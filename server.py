@@ -34,6 +34,9 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
             if operate[0] == 'close' and len(operate) == 2:
                 opStr = ''
                 #待机
+            if operate[0] == 'sleep' and len(operate) == 2:
+                opStr = ''
+            
             if operate[0] == 'wait' and len(operate) == 3:
                 opStr = ''
                 #啥是等待？
