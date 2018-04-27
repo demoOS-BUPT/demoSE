@@ -7,7 +7,7 @@ HOST, PORT = "127.0.0.1", int(2333)
 room = 503
 currentTemp = 15
 finalTemp = 25
-wind = 2
+wind = 3
 
 if __name__ == '__main__':
     # Connect to Server
