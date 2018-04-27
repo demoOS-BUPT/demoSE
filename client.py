@@ -7,7 +7,7 @@ HOST, PORT = "127.0.0.1", int(2333)
 room = 503
 currentTemp = 15
 finalTemp = 25
-wind = 2
+wind = 1
 
 if __name__ == '__main__':
     # Connect to Server
@@ -16,11 +16,11 @@ if __name__ == '__main__':
     time.sleep(0.2)
 
     air = Air()
-    air.show_status()    
+    air.show_status()
     sendBuf = air.send_status()
     print sendBuf
     sock.send(sendBuf)
-    
+
 
     opStr = ''
     while 1:
