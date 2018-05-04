@@ -8,7 +8,7 @@ import sys
 from PyQt4 import QtCore, QtGui, uic
 
 # 1 Set Host and Port
-HOST, PORT = "127.0.0.1", int(2333)
+HOST, PORT = "127.0.0.1", int(233)
 
 # Ui Init
 qtCreatorFile = "./server.ui"  # Window File
@@ -45,10 +45,12 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
         # 初次开机，注意startTime字段在此次保存
         opStr = ""
         req = self.request
+        req.sendall("a")
+        time.sleep(0.5)
+        '''
         res = req.recv(1024)
         opStr += res.decode()
         operate = opStr.split("_")
-
 
         if operate[0] != 'r' or len(operate) != 5:
             print( 'connect the air error!')
@@ -80,7 +82,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 opStr = ''
 
             time.sleep(0.1)
-
+'''
 
 class ThreadedServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass

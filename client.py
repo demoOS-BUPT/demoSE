@@ -1,31 +1,22 @@
 #-*- coding:utf-8 -*-
 import socket
 import time
-import threading
-from Air import *
-# Socket Init
-HOST, PORT = "127.0.0.1", int(2333)
-room = 503
-currentTemp = 15
-finalTemp = 25
-wind = 1
-
-# -*- coding:utf-8 -*-
-import socket
-import time
 import sys
 from PyQt4 import QtCore, QtGui, uic
-
+import threading
+from Air import *
 # Ui Init
 qtCreatorFile = "client.ui"  # Window File
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
 # Socket Init
-HOST, PORT = "127.0.0.1", int(2333)
+HOST, PORT = "127.0.0.1", int(233)
+
 room = 503
 currentTemp = 15
-finalTemp = 25
-wind = 2
+
+#finalTemp = 25
+#wind = 2
 
 sock_flag = 0;
 
@@ -36,56 +27,105 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
         self.setupUi(self)
 
         # 连接信号和槽
-        self.offBtn.clicked.connect(self.off)
-        self.onBtn.clicked.connect(self.on)
+        self.oBtn.clicked.connect(self.onOroff)
+        self.commitBtn.setDisabled(False)
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.t = myThread(self.sock)
+        self.t = myThread(self.sock, self)
 
-    def on(self):
+    def onOroff(self):
+        global sock_flag
+        if(sock_flag == 0):
+            finalTemp = float(self.temperaBox.value())
+            on_tips_string = u"您设置了空调温度：" + str(finalTemp)
+            self.tipLabel.setText(on_tips_string)
+
+            if(self.highBtn.isChecked()):
+                wind = 2
+            if(self.midBtn.isChecked()):
+                wind = 1
+            else:
+                wind = 0
+
+            # Connect to Server
+            #try:
+            self.sock.connect((HOST, PORT))
+            #except Exception:
+            #    print 'Server port not connect!'
+            #    return
+
+            time.sleep(0.2)
+            #room=503, currentTemp=15, finalTemp=25, wind=2
+            self.air = Air(room,currentTemp,finalTemp,wind)
+            self.air.show_status()
+            sendBuf = self.air.send_status()
+            self.sock.send(sendBuf.encode(encoding="utf-8"))
+
+            s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~"
+            self.roomLabel.setText(s)
+
+            sock_flag = 1
+            self.oBtn.setText(u"关机")
+            self.t.start()
+
+            self.commitBtn.clicked.connect(self.setTemp)
+            self.cancelBtn.clicked.connect(self.cancelTemp)
+        else:
+            off_tips_string = u"耶 终于关空调了"
+            self.tipLabel.setText(off_tips_string)
+            sock_flag = 0;
+
+            self.commitBtn.clicked.disconnect(self.setTemp)
+            self.oBtn.setText(u"开机")
+
+            self.sock.close()
+
+    def showState(self):
+        #self.stateLab.setText(str(self.air.))
+        self.curtempLab.setText(str(self.air.currentTemp))
+        self.aimtempLab.setText(str(self.air.finalTemp))
+
+        if(self.air.wind == 2):
+            wind_str = u"高风"
+        if (self.air.wind == 1):
+            wind_str = u"中风"
+        else:
+            wind_str = u"低风"
+        self.windLab.setText(wind_str)
+        #self.energyLab.setText(self.air.)
+        #self.priceLab.setText(self.air.)
+
+    #修改目标温度参数
+    def setTemp(self):
         temperature = float(self.temperaBox.value())
         on_tips_string = u"您设置了空调温度：" + str(temperature)
         self.tipLabel.setText(on_tips_string)
 
-        # Connect to Server
-        self.sock.connect((HOST, PORT))
-        time.sleep(0.2)
+        self.air.change_status(finalTemp=temperature)
 
-        air = Air()
-        air.show_status()
-        sendBuf = air.send_status()
-        self.sock.send(sendBuf.encode(encoding="utf-8"))
+    def cancelTemp(self):
+        on_tips_string = u"成功取消目标温度更改"
+        self.tipLabel.setText(on_tips_string)
 
-        '''
-        ################处理一下此时服务器没开的情况
-        '''
 
-        ##开始线程处理和服务器间的通信啦'''#
-        '''
-        self.t = threading.Thread(target=run(self.sock))
-        self.t = setDaemon(True)
-        self.t.start()
-        '''
-        sock_flag = 1
-        self.t.start()
+        self.temperaBox.setValue(self.air.finalTemp)
 
-    def off(self):
-        off_tips_string = u"耶 终于关空调了"
-        self.tipLabel.setText(off_tips_string)
-        sock_flag=0;
-        self.sock.close()
 
 
 class myThread(threading.Thread):  # 继承父类threading.Thread
-    def __init__(self, sock):
-        threading.Thread.__init__(self)
+    def __init__(self, sock,client):
+        super(myThread, self).__init__()
         self.sock = sock
+        self.client = client
     def run(self):
+        global sock_flag
         opStr = ''
         while sock_flag:
             res = self.sock.recv(1024)
-            opStr += res.decode()
+            opStr += res
             operate = opStr.split("_")
+
+            self.client.showState()
 
             if operate[0] == 'a' and len(operate) == 10:
                 opStr = ''
@@ -107,6 +147,7 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
 
 if __name__ == '__main__':
     ##ui
+    sock_flag = 0;
     app = QtGui.QApplication(sys.argv)
     client = Client()
     client.show()
