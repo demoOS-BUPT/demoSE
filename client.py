@@ -5,6 +5,7 @@ import sys
 from PyQt4 import QtCore, QtGui, uic
 import threading
 from Air import *
+
 # Ui Init
 qtCreatorFile = "client.ui"  # Window File
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
@@ -21,10 +22,12 @@ currentTemp = 15
 sock_flag = 0;
 
 class Client(QtGui.QMainWindow,Ui_MainWindow):
-    def __init__(self):
+    def __init__(self,user):
         QtGui.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
+        global room
+        room = user
 
         # 连接信号和槽
         self.oBtn.clicked.connect(self.onOroff)
@@ -107,7 +110,6 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
         on_tips_string = u"成功取消目标温度更改"
         self.tipLabel.setText(on_tips_string)
 
-
         self.temperaBox.setValue(self.air.finalTemp)
 
 
@@ -150,7 +152,6 @@ if __name__ == '__main__':
     sock_flag = 0;
     app = QtGui.QApplication(sys.argv)
     client = Client()
-    client.show()
-
+    client.show();
     sys.exit(app.exec_())
 
