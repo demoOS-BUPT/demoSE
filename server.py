@@ -2,6 +2,7 @@
 import SocketServer
 import time
 from Air import *
+from setrateui import *
 import sqlite3
 import threading
 import sys
@@ -24,6 +25,16 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         # 连接信号和槽
         self.onBtn.clicked.connect(self.on)
         self.offBtn.clicked.connect(self.off)
+        self.setRateBtn.clicked.connect(self.setRate)
+
+    def setRate(self):
+        self.setrate = setrateUI()
+        self.setrate.show()
+
+        if(self.setrate.exec_()):
+            print self.setrate.lowrate
+            print self.setrate.midrate
+            print self.setrate.highrate
 
     def on(self):
         #temperature = float(self.temperaBox.value())

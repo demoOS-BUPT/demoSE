@@ -17,13 +17,13 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>90</y>
-     <width>531</width>
-     <height>341</height>
+     <y>230</y>
+     <width>521</width>
+     <height>201</height>
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="State">
     <attribute name="title">
@@ -89,43 +89,7 @@
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item alignment="Qt::AlignHCenter">
-     <widget class="QPushButton" name="pushButton_5">
-      <property name="text">
-       <string>查看服务们</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="pushButton_2">
-      <property name="text">
-       <string>查看等待房间</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="pushButton_3">
-      <property name="text">
-       <string>设置费率</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="pushButton">
-      <property name="text">
-       <string>查看房间状态</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="pushButton_4">
-      <property name="text">
-       <string>查看计费标准</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
+   <layout class="QHBoxLayout" name="horizontalLayout"/>
   </widget>
   <widget class="QLabel" name="display">
    <property name="geometry">
@@ -138,6 +102,71 @@
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="setRateBtn">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>130</y>
+     <width>93</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>设置费率</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_4">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>170</y>
+     <width>122</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>查看计费标准</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="waitQueBtn">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>130</y>
+     <width>165</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>查看等待房间</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>170</y>
+     <width>250</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>查看房间状态</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_5">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>170</y>
+     <width>93</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>查看报表</string>
    </property>
   </widget>
  </widget>
