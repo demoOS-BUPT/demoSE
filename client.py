@@ -104,7 +104,8 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
         on_tips_string = u"您设置了空调温度：" + str(temperature)
         self.tipLabel.setText(on_tips_string)
 
-        self.air.change_status(finalTemp=temperature)
+        status = {'finalTemp':temperature}
+        self.air.change_status(status)
 
     def cancelTemp(self):
         on_tips_string = u"成功取消目标温度更改"

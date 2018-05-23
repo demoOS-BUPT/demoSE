@@ -20,7 +20,7 @@ class Air(object):
         self.is_sleep()
 
     #改变状态
-    def change_status(self, **kwargs):
+    def change_status(self, kwargs):
         if 'room' in kwargs:
             self.room = kwargs['room']
         if 'currentTemp' in kwargs:
