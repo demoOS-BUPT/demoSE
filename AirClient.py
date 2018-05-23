@@ -16,10 +16,9 @@ class AirClient(object):
         self.lastTime = int(time.time())
         self.sleep = False
         self.open = True
-        self.status_to_money()
-        self.is_sleep()
+        #self.is_sleep()
 
-   def init(self, room=503, currentTemp=15, finalTemp=25, wind=2):
+    def init(self, room=503, currentTemp=15, finalTemp=25, wind=2):
         self.room = room
         self.mode = 'hot'
         self.currentTemp = currentTemp
@@ -30,41 +29,45 @@ class AirClient(object):
         self.lastTime = int(time.time())
         self.sleep = False
         self.open = True
-        self.status_to_money()
-        self.is_sleep()
+        #self.is_sleep()
 
     def send_start(self):
         #{:0>2d} 左边补0
-        sendBuf = 'start_{room}_$'.format({'room':self.room})
+        status = {'room':self.room}
+        sendBuf = 'start_{room}_$'.format(**status)
         return sendBuf
 
     def send_first_open(self):
         sendBuf = 'r_{room}_{currentTemp}_{finalTemp}_{wind}_$'
-        sendBuf = sendBuf.format({'room':self.room,
+        status = {'room':self.room,
                                     'currentTemp':self.currentTemp,
                                     'finalTemp':self.finalTemp,
-                                    'wind':self.wind})
+                                    'wind':self.wind}
+        sendBuf = sendBuf.format(**status)
         return sendBuf
 
     def send_open(self):
         sendBuf = 'r_{room}_{currentTemp}_{finalTemp}_{wind}_$'
-        sendBuf = sendBuf.format({'room':self.room,
+        status = {'room':self.room,
                                     'currentTemp':self.currentTemp,
                                     'finalTemp':self.finalTemp,
-                                    'wind':self.wind})
+                                    'wind':self.wind}
+        sendBuf = sendBuf.format(**status)
         return sendBuf
 
     def send_change(self):
         sendBuf = 'c_{room}_{currentTemp}_{finalTemp}_{wind}_$'
-        sendBuf = sendBuf.format({'room':self.room,
+        status = {'room':self.room,
                                     'currentTemp':self.currentTemp,
                                     'finalTemp':self.finalTemp,
-                                    'wind':self.wind})
+                                    'wind':self.wind}
+        sendBuf = sendBuf.format(**status)
         return sendBuf
 
     def send_close(self):
         sendBuf = 'close_{room}_$'
-        sendBuf = sendBuf.format({'room':self.room})
+        status = {'room':self.room}
+        sendBuf = sendBuf.format(**status)
         return sendBuf
 
     def recv_start(self, operate):
@@ -107,8 +110,8 @@ class AirClient(object):
     def recv_wait(self, operate):
         print 'i recv a wait message!'
 
-    #改变状态
-    def change_status(self, **kwargs):
+    #改变状态,这里把参数补齐
+    def change_status(self, kwargs):
         if 'room' in kwargs:
             self.room = kwargs['room']
         if 'currentTemp' in kwargs:

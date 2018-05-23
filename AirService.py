@@ -3,24 +3,138 @@ import socket
 import time
 import re, ConfigParser
 
-COLD = 0.1
+MODE = '1'
+TEMPFROM = '20.0'
+TEMPTO = '30.0'
+TEMPWIDTH = '2.0'
+WIND = '3'
+FINALTEMP = '28'
+TEMPCHANGE = 1.2
 
-class Air(object):
+class AirService(object):
     #初始化
     def __init__(self, room=503, currentTemp=15, finalTemp=25, wind=2):
         self.room = room
+        self.mode = 'hot'
         self.currentTemp = currentTemp
         self.finalTemp = finalTemp
         self.wind = wind
         self.totalMoney = 0.0
+        self.perMoney = 1.2
         self.startTime = int(time.time())
         self.lastTime = int(time.time())
         self.sleep = False
+        self.open = True
         self.status_to_money()
         self.is_sleep()
 
-    #改变状态
-    def change_status(self, **kwargs):
+    def init(self, room=503, currentTemp=15, finalTemp=25, wind=2):
+        self.room = room
+        self.mode = 'hot'
+        self.currentTemp = currentTemp
+        self.finalTemp = finalTemp
+        self.wind = wind
+        self.totalMoney = 0.0
+        self.perMoney = 1.2
+        self.startTime = int(time.time())
+        self.lastTime = int(time.time())
+        self.sleep = False
+        self.open = True
+        self.status_to_money()
+        self.is_sleep()
+
+    def recv_start(self, operate):
+        status = {}
+        status['room'] = operate[1]
+        self.change_status(status)
+        return 
+
+    def recv_first_open(self, operate):
+        status = {}
+        status['room'] = operate[1]
+        status['currentTemp'] = operate[2]
+        status['finalTemp'] = operate[3]
+        if operate[3] == '#':
+            status['finalTemp'] = FINALTEMP
+        status['wind'] = operate[4]
+        if operate[4] == '#':
+            status['finalTemp'] = WIND
+        self.change_status(status)
+        return 
+
+    def recv_open(self, operate):
+        status = {}
+        status['room'] = operate[1]
+        status['currentTemp'] = operate[2]
+        status['finalTemp'] = operate[3]
+        status['wind'] = operate[4]
+        self.change_status(status)
+        return 
+
+    def recv_change(self, operate):
+        status = {}
+        status['room'] = operate[1]
+        status['currentTemp'] = operate[2]
+        status['finalTemp'] = operate[3]
+        status['wind'] = operate[4]
+        self.change_status(status)
+        return 
+
+    def recv_close(self, operate):
+        print operate[1] + 'closed!'
+        return
+
+    def send_start(self):
+        sendBuf = 'start_{room}_{mode}_{tempFrom}-{tempTo}_{tempWidth}_$'
+        status = {'room':self.room,
+                'mode':MODE,
+                'tempFrom':TEMPFROM,
+                'tempTo':TEMPTO,
+                'tempWidth':TEMPWIDTH,
+                }
+        sendBuf = sendBuf.format(**status)
+        return sendBuf
+
+    def send_answer(self):
+        sendBuf = 'a_{room}_{currentTemp}_{totalMoney}_{time}_{finalTemp}_{wind}_{tempChange}_{preMoney}_{totalElec}_$'
+        status = {'room':self.room,
+                    'currentTemp':self.currentTemp,
+                    'totalMoney':self.totalMoney,
+                    'time':time.time(),
+                    'finalTemp': self.finalTemp,
+                    'wind':self.wind,
+                    'tempChange':TEMPCHANGE,
+                    'preMoney':self.preMoney,
+                    'totalElec':self.totalElec}
+        sendBuf = sendBuf.format(**status)
+        return sendBuf
+
+    def send_close(self, flag):
+        #退房标识
+        sendBuf = 'close_{room}_{flag}_$'
+        status = {'room':self.room,
+                    'flag':flag}
+        sendBuf = sendBuf.format(**status)
+        return sendBuf
+
+    def send_sleep(self):
+        sendBuf = 'sleep_{room}_$'
+        status = {'room':self.room}
+        sendBuf = sendBuf.format(**status)
+        return sendBuf
+
+    def send_wait(self, waitNum, waitType):
+        #调度
+        sendBuf = 'wait_{room}_{num}_{type}_$'
+        status = {'room':self.room,
+                    'num':waitNum,
+                    'type':waitType,}
+        sendBuf = sendBuf.format(**status)
+
+
+
+    #改变状态,这里把参数补齐
+    def change_status(self, kwargs):
         if 'room' in kwargs:
             self.room = kwargs['room']
         if 'currentTemp' in kwargs:
@@ -32,12 +146,10 @@ class Air(object):
 
     #test：展示状态
     def show_status(self):
-        print 'room:', self.room, 'currentTemp:', self.currentTemp, 'finalTemp:', self.finalTemp, 'wind:', self.wind
+        #print 'room:', self.room, 'currentTemp:', self.currentTemp, 'finalTemp:', self.finalTemp, 'wind:', self.wind
+        print dir(self)
 
-    #test：返回一个用于发送的字符串233
-    def send_status(self):
-        sendBuf = 'r_' + str(self.room) + '_' + str(self.currentTemp) + '_' + str(self.finalTemp) + '_' + str(self.wind)
-        return sendBuf
+
 
     #模拟运行
     def work(self):
@@ -52,9 +164,9 @@ class Air(object):
         if not self.is_sleep():
             #正常运行
             self.currentTemp += (nowTime - self.lastTime) * self.wind
-            self.totalMoney += self.perMoney * self.perMoney
+            self.totalMoney += (nowTime - self.lastTime) * self.perMoney
         else:
-            #睡眠了
+            #睡眠了，不该运行
             self.currentTemp -= COLD * (nowTime - self.lastTime)
             print self.currentTemp
 
