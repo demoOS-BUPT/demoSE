@@ -4,7 +4,7 @@ import time
 import sys
 from PyQt4 import QtCore, QtGui, uic
 import threading
-from Air import *
+from AirClient import *
 
 # Ui Init
 qtCreatorFile = "client.ui"  # Window File
@@ -50,7 +50,7 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
             else:
                 wind = 0
 
-            # Connect to Server
+            #Connect to Server
             #try:
             self.sock.connect((HOST, PORT))
             #except Exception:
@@ -59,12 +59,36 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
 
             time.sleep(0.2)
             #room=503, currentTemp=15, finalTemp=25, wind=2
-            self.air = Air(room,currentTemp,finalTemp,wind)
+            self.air = AirClient(room,currentTemp,finalTemp,wind)
+
+            '''默认在哪设都行
+            status = {'room': '307C',
+                      'currentTemp': 20.3,
+                      'finalTemp': 28.0,
+                      'wind': 2,  # 中速
+                      }
+            self.air.change_status(status)
+            '''
+
+            ##开机
+            sendBuf = self.air.send_start()
+            print sendBuf
+            self.sock.send(sendBuf)
+
+            self.air.show_status()
+            sendBuf = self.air.send_first_open()
+            print sendBuf
+            self.sock.send(sendBuf)
+
+            '''
             self.air.show_status()
             sendBuf = self.air.send_status()
+            print sendBuf
             self.sock.send(sendBuf.encode(encoding="utf-8"))
-
+            '''
             s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~"
+            starttime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.air.startTime))
+            s += ( u"\n开机时间为：" + str(starttime) )
             self.roomLabel.setText(s)
 
             sock_flag = 1
@@ -126,33 +150,47 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
         while sock_flag:
             res = self.sock.recv(1024)
             opStr += res
+            print opStr
             operate = opStr.split("_")
 
+            if operate[0] == 'start' and len(operate) == 7 and operate[-1] == '$':
+                self.client.air.recv_start(operate)
+                print 'first_start!'
+                opStr = ''
+                print operate
+            if operate[0] == 'a' and len(operate) == 11 and operate[-1] == '$':
+                self.client.air.recv_a(operate)
+                opStr = ''
+                print "received an a"
+
+            if operate[0] == 'close' and len(operate) == 4 and operate[-1] == '$':
+                self.client.air.recv_close(operate)
+                opStr = ''
+                print operate
+            if operate[0] == 'sleep' and len(operate) == 3 and operate[-1] == '$':
+                self.client.air.recv_sleep(operate)
+                opStr = ''
+                print operate
+                # 待机
+            if operate[0] == 'wait' and len(operate) == 5 and operate[-1] == '$':
+                self.client.air.recv_wait(operate)
+                opStr = ''
+                # 阻塞，等待服务
             self.client.showState()
 
-            if operate[0] == 'a' and len(operate) == 10:
-                opStr = ''
-                print(operate)
-            if operate[0] == 'close' and len(operate) == 2:
-                opStr = ''
-            # close
-            if operate[0] == 'sleep' and len(operate) == 2:
-                opStr = ''
-            # 待机
-            if operate[0] == 'wait' and len(operate) == 3:
-                opStr = ''
-            # 啥是等待？
+            if time.time() - self.client.air.startTime > 5 and time.time() - self.client.air.startTime < 6:
+                sendBuf = self.client.air.send_change()
+                self.sock.send(sendBuf)
+                time.sleep(1)
+            time.sleep(0.1)
+        self.sock.close()
 
-            if 1 == 0:
-                sendBuf = "aloha～"
-                sock.send(sendBuf)
-                print(sendBuf)
-
+'''
 if __name__ == '__main__':
     ##ui
     sock_flag = 0;
     app = QtGui.QApplication(sys.argv)
-    client = Client()
-    client.show();
+    #client = Client()
+    #client.show();
     sys.exit(app.exec_())
-
+'''
