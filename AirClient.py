@@ -3,6 +3,10 @@ import socket
 import time
 import re, ConfigParser
 
+global localTempChange,localTempRange,localInitTemp
+localTempChange=0.2
+localTempRange=3.0
+localInitTemp=26
 class AirClient(object):
     #初始化
     def __init__(self, room=503, currentTemp=15, finalTemp=25, wind=2):
@@ -19,7 +23,7 @@ class AirClient(object):
         self.status_to_money()
         self.is_sleep()
 
-   def init(self, room=503, currentTemp=15, finalTemp=25, wind=2):
+    def init(self, room=503, currentTemp=15, finalTemp=25, wind=2):
         self.room = room
         self.mode = 'hot'
         self.currentTemp = currentTemp
@@ -117,6 +121,44 @@ class AirClient(object):
             self.finalTemp = kwargs['finalTemp']
         if 'wind' in kwargs:
             self.wind = kwargs['wind']
+        if 'totalMoney' in kwargs:
+            self.totalMoney=kwargs['totalMoney']
+        if 'time'in kwargs:
+            self.lastTime=kwargs['time']
+        #温度变化tempChange 单价preMoney 累积变量totalElec
+        if 'mode'in kwargs:
+            self.mode=kwargs['mode']
+        #工作温度范围 tempFrom tempTo 温度波动范围 tempWidth
+
+
+
+    #回温计算
+    def work(self):
+        #localTempChange 本地每秒温度变化速率 localTempRange 本地温度变化范围 #本地初始温度
+        change=0
+        curTempRange=abs(self.currentTemp-localInitTemp)
+        if self.sleep:
+            if curTempRange<localTempRange:
+                #回到初始值
+                while change!=curTempRange:
+                    change += localTempChange
+                    time.sleep(0.1)
+                self.currentTemp=localInitTemp
+            else:
+                #一个范围
+                while change!=localTempRange:
+                    #本地温度变化函数 线性
+                    change += localTempChange
+                    time.sleep(0.1)
+                if self.mode=='hot':
+                    self.currentTemp -= localTempChange
+                elif self.mode=='cold':
+                    self.currentTemp += localTempChange
+
+            self.sleep=False
+
+
+
 
     #test：展示状态
     def show_status(self):

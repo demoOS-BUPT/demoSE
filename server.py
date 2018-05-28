@@ -1,7 +1,8 @@
 #-*- coding:utf-8 -*-
 import SocketServer, time
 import sqlite3
-from Air import *
+from AirClient import *
+
     
 class HandleCheckin(SocketServer.StreamRequestHandler):
     # 3 Call this function when recv a connection from client
@@ -14,7 +15,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
         if operate[0] != 'r' or len(operate) != 5:
             print 'connect the air error!'
             return
-        objAir = Air(room=operate[1], currentTemp=float(operate[2]), finalTemp=float(operate[3]), wind=int(operate[4]))
+        objAir = AirClient(room=operate[1], currentTemp=float(operate[2]), finalTemp=float(operate[3]), wind=int(operate[4]))
 
 
         opStr = ''
@@ -46,7 +47,7 @@ class ThreadedServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 
 if __name__ == "__main__":
     # 1 Set Host and Port
-    HOST, PORT = "127.0.0.1", int(2333)
+    HOST, PORT = "0.0.0.0", int(8000)
 
     # 2 Start Server
     server = ThreadedServer((HOST, PORT), HandleCheckin)

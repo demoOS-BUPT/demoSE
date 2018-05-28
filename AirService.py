@@ -85,3 +85,25 @@ class Air(object):
                 print 'time to get up~'
                 self.sleep = False
         return self.sleep
+
+
+    def is_sleep_2(self):
+        if self.sleep == False:
+            if self.mode=='hot':
+                if self.currentTemp>self.finalTemp:
+                    print 'time to sleep~'
+                    self.sleep = True
+            elif self.mode=='cold':
+                if self.currentTemp<self.finalTemp:
+                    print 'time to sleep~'
+                    self.sleep = True
+        else:
+            if self.mode=='hot':
+                if self.currentTemp<self.finalTemp-localTempRange:
+                    print 'time to get up~'
+                    self.sleep = False
+            elif self.mode=='cold':
+                if self.currentTemp>self.finalTemp+localTempRange:
+                    print 'time to get up~'
+                    self.sleep = False
+        return self.sleep

@@ -3,7 +3,7 @@ import socket
 import time
 from AirClient import *
 # Socket Init
-HOST, PORT = "127.0.0.1", int(2333)
+HOST, PORT = "127.0.0.1", int(8000)
 cold = 0.1
 
 if __name__ == '__main__':
@@ -12,7 +12,7 @@ if __name__ == '__main__':
     sock.connect((HOST, PORT))
     time.sleep(0.2)
 
-    air = Air()
+    air = AirClient()
     status={'room':'503',
             'currentTemp':20.3,
             'finalTemp':28.0,
