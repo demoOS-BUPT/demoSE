@@ -3,6 +3,7 @@ import SocketServer
 import time
 from AirService import *
 from setrateui import *
+from formui import *
 import sqlite3
 import threading
 import sys
@@ -25,7 +26,8 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         # 连接信号和槽
         self.onBtn.clicked.connect(self.on)
         self.offBtn.clicked.connect(self.off)
-        self.setRateBtn.clicked.connect(self.setRate)
+        self.setBtn.clicked.connect(self.setRate)
+        self.formBtn.clicked.connect(self.printForm)
 
     def setRate(self):
         self.setrate = setrateUI()
@@ -35,6 +37,11 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
             print self.setrate.lowrate
             print self.setrate.midrate
             print self.setrate.highrate
+
+    def printForm(self):
+        self.formui = formUI()
+        self.formui.show()
+        #self.formui.exec_()
 
     def on(self):
         #temperature = float(self.temperaBox.value())
@@ -53,8 +60,8 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
     # 3 Call this function when recv a connection from client
     def handle(self):
         # 4 Send the question
-        req = self.request
 
+        req = self.request
         #初次开机，注意startTime字段在此次保存
         operate = req.recv(1024).strip().split("_")
         if operate[0] != 'start' or operate[-1] != '$':
@@ -67,6 +74,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
         opStr = ''
         operate = []
+        req.setblocking(0)
         while 1:
             objAir.work()#模拟运行
 

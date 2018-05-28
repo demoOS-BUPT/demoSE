@@ -15,7 +15,9 @@ HOST, PORT = "127.0.0.1", int(233)
 
 room = 503
 currentTemp = 15
-
+limit_l = 16
+limit_h = 30
+defalt_temp = 26
 #finalTemp = 25
 #wind = 2
 
@@ -29,7 +31,14 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
         global room
         room = user
 
+        # 设置滑动条控件的最大最小值
+        self.tempSlider.setMinimum(limit_l)
+        self.tempSlider.setMaximum(limit_h)
+        # 设置滑动条控件的初始值
+        self.tempSlider.setValue(defalt_temp)
+
         # 连接信号和槽
+        self.tempSlider.valueChanged[int].connect(self.changetemp)
         self.oBtn.clicked.connect(self.onOroff)
         self.commitBtn.setDisabled(False)
 
@@ -108,9 +117,10 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
             self.sock.close()
 
     def showState(self):
-        #self.stateLab.setText(str(self.air.))
-        self.curtempLab.setText(str(self.air.currentTemp))
-        self.aimtempLab.setText(str(self.air.finalTemp))
+        stateStr = ""
+        stateStr += u"当前模式："+self.air.mode
+        stateStr += u"\n当前温度："+(str(self.air.currentTemp))
+        stateStr += u"\n目标温度：" +(str(self.air.finalTemp))
 
         if(self.air.wind == 2):
             wind_str = u"高风"
@@ -118,9 +128,12 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
             wind_str = u"中风"
         else:
             wind_str = u"低风"
-        self.windLab.setText(wind_str)
-        #self.energyLab.setText(self.air.)
-        #self.priceLab.setText(self.air.)
+
+        stateStr += u"\n风速：" +(wind_str)
+        stateStr += u"\n工作模式：" +self.air.mode
+        stateStr += u"\n消费金额：" +str(self.air.totalMoney)
+
+        self.stateBrowser.setText(str(stateStr))
 
     #修改目标温度参数
     def setTemp(self):
@@ -136,6 +149,10 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
         self.tipLabel.setText(on_tips_string)
 
         self.temperaBox.setValue(self.air.finalTemp)
+        self.tempSlider.setValue(self.air.finaltemp)
+
+    def changetemp(self,value):
+        self.temperaBox.setValue(value)
 
 
 
@@ -182,6 +199,7 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
                 sendBuf = self.client.air.send_change()
                 self.sock.send(sendBuf)
                 time.sleep(1)
+
             time.sleep(0.1)
         self.sock.close()
 
