@@ -3,7 +3,7 @@ import socket
 import time
 from AirClient import *
 # Socket Init
-HOST, PORT = "192.168.43.26", int(8002)
+HOST, PORT = "127.0.0.1", int(8000)
 cold = 0.1
 
 if __name__ == '__main__':

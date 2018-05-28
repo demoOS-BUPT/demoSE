@@ -123,5 +123,5 @@ class AirClient(object):
 
     #test：展示状态
     def show_status(self):
-        #print 'room:', self.room, 'currentTemp:', self.currentTemp, 'finalTemp:', self.finalTemp, 'wind:', self.wind
-        print dir(self)
+        print 'room:', self.room, 'currentTemp:', self.currentTemp, 'finalTemp:', self.finalTemp, 'wind:', self.wind
+        #print dir(self)
