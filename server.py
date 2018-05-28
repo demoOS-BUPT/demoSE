@@ -1,8 +1,8 @@
 #-*- coding:utf-8 -*-
 import SocketServer, time
 import sqlite3
-from AirClient import *
 
+from AirService import *
     
 class HandleCheckin(SocketServer.StreamRequestHandler):
     # 3 Call this function when recv a connection from client
@@ -12,11 +12,14 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
         #初次开机，注意startTime字段在此次保存
         operate = req.recv(1024).strip().split("_")
-        if operate[0] != 'r' or len(operate) != 5:
+        if operate[0] != 'start' or operate[-1] != '$':
             print 'connect the air error!'
             return
-        objAir = AirClient(room=operate[1], currentTemp=float(operate[2]), finalTemp=float(operate[3]), wind=int(operate[4]))
 
+        print operate
+        objAir = AirService()
+
+        req.sendall(objAir.send_start())
 
         opStr = ''
         operate = []
@@ -26,18 +29,18 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
             res = req.recv(1024).strip()
             opStr += res
             operate = opStr.split("_")
-            if operate[0] == 'r' and len(operate) == 5:
-                #开机
+            if operate[0] == 'r' and operate[-1] == '$':
+                objAir.recv_first_open(operate)
                 opStr = ''
                 print operate
-            if operate[0] == 'c' and len(operate) == 5:
+            if operate[0] == 'c' and operate[-1] == '$':
+                objAir.recv_change(operate)
                 opStr = ''
-            if operate[0] == 'close' and len(operate) == 2:
+                print operate
+            if operate[0] == 'close' and operate[-1] == '$':
+                objAir.recv_close(operate)
                 opStr = ''
                 #待机
-            if operate[0] == 'wait' and len(operate) == 3:
-                opStr = ''
-                #啥是等待？
 
             time.sleep(0.1)
 
