@@ -31,6 +31,10 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
         global room
         room = user
 
+        # 开始装载样式表
+        qss_file = open('clientQSS.qss').read()
+        self.setStyleSheet(qss_file)
+
         # 设置滑动条控件的最大最小值
         self.tempSlider.setMinimum(limit_l)
         self.tempSlider.setMaximum(limit_h)
