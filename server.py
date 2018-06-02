@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 import SocketServer, time, threading
 import sqlite3
+
 from AirService import *
     
 class HandleCheckin(SocketServer.StreamRequestHandler):
@@ -22,6 +23,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
         t2.start()
         t1.join()
         t2.join()
+
 
     def listen(self):
         req = self.request        

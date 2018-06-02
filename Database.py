@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 import sqlite3
-
+import time
+from AirClient import *
 class Database(object):
 
     def __init__(self):
@@ -37,8 +38,8 @@ class Database(object):
         self.conn.commit()
     
      
-    def insert_operate(self, action, objAirm, user):
-        if !isinstance(objAir, Air):
+    def insert_operate(self, action, objAir, user):
+        if isinstance(objAir, Air)==False:
             print 'not a airObj!'
             return
         sqlQuery = "INSERT INTO `operate` (`id`, `operate`, `room`, `user`, `ip`, `time`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) '\
@@ -50,8 +51,58 @@ class Database(object):
         cursor.close()
         self.conn.commit()
         
-    def select_operate(self, room):
-        pass
+    def select_operate(self,date, objAir,type):
+        if isinstance(objAir, Air)==False:
+            print 'not a airObj!'
+            return
+        if type==0:
+            #日报表
+            sqlQuery = "SELECT * FROM `operate` WHERE strftime('%Y-%m-%d','TIME')=={date} ORDER BY TIME".format(
+            date=date
+            )
+            print("{date}日报表\n".format(date=date))
+        elif type==1:
+            #周报表
+            sqlQuery = "SELECT * FROM `operate` WHERE strftime('%Y-%W','TIME')=={date} ORDER BY TIME".format(
+            date=date
+            )
+            print("{date}周报表\n".format(date=date))
+        elif type==2:
+            #月报表
+            sqlQuery = "SELECT * FROM `operate` WHERE strftime('%Y-%m','TIME')=={date} ORDER BY TIME".format(
+            date=date
+            )
+            print("{date}月报表\n".format(date=date))
+
+        cursor = self.conn.cursor()
+        cursor.execute(sqlQuery)
+
+        print('%5s'%'Room'),
+        print('%10s'%'Operate'),
+        print('%8s'%'User'),
+        print('%15s'%'IP'),
+        print('%15s'%'Time'),
+        print('%15s'%'InitTemperature'),
+        print('%15s'%'FinalTemperature'),
+        print('%5s'%'Wind'),
+        print('%15s'%'PerMoney'),
+        print('%15s'%'TotalMoney')
+
+        for row in cursor:
+            # print "id_operate_room_user_ip_time_currentTemp_finalTemp_wind_totalMoney_perMonet"
+            print('%5s'%row[2]),
+            print('%10s'%row[1]),
+            print('%8s'%row[3]),
+            print('%15s'%row[4]),
+            print('%15s'%row[5]),
+            print('%15s'%row[6]),
+            print('%15s'%row[7]),
+            print('%5s'%row[8]),
+            print('%15s'%row[10]),
+            print('%15s'%row[9])
+
+        cursor.close()
+        self.conn.commit()
         
 if __name__ == '__main__':
     database = Database()
