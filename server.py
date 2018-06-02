@@ -6,16 +6,21 @@ from AirService import *
     
 class HandleCheckin(SocketServer.StreamRequestHandler):
     def handle(self):
-        req = self.request
-        operate = req.recv(1024).strip().split("_")
-        if operate[0] != 'start' or operate[-1] != '$':
-            print 'connect the air error!'
-            return
-        print '[recv] start'
+        #req = self.request
         self.objAir = AirService()
 
-        req.sendall(self.objAir.send_start())
-        print '[send] start'
+        operate = self.request.recv(1024).strip().split("_")
+        if operate[0] != 'start' or operate[-1] != '$':
+            print '[error]recv start error!'
+            return
+        else:
+            print '[recv]start'
+            self.objAir.recv_start(operate)
+
+            sendBuf = self.objAir.send_start()
+            self.request.sendall(sendBuf)
+            print '[send] start', sendBuf
+            time.sleep(0.5)
 
         t1 = threading.Thread(target=self.listen, name='listen')
         t2 = threading.Thread(target=self.work, name='work')
@@ -26,15 +31,13 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
 
     def listen(self):
-        req = self.request        
-
+        
         opStr = ''
         operate = []
 
-        ii = 0
         while 1:
 
-            res = req.recv(1024).strip()
+            res = self.request.recv(1024).strip()
 
             opStr += res
             operate = opStr.split("_")
@@ -54,26 +57,27 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 #待机
 
             time.sleep(0.1)
-            ii+=1
-            if ii > 10:
-                exit()
+
 
     def work(self):
         print '[work start]'
-        req = self.request
-        jj = 0
+        
         while(1):
-            sendBuf = self.objAir.work()
-            print sendBuf
-            if sendBuf != False and sendBuf != None:
-                req.sendall(sendBuf)
-                print '[send]' + sendBuf
-            time.sleep(0.2)
-            jj += 1
-            if jj >= 150:
-                exit()
-            print '[work loop]'
+            time.sleep(0.1)
 
+            if not self.objAir.open:
+                continue
+
+            sendBuf = self.objAir.work()
+            if sendBuf != False and sendBuf != None:
+                self.request.sendall(sendBuf)
+                print '[send]', sendBuf
+                continue
+
+            if not self.objAir.sleep:
+                sendBuf = self.objAir.send_answer()
+                #print '[send]', sendBuf
+                self.request.sendall(sendBuf)
 
 
 class ThreadedServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
