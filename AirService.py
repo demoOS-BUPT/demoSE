@@ -3,13 +3,30 @@ import socket
 import time
 import re, ConfigParser
 
-MODE = '1'
-TEMPFROM = '20.0'
-TEMPTO = '30.0'
-TEMPWIDTH = '2.0'
-WIND = '3'
-FINALTEMP = '28'
-TEMPCHANGE = 1.2
+def read_setting():
+    cp = ConfigParser.SafeConfigParser()
+    cp.read('Air.conf')
+
+    global WIND
+    global ELEC_MONEY
+    global ELEC_TEMP
+    global MODE
+    global TEMP_FROM
+    global TEMP_TO
+    global TEMP_WIDTH
+
+    WIND = [0,float(cp.get('wind','low')), float(cp.get('wind','medium')), float(cp.get('wind', 'high'))]
+    ELEC_MONEY = float(cp.get('elec', 'money'))
+    ELEC_TEMP = float(cp.get('elec', 'temp'))
+    MODE = cp.get('air', 'mode')
+    TEMP_FROM = int(cp.get('air', 'tempFrom'))
+    TEMP_TO = int(cp.get('air', 'tempTo'))
+    TEMP_WIDTH = int(cp.get('air', 'tempWidth'))
+
+    DEFAULT_WIND = cp.get('air', 'defaultWind')
+    DEFAULT_TEMP = cp.get('air', 'defaultTemp')
+
+    SYSTEM_TIME = cp.get('system', 'systemTime')
 
 class AirService(object):
     #初始化
@@ -25,8 +42,9 @@ class AirService(object):
         self.lastTime = int(time.time())
         self.sleep = False
         self.open = True
-        self.status_to_money()
-        self.is_sleep()
+        self.totalElec = 0
+        self.status_syn()
+
 
     def init(self, room=503, currentTemp=15, finalTemp=25, wind=2):
         self.room = room
@@ -40,7 +58,7 @@ class AirService(object):
         self.lastTime = int(time.time())
         self.sleep = False
         self.open = True
-        self.status_to_money()
+        self.status_syn()
         self.is_sleep()
 
     def recv_start(self, operate):
@@ -52,21 +70,21 @@ class AirService(object):
     def recv_first_open(self, operate):
         status = {}
         status['room'] = operate[1]
-        status['currentTemp'] = operate[2]
+        status['currentTemp'] = float(operate[2])
         status['finalTemp'] = operate[3]
         if operate[3] == '#':
-            status['finalTemp'] = FINALTEMP
+            status['finalTemp'] = DEFAULT_TEMP
         status['wind'] = operate[4]
         if operate[4] == '#':
-            status['finalTemp'] = WIND
+            status['finalTemp'] = DEFAULT_WIND
         self.change_status(status)
         return 
 
     def recv_open(self, operate):
         status = {}
         status['room'] = operate[1]
-        status['currentTemp'] = operate[2]
-        status['finalTemp'] = operate[3]
+        status['currentTemp'] = float(operate[2])
+        status['finalTemp'] = float(operate[3])
         status['wind'] = operate[4]
         self.change_status(status)
         return 
@@ -74,8 +92,8 @@ class AirService(object):
     def recv_change(self, operate):
         status = {}
         status['room'] = operate[1]
-        status['currentTemp'] = operate[2]
-        status['finalTemp'] = operate[3]
+        status['currentTemp'] = float(operate[2])
+        status['finalTemp'] = float(operate[3])
         status['wind'] = operate[4]
         self.change_status(status)
         return 
@@ -88,9 +106,9 @@ class AirService(object):
         sendBuf = 'start_{room}_{mode}_{tempFrom}-{tempTo}_{tempWidth}_$'
         status = {'room':self.room,
                 'mode':MODE,
-                'tempFrom':TEMPFROM,
-                'tempTo':TEMPTO,
-                'tempWidth':TEMPWIDTH,
+                'tempFrom':TEMP_FROM,
+                'tempTo':TEMP_TO,
+                'tempWidth':TEMP_WIDTH,
                 }
         sendBuf = sendBuf.format(**status)
         return sendBuf
@@ -103,7 +121,7 @@ class AirService(object):
                     'time':time.time(),
                     'finalTemp': self.finalTemp,
                     'wind':self.wind,
-                    'tempChange':TEMPCHANGE,
+                    'tempChange':TEMP_CHANGE,
                     'preMoney':self.preMoney,
                     'totalElec':self.totalElec}
         sendBuf = sendBuf.format(**status)
@@ -146,54 +164,87 @@ class AirService(object):
 
     #test：展示状态
     def show_status(self):
-        #print 'room:', self.room, 'currentTemp:', self.currentTemp, 'finalTemp:', self.finalTemp, 'wind:', self.wind
-        print dir(self)
+        print 'room:', self.room, 'currentTemp:', self.currentTemp, 'finalTemp:', self.finalTemp, 'wind:', self.wind
+
 
 
 
     #模拟运行
     def work(self):
         nowTime = int(time.time())
-        #先确认状态
-        self.status_to_money()
+        
+        #把风速同步到每秒扣多少钱
+        self.status_syn()
 
         #模拟运行
-        if nowTime == self.lastTime:
-            return
-        
-        if not self.is_sleep():
+        if nowTime <= self.lastTime + 3:
+            return False
+
+        if not self.sleep:
+            print 'running'
+            self.show_status()
             #正常运行
-            self.currentTemp += (nowTime - self.lastTime) * self.wind
-            self.totalMoney += (nowTime - self.lastTime) * self.perMoney
+            self.totalElec += float(WIND[int(self.wind)])
+            self.totalMoney += self.perMoney
+            if self.mode == 'hot':
+                self.currentTemp += WIND[int(self.wind)] * float(ELEC_TEMP)
+            else:
+                self.currentTemp -= WIND[int(self.wind)] * float(ELEC_TEMP)
         else:
             #睡眠了，不该运行
-            self.currentTemp -= COLD * (nowTime - self.lastTime)
-            print self.currentTemp
+            #self.currentTemp -= COLD * (nowTime - self.lastTime)
+            print '[sleep]',self.room,'sleeping'
 
         self.lastTime = nowTime
+        sendBuf = self.is_sleep()
+        return sendBuf
+        
 
 
     #风速转每秒的钱数
-    def status_to_money(self):
+    def status_syn(self):
         #根据风速得到每秒钱数，这里后面替换为ConfigParser
-        if self.currentTemp == self.finalTemp:
-            self.perMoney = 0
-            return
-        if self.wind == 1:
-            self.perMoney = 0.5
-        elif self.wind == 2:
-            self.perMoney = 1
-        elif self.wind == 3:
-            self.perMoney = 2
+        if self.wind == 1 or self.wind == '1':
+            self.perMoney = float(WIND[0]) * ELEC_MONEY
+        elif self.wind == 2 or self.wind == '2':
+            self.perMoney = float(WIND[1]) * ELEC_MONEY
+        elif self.wind == 3 or self.wind == '3':
+            self.perMoney = float(WIND[2]) * ELEC_MONEY
 
     #是否该休眠
     def is_sleep(self):
-        if self.sleep == False:
-            if self.currentTemp > self.finalTemp:
+        if self.sleep:
+            return False
+        if self.mode == 'hot':
+            if self.currentTemp >= self.finalTemp:
                 print 'time to sleep~'
                 self.sleep = True
+                return self.send_sleep()
         else:
-            if self.currentTemp < self.finalTemp - 5:
-                print 'time to get up~'
-                self.sleep = False
+            if self.currentTemp <= self.finalTemp:
+                print 'time to sleep~'
+                self.sleep = True
+                return self.send_sleep()
+        return False
+    '''
+    def is_sleep_2(self):
+        if self.sleep == False:
+            if self.mode=='hot':
+                if self.currentTemp>self.finalTemp:
+                    print 'time to sleep~'
+                    self.sleep = True
+            elif self.mode=='cold':
+                if self.currentTemp<self.finalTemp:
+                    print 'time to sleep~'
+                    self.sleep = True
+        else:
+            if self.mode=='hot':
+                if self.currentTemp<self.finalTemp-localTempRange:
+                    print 'time to get up~'
+                    self.sleep = False
+            elif self.mode=='cold':
+                if self.currentTemp>self.finalTemp+localTempRange:
+                    print 'time to get up~'
+                    self.sleep = False
         return self.sleep
+    '''
