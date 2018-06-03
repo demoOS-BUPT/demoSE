@@ -37,6 +37,8 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
             print self.setrate.lowrate
             print self.setrate.midrate
             print self.setrate.highrate
+            print self.setrate.schedule
+            print self.setrate.mode
 
     def printForm(self):
         self.formui = formUI()
@@ -74,7 +76,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
         opStr = ''
         operate = []
-        req.setblocking(0)
+        req.setblocking(1)
         while 1:
             objAir.work()#模拟运行
 

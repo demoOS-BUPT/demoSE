@@ -28,11 +28,12 @@ class setrateUI(QtGui.QDialog):
 
     def commitAction(self):
         if( self.setrateForm.FCFSBtn.isChecked() ):
-            self.Schedule = 0
+            self.schedule = 0
         else:
-            self.Schedule = 1
+            self.schedule = 1
 
         #0 制冷 1 制热
+        self.mode = self.setrateForm.modeBox.currentIndex()
         print self.setrateForm.modeBox.currentIndex()
 
         self.lowrate = float(self.setrateForm.lowRateEdit.text())

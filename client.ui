@@ -267,14 +267,17 @@
        <string>当前时间：</string>
       </property>
      </widget>
-     <widget class="QTextBrowser" name="stateBrowser">
+     <widget class="QLabel" name="showLab">
       <property name="geometry">
        <rect>
         <x>20</x>
         <y>170</y>
-        <width>256</width>
-        <height>192</height>
+        <width>331</width>
+        <height>201</height>
        </rect>
+      </property>
+      <property name="text">
+       <string>这才是显示状态的stateLab</string>
       </property>
      </widget>
     </widget>

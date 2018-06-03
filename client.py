@@ -20,6 +20,9 @@ limit_h = 30
 defalt_temp = 26
 #finalTemp = 25
 #wind = 2
+HIGHWIND = 2
+MIDWIND = 1
+LOWWIND = 0
 
 sock_flag = 0;
 
@@ -42,9 +45,15 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
         self.tempSlider.setValue(defalt_temp)
 
         # 连接信号和槽
-        self.tempSlider.valueChanged[int].connect(self.changetemp)
+        self.tempSlider.valueChanged[int].connect(self.changeBoxTemp)
+        self.temperaBox.valueChanged[float].connect(self.changeSliderTemp)
         self.oBtn.clicked.connect(self.onOroff)
         self.commitBtn.setDisabled(False)
+
+        self.highBtn.toggled[bool].connect(self.highBtnSlot)
+        self.midBtn.toggled[bool].connect(self.midBtnSlot)
+        self.lowBtn.toggled[bool].connect(self.lowBtnSlot)
+
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.t = myThread(self.sock, self)
@@ -122,22 +131,22 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
 
     def showState(self):
         stateStr = ""
-        stateStr += u"当前模式："+self.air.mode
         stateStr += u"\n当前温度："+(str(self.air.currentTemp))
         stateStr += u"\n目标温度：" +(str(self.air.finalTemp))
 
-        if(self.air.wind == 2):
+        if(self.air.wind == HIGHWIND):
             wind_str = u"高风"
-        if (self.air.wind == 1):
+        if (self.air.wind == MIDWIND):
             wind_str = u"中风"
         else:
             wind_str = u"低风"
 
         stateStr += u"\n风速：" +(wind_str)
+
+
         stateStr += u"\n工作模式：" +self.air.mode
         stateStr += u"\n消费金额：" +str(self.air.totalMoney)
-
-        self.stateBrowser.setText(str(stateStr))
+        self.showLab.setText(stateStr)
 
     #修改目标温度参数
     def setTemp(self):
@@ -146,7 +155,16 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
         self.tipLabel.setText(on_tips_string)
 
         status = {'finalTemp':temperature}
+
+
+        status = {'room': self.air.room,
+                  'currentTemp': self.air.currentTemp,
+                  'finalTemp': temperature,
+                  'wind': self.air.wind,  # 中速
+                  }
         self.air.change_status(status)
+        sendBuf = self.air.send_change()
+        self.sock.send(sendBuf)
 
     def cancelTemp(self):
         on_tips_string = u"成功取消目标温度更改"
@@ -155,19 +173,60 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
         self.temperaBox.setValue(self.air.finalTemp)
         self.tempSlider.setValue(self.air.finaltemp)
 
-    def changetemp(self,value):
+    def changeBoxTemp(self,value):
         self.temperaBox.setValue(value)
+
+    def changeSliderTemp(self, value):
+        self.tempSlider.setValue(int(value))
+
+    def highBtnSlot(self):
+        if (self.highBtn.isChecked()):
+            print 'a '
+            status = {'room': self.air.room,
+                      'currentTemp': self.air.currentTemp,
+                      'finalTemp': self.air.finalTemp,
+                      'wind': HIGHWIND,  # 中速
+                      }
+            self.air.change_status(status)
+            sendBuf = self.air.send_change()
+            self.sock.send(sendBuf)
+
+    def midBtnSlot(self):
+        if (self.midBtn.isChecked()):
+            print 'b '
+            status = {'room': self.air.room,
+                      'currentTemp': self.air.currentTemp,
+                      'finalTemp': self.air.finalTemp,
+                      'wind': MIDWIND,  # 中速
+                      }
+            self.air.change_status(status)
+            sendBuf = self.air.send_change()
+            self.sock.send(sendBuf)
+
+    def lowBtnSlot(self):
+        if (self.lowBtn.isChecked()):
+            print 'c '
+        status = {'room': self.air.room,
+                  'currentTemp': self.air.currentTemp,
+                  'finalTemp': self.air.finalTemp,
+                  'wind': LOWWIND,  # 中速
+                  }
+        self.air.change_status(status)
+        sendBuf = self.air.send_change()
+        self.sock.send(sendBuf)
 
 
 
 class myThread(threading.Thread):  # 继承父类threading.Thread
-    def __init__(self, sock,client):
+    def __init__(self,sock,client):
         super(myThread, self).__init__()
         self.sock = sock
         self.client = client
     def run(self):
+
         global sock_flag
         opStr = ''
+
         while sock_flag:
             res = self.sock.recv(1024)
             opStr += res
@@ -179,6 +238,7 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
                 print 'first_start!'
                 opStr = ''
                 print operate
+
             if operate[0] == 'a' and len(operate) == 11 and operate[-1] == '$':
                 self.client.air.recv_a(operate)
                 opStr = ''
@@ -197,15 +257,17 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
                 self.client.air.recv_wait(operate)
                 opStr = ''
                 # 阻塞，等待服务
-            self.client.showState()
 
             if time.time() - self.client.air.startTime > 5 and time.time() - self.client.air.startTime < 6:
                 sendBuf = self.client.air.send_change()
                 self.sock.send(sendBuf)
                 time.sleep(1)
 
+            self.client.showState()
             time.sleep(0.1)
+        print '我要关闭咯'
         self.sock.close()
+
 
 '''
 if __name__ == '__main__':
