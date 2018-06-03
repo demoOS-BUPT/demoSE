@@ -18,19 +18,33 @@ class setrateUI(QtGui.QDialog):
         self.setrateForm = Ui_setrateForm()
         self.setrateForm.setupUi(self)
 
+
+        self.setrateForm.lowRateEdit.setText('1.5')
+        self.setrateForm.midRateEdit.setText('2')
+        self.setrateForm.highRateEdit.setText('2.5')
+        self.setrateForm.FCFSBtn.setChecked(True)
+
         self.setrateForm.commitBtn.clicked.connect(self.commitAction)
 
     def commitAction(self):
-        self.lowrate = int(self.setrateForm.lowRateEdit.text())
-        self.midrate = int(self.setrateForm.midRateEdit.text())
-        self.highrate = int(self.setrateForm.highRateEdit.text())
+        if( self.setrateForm.FCFSBtn.isChecked() ):
+            self.Schedule = 0
+        else:
+            self.Schedule = 1
+
+        #0 制冷 1 制热
+        print self.setrateForm.modeBox.currentIndex()
+
+        self.lowrate = float(self.setrateForm.lowRateEdit.text())
+        self.midrate = float(self.setrateForm.midRateEdit.text())
+        self.highrate = float(self.setrateForm.highRateEdit.text())
 
 
         if self.lowrate < 10 and self.lowrate >1:
             QtGui.QMessageBox.information(self, u"信息提示", u"修改成功")
             self.accept()
         else:
-            QtGui.QMessageBox.information(self, u"信息提示", u"修改规则：")
+            QtGui.QMessageBox.information(self, u"信息提示", u"修改规则：嗯嗯没写")
 
 if __name__ == "__main__":
     import sys

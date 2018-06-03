@@ -2,7 +2,6 @@
 # Ui Init
 from PyQt4 import QtCore, QtGui,uic,Qt
 
-
 form_qtCreatorFile = "form.ui"  # Window File
 form_MainWindow, form_QtBaseClass = uic.loadUiType(form_qtCreatorFile)
 
@@ -37,6 +36,7 @@ class formUI(QtGui.QDialog):
         self.connect(self.formForm.printBtn,QtCore.SIGNAL("clicked()"),self.printAction)
         self.formForm.calWidget.clicked.connect(self.setDate)
         self.tableView()
+
     def tableView(self):
         self.formForm.tabWidget.setColumnCount(3)
         self.formForm.tabWidget.setRowCount(4)
@@ -71,7 +71,15 @@ class formUI(QtGui.QDialog):
 
         #获取所需打印的第一天的年月日
         year,month,day = self.formForm.dateEdit.date().getDate()
+
+        #传类型和日期
         print '不会打印啦'+str(type)+' year:'+str(year) + ' month: '+str(month) + 'day '+ str(day)
+
+        #收一堆信息展示
+        '''
+        self.formForm.tabWidget.setRowCount(4)
+        '''
+
 
 if __name__ == "__main__":
     import sys
