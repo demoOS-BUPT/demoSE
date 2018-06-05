@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="oBtn">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>10</y>
+      <x>380</x>
+      <y>20</y>
       <width>101</width>
       <height>91</height>
      </rect>
@@ -31,9 +31,9 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>170</y>
-      <width>111</width>
-      <height>95</height>
+      <y>190</y>
+      <width>209</width>
+      <height>43</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -42,11 +42,14 @@
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QRadioButton" name="highBtn">
+      <widget class="QRadioButton" name="lowBtn">
        <property name="text">
-        <string>高风</string>
+        <string>低风</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -58,12 +61,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="lowBtn">
+      <widget class="QRadioButton" name="highBtn">
        <property name="text">
-        <string>低风</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
+        <string>高风</string>
        </property>
       </widget>
      </item>
@@ -72,236 +72,75 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>300</y>
+      <x>20</x>
+      <y>280</y>
       <width>451</width>
       <height>421</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
-    <widget class="QWidget" name="widget">
+    <widget class="QWidget" name="stateTab">
      <attribute name="title">
       <string>房间状态</string>
      </attribute>
-     <widget class="QLabel" name="label">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>40</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>目标温度：</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_6">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>60</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>当前温度：</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="curtempLab">
-      <property name="geometry">
-       <rect>
-        <x>110</x>
-        <y>60</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_3">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>100</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>耗能：</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_4">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>80</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>钱：</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_2">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>20</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>状态</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="energyLab">
-      <property name="geometry">
-       <rect>
-        <x>110</x>
-        <y>100</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="priceLab">
-      <property name="geometry">
-       <rect>
-        <x>100</x>
-        <y>80</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="nowtempLab">
-      <property name="geometry">
-       <rect>
-        <x>110</x>
-        <y>60</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="stateLab">
-      <property name="geometry">
-       <rect>
-        <x>80</x>
-        <y>20</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_5">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>120</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>风速：</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="windLab">
-      <property name="geometry">
-       <rect>
-        <x>80</x>
-        <y>120</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="aimtempLab">
-      <property name="geometry">
-       <rect>
-        <x>110</x>
-        <y>40</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QLabel" name="label_7">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>140</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>当前时间：</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="showLab">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>170</y>
+        <x>30</x>
+        <y>30</y>
         <width>331</width>
         <height>201</height>
        </rect>
       </property>
       <property name="text">
-       <string>这才是显示状态的stateLab</string>
+       <string>主人没开机呢，我该显示些什么呢</string>
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="table">
+    <widget class="QWidget" name="billTab">
      <attribute name="title">
       <string>账单</string>
      </attribute>
-     <widget class="QStackedWidget" name="bill">
+     <widget class="QLabel" name="billLab">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>20</y>
-        <width>401</width>
-        <height>151</height>
+        <x>40</x>
+        <y>40</y>
+        <width>351</width>
+        <height>301</height>
        </rect>
       </property>
-      <widget class="QWidget" name="page"/>
-      <widget class="QWidget" name="page_2"/>
+      <property name="text">
+       <string/>
+      </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab">
+    <widget class="QWidget" name="condiTab">
      <attribute name="title">
       <string>空调使用手册</string>
      </attribute>
+     <widget class="QTextEdit" name="textEdit">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>70</y>
+        <width>361</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:600; color:#a17c9c;&quot;&gt;亲，如果空调出现任何问题请咨询我们的管理员：yifei@bupt.com&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt; font-weight:600; color:#a17c9c;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:600; color:#a17c9c;&quot;&gt;如果不会使用我们的空调请咨询(￣ˇ￣)&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:600; color:#a17c9c;&quot;&gt;emmmm....等我去注册个邮箱先昂~&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
     </widget>
    </widget>
    <widget class="QWidget" name="layoutWidget">
@@ -346,8 +185,8 @@
     <property name="geometry">
      <rect>
       <x>250</x>
-      <y>160</y>
-      <width>95</width>
+      <y>100</y>
+      <width>101</width>
       <height>65</height>
      </rect>
     </property>
@@ -355,14 +194,14 @@
      <item>
       <widget class="QPushButton" name="commitBtn">
        <property name="text">
-        <string>确认</string>
+        <string>更改目标温度</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="cancelBtn">
        <property name="text">
-        <string>取消</string>
+        <string>取消更改</string>
        </property>
       </widget>
      </item>
@@ -397,8 +236,8 @@
    <widget class="QSlider" name="tempSlider">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>160</y>
+      <x>20</x>
+      <y>80</y>
       <width>21</width>
       <height>131</height>
      </rect>
@@ -407,6 +246,29 @@
      <enum>Qt::Vertical</enum>
     </property>
    </widget>
+   <widget class="QLabel" name="setBackLab">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>40</y>
+      <width>341</width>
+      <height>221</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <zorder>setBackLab</zorder>
+   <zorder>oBtn</zorder>
+   <zorder>winFrame</zorder>
+   <zorder>tabWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>roomLabel</zorder>
+   <zorder>tipLabel</zorder>
+   <zorder>tempSlider</zorder>
+   <zorder>commitBtn</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>

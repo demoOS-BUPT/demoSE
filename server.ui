@@ -13,32 +13,6 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>720</x>
-     <y>30</y>
-     <width>101</width>
-     <height>91</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QPushButton" name="onBtn">
-      <property name="text">
-       <string>开</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="offBtn">
-      <property name="text">
-       <string>关</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
   <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
@@ -59,9 +33,9 @@
   <widget class="QLabel" name="display">
    <property name="geometry">
     <rect>
-     <x>590</x>
-     <y>190</y>
-     <width>121</width>
+     <x>580</x>
+     <y>120</y>
+     <width>231</width>
      <height>101</height>
     </rect>
    </property>
@@ -69,77 +43,11 @@
     <string/>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>100</y>
-     <width>351</width>
-     <height>111</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>当前时间，策略，工作模式，工作状态 送风状态？？</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="checkoutBtn">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>90</y>
-     <width>93</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>退房</string>
-   </property>
-  </widget>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>90</y>
-     <width>101</width>
-     <height>135</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout_2">
-    <item>
-     <widget class="QPushButton" name="waitQueBtn">
-      <property name="text">
-       <string>等待房间</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="setBtn">
-      <property name="text">
-       <string>设置</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="pushButton_4">
-      <property name="text">
-       <string>查看计费标准</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="formBtn">
-      <property name="text">
-       <string>报表</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>250</y>
+     <x>200</x>
+     <y>240</y>
      <width>741</width>
      <height>251</height>
     </rect>
@@ -163,6 +71,65 @@
      <widget class="QLabel" name="s3Lab">
       <property name="text">
        <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>280</y>
+     <width>141</width>
+     <height>361</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>当前时间巴拉巴拉</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="onBtn">
+   <property name="geometry">
+    <rect>
+     <x>850</x>
+     <y>70</y>
+     <width>91</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>开</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>31</x>
+     <y>106</y>
+     <width>311</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <item>
+     <widget class="QPushButton" name="formBtn">
+      <property name="text">
+       <string>报表</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="checkoutBtn">
+      <property name="text">
+       <string>退房</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="setBtn">
+      <property name="text">
+       <string>设置</string>
       </property>
      </widget>
     </item>

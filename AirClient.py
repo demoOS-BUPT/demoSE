@@ -111,7 +111,8 @@ class AirClient(object):
         if 'totalMoney' in kwargs:
             self.totalMoney = float(kwargs['totalMoney'])
         if 'time'in kwargs:
-            self.lastTime = kwargs['time']
+            pass
+            #    self.lastTime = int(kwargs['time'])
         if 'tempChange' in kwargs:
             self.tempChange = int(kwargs['tempChange'])
         if 'perMoney' in kwargs:
@@ -138,7 +139,7 @@ class AirClient(object):
         nowTime = int(time.time())
         
         #模拟运行
-        if nowTime <= self.lastTime + 3:
+        if nowTime <= int( self.lastTime + 3 ):
             return False
 
         if self.sleep:
