@@ -16,10 +16,6 @@ HOST, PORT = "127.0.0.1", int(233)
 qtCreatorFile = "./server.ui"  # Window File
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
-global serverui
-global airserver
-
-
 
 class Server(QtGui.QMainWindow,Ui_MainWindow):
     def __init__(self,server):
@@ -59,12 +55,6 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         server_thread.setDaemon(True)
         server_thread.start()
 
-    def showState(self):
-        client_str = ''
-        client_str += str(airserver.currentTemp)
-
-        self.s1Lab.setText(client_str)
-
     def off(self):
         server.shutdown()
 
@@ -72,7 +62,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
     # 3 Call this function when recv a connection from client
     def handle(self):
         #req = self.request
-        self.objAir = airserver
+        self.objAir = AirService()
 
         operate = self.request.recv(1024).strip().split("_")
         if operate[0] != 'start' or operate[-1] != '$':
@@ -126,25 +116,26 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
     def work(self):
         print '[work start]'
-
         
         while(1):
-            time.sleep(0.1)
-
             if not self.objAir.open:
                 continue
-            serverui.showState()
 
-            sendBuf = self.objAir.work()
-            if sendBuf != False and sendBuf != None:
-                self.request.sendall(sendBuf)
-                print '[send]', sendBuf
-                continue
+            self.objAir.work()
 
             if not self.objAir.sleep:
                 sendBuf = self.objAir.send_answer()
                 #print '[send]', sendBuf
                 self.request.sendall(sendBuf)
+                time.sleep(0.1)
+
+            sendBuf = self.is_sleep()
+            if sendBuf != False and sendBuf != None:
+                self.request.sendall(sendBuf)
+                print '[send]', sendBuf
+                continue
+
+            
 
 
 class ThreadedServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
@@ -152,17 +143,14 @@ class ThreadedServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 
 if __name__ == "__main__":
     read_setting()
-
-    app = QtGui.QApplication(sys.argv)
     server = ThreadedServer((HOST, PORT), HandleCheckin)
     server.allow_reuse_address = True
 
-
+    app = QtGui.QApplication(sys.argv)
     serverui = Server(server)
     serverui.show()
-    airserver = AirService()
 
     if app.exec_():
         server.shutdown()
-        exit()
+        sys.exit(True)
 

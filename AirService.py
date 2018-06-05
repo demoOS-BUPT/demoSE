@@ -206,11 +206,10 @@ class AirService(object):
         else:
             #睡眠了，不该运行
             #self.currentTemp -= COLD * (nowTime - self.lastTime)
-            print '[sleep]',self.room,'sleeping'
+            pass
 
         self.lastTime = nowTime
-        sendBuf = self.is_sleep()
-        return sendBuf
+        return
         
 
 
