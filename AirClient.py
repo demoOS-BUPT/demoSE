@@ -135,6 +135,12 @@ class AirClient(object):
     #回温计算
     def work(self):
         #localTempChange 本地每秒温度变化速率 localTempRange 本地温度变化范围 #本地初始温度
+        nowTime = int(time.time())
+        
+        #模拟运行
+        if nowTime <= self.lastTime + 3:
+            return False
+
         if self.sleep:
             print '[sleeping]'
             if self.mode == 'hot':
@@ -149,6 +155,8 @@ class AirClient(object):
                     return self.send_open()
         else:
             return False
+
+        self.lastTime = nowTime
 
     #test：展示状态
     def show_status(self):
