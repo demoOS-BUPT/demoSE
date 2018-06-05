@@ -20,9 +20,9 @@ limit_h = 30
 defalt_temp = 26
 #finalTemp = 25
 #wind = 2
-HIGHWIND = 2
-MIDWIND = 1
-LOWWIND = 0
+HIGHWIND = 3
+MIDWIND = 2
+LOWWIND = 1
 
 sock_flag = 0;
 
@@ -66,11 +66,11 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
             self.tipLabel.setText(on_tips_string)
 
             if(self.highBtn.isChecked()):
-                wind = 2
+                wind = HIGHWIND
             if(self.midBtn.isChecked()):
-                wind = 1
+                wind = MIDWIND
             else:
-                wind = 0
+                wind = LOWWIND
 
             #Connect to Server
             #try:

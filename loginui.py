@@ -69,4 +69,7 @@ if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
     login = loginUI()
     login.show()
-    sys.exit(app.exec_())
+
+    if( app.exec_() ):
+        print 'aa'
+        exit()
