@@ -4,6 +4,7 @@ import time
 from AirService import *
 from setrateui import *
 from formui import *
+from algo import *
 import sqlite3
 import threading
 import sys
@@ -15,11 +16,7 @@ HOST, PORT = "127.0.0.1", int(233)
 # Ui Init
 qtCreatorFile = "./server.ui"  # Window File
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
-
-global serverui
-global airserver
-
-
+algo = Algo()
 
 class Server(QtGui.QMainWindow,Ui_MainWindow):
     def __init__(self,server):
@@ -59,12 +56,6 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         server_thread.setDaemon(True)
         server_thread.start()
 
-    def showState(self):
-        client_str = ''
-        client_str += str(airserver.currentTemp)
-
-        self.s1Lab.setText(client_str)
-
     def off(self):
         server.shutdown()
 
@@ -72,7 +63,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
     # 3 Call this function when recv a connection from client
     def handle(self):
         #req = self.request
-        self.objAir = airserver
+        self.objAir = AirService()
 
         operate = self.request.recv(1024).strip().split("_")
         if operate[0] != 'start' or operate[-1] != '$':
@@ -86,6 +77,8 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
             self.request.sendall(sendBuf)
             print '[send] start', sendBuf
             time.sleep(0.5)
+
+        algo.req_server(self.objAir.room)
 
         t1 = threading.Thread(target=self.listen, name='listen')
         t2 = threading.Thread(target=self.work, name='work')
@@ -110,6 +103,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
             if operate[0] == 'r' and operate[-1] == '$':
                 self.objAir.recv_first_open(operate)
+                algo.req_server(self.objAir.room)
                 opStr = ''
                 print operate
             if operate[0] == 'c' and operate[-1] == '$':
@@ -125,26 +119,33 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
 
     def work(self):
+        global algo
         print '[work start]'
-
         
         while(1):
-            time.sleep(0.1)
-
+            time.sleep(0.2)
             if not self.objAir.open:
                 continue
-            serverui.showState()
 
-            sendBuf = self.objAir.work()
-            if sendBuf != False and sendBuf != None:
-                self.request.sendall(sendBuf)
-                print '[send]', sendBuf
+            if self.objAir.sleep:
                 continue
 
-            if not self.objAir.sleep:
+            if self.objAir.room in algo.serverList:
+                self.objAir.work()
+
                 sendBuf = self.objAir.send_answer()
                 #print '[send]', sendBuf
                 self.request.sendall(sendBuf)
+                time.sleep(0.1)
+
+                sendBuf = self.objAir.is_sleep()
+                if sendBuf != False and sendBuf != None:
+                    self.request.sendall(sendBuf)
+                    algo.remove_server(self.objAir.room)
+                    print '[send]', sendBuf
+                    continue
+
+            
 
 
 class ThreadedServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
@@ -152,17 +153,14 @@ class ThreadedServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 
 if __name__ == "__main__":
     read_setting()
-
-    app = QtGui.QApplication(sys.argv)
     server = ThreadedServer((HOST, PORT), HandleCheckin)
     server.allow_reuse_address = True
 
-
+    app = QtGui.QApplication(sys.argv)
     serverui = Server(server)
     serverui.show()
-    airserver = AirService()
 
     if app.exec_():
         server.shutdown()
-        exit()
+        sys.exit(True)
 
