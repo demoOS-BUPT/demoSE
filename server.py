@@ -61,47 +61,85 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
 class HandleCheckin(SocketServer.StreamRequestHandler):
     # 3 Call this function when recv a connection from client
     def handle(self):
-        # 4 Send the question
+        #req = self.request
+        self.objAir = AirService()
 
-        req = self.request
-        #初次开机，注意startTime字段在此次保存
-        operate = req.recv(1024).strip().split("_")
+        operate = self.request.recv(1024).strip().split("_")
         if operate[0] != 'start' or operate[-1] != '$':
-            print 'connect the air error!'
+            print '[error]recv start error!'
             return
-        print operate
-        objAir = AirService()
+        else:
+            print '[recv]start'
+            self.objAir.recv_start(operate)
 
-        req.sendall(objAir.send_start())
+            sendBuf = self.objAir.send_start()
+            self.request.sendall(sendBuf)
+            print '[send] start', sendBuf
+            time.sleep(0.5)
 
+        t1 = threading.Thread(target=self.listen, name='listen')
+        t2 = threading.Thread(target=self.work, name='work')
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+
+
+    def listen(self):
+        
         opStr = ''
         operate = []
-        req.setblocking(1)
-        while 1:
-            objAir.work()#模拟运行
 
-            res = req.recv(1024).strip()
+        while 1:
+
+            res = self.request.recv(1024).strip()
+
             opStr += res
             operate = opStr.split("_")
+            print operate
+
             if operate[0] == 'r' and operate[-1] == '$':
-                objAir.recv_first_open(operate)
+                self.objAir.recv_first_open(operate)
                 opStr = ''
                 print operate
             if operate[0] == 'c' and operate[-1] == '$':
-                objAir.recv_change(operate)
+                self.objAir.recv_change(operate)
                 opStr = ''
-                print operate
+                print '[change]',operate
             if operate[0] == 'close' and operate[-1] == '$':
-                objAir.recv_close(operate)
+                self.objAir.recv_close(operate)
                 opStr = ''
                 #待机
 
             time.sleep(0.1)
 
+
+    def work(self):
+        print '[work start]'
+        
+        while(1):
+            time.sleep(0.1)
+
+            if not self.objAir.open:
+                continue
+
+            sendBuf = self.objAir.work()
+            if sendBuf != False and sendBuf != None:
+                self.request.sendall(sendBuf)
+                print '[send]', sendBuf
+                continue
+
+            if not self.objAir.sleep:
+                sendBuf = self.objAir.send_answer()
+                #print '[send]', sendBuf
+                self.request.sendall(sendBuf)
+
+
 class ThreadedServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
 if __name__ == "__main__":
+    read_setting()
     server = ThreadedServer((HOST, PORT), HandleCheckin)
     server.allow_reuse_address = True
 

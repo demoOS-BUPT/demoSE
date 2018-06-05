@@ -75,32 +75,44 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
             #Connect to Server
             #try:
             self.sock.connect((HOST, PORT))
+            self.sock.setblocking(0)
             #except Exception:
             #    print 'Server port not connect!'
             #    return
 
             time.sleep(0.2)
             #room=503, currentTemp=15, finalTemp=25, wind=2
-            self.air = AirClient(room,currentTemp,finalTemp,wind)
-
-            '''默认在哪设都行
-            status = {'room': '307C',
-                      'currentTemp': 20.3,
-                      'finalTemp': 28.0,
-                      'wind': 2,  # 中速
-                      }
+            
+            self.air = AirClient()
+            status={'room':'307C',
+                    'currentTemp':20.3,
+                    'finalTemp':24.0,
+                    'wind':'2',#中速
+                    }
             self.air.change_status(status)
-            '''
 
             ##开机
             sendBuf = self.air.send_start()
             print sendBuf
             self.sock.send(sendBuf)
 
+            time.sleep(0.2)
+            opStr = self.sock.recv(1024)
+            operate = opStr.split("_")
+            if operate[0] == 'start' and len(operate) == 6 and operate[-1] == '$':
+                self.air.recv_start(operate)
+                print '[recv]first start!'
+                opStr = ''
+            else:
+                print '[error]recv first start error!'
+                exit()
+
+
             self.air.show_status()
             sendBuf = self.air.send_first_open()
             print sendBuf
             self.sock.send(sendBuf)
+            time.sleep(0.2)
 
             '''
             self.air.show_status()
@@ -228,37 +240,37 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
         opStr = ''
 
         while sock_flag:
-            res = self.sock.recv(1024)
+            try:
+                res = self.sock.recv(1024)
+            except:
+                res = ''
+            if res != '':
+                print '[recv]', res
             opStr += res
-            print opStr
+            #print opStr
             operate = opStr.split("_")
-
-            if operate[0] == 'start' and len(operate) == 7 and operate[-1] == '$':
-                self.client.air.recv_start(operate)
-                print 'first_start!'
-                opStr = ''
-                print operate
 
             if operate[0] == 'a' and len(operate) == 11 and operate[-1] == '$':
                 self.client.air.recv_a(operate)
-                opStr = ''
-                print "received an a"
 
             if operate[0] == 'close' and len(operate) == 4 and operate[-1] == '$':
                 self.client.air.recv_close(operate)
-                opStr = ''
-                print operate
+
             if operate[0] == 'sleep' and len(operate) == 3 and operate[-1] == '$':
                 self.client.air.recv_sleep(operate)
-                opStr = ''
-                print operate
-                # 待机
+
+                #待机
             if operate[0] == 'wait' and len(operate) == 5 and operate[-1] == '$':
                 self.client.air.recv_wait(operate)
-                opStr = ''
-                # 阻塞，等待服务
 
-            if time.time() - self.client.air.startTime > 5 and time.time() - self.client.air.startTime < 6:
+            opStr = ''
+
+            sendBuf = self.client.air.work()
+            if sendBuf != '' and sendBuf != False and sendBuf != None:
+                self.sock.send(sendBuf)
+                print '[send]', sendBuf
+            
+            if time.time() - self.client.air.startTime > 5 and time.time() - self.client.air.startTime < 6 and False:
                 sendBuf = self.client.air.send_change()
                 self.sock.send(sendBuf)
                 time.sleep(1)

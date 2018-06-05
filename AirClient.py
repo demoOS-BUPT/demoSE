@@ -3,22 +3,13 @@ import socket
 import time
 import re, ConfigParser
 
+global localTempChange,localTempRange,localInitTemp
+localTempChange=0.2
+localTempRange=3.0
+localInitTemp=26
 class AirClient(object):
-    #初始化
-    def __init__(self, room=503, currentTemp=15, finalTemp=25, wind=2):
-        self.room = room
-        self.mode = 'hot'
-        self.currentTemp = currentTemp
-        self.finalTemp = finalTemp
-        self.wind = wind
-        self.totalMoney = 0.0
-        self.startTime = int(time.time())
-        self.lastTime = int(time.time())
-        self.sleep = False
-        self.open = True
-        #self.is_sleep()
 
-    def init(self, room=503, currentTemp=15, finalTemp=25, wind=2):
+    def __init__(self, room=503, currentTemp=15, finalTemp=25, wind=2):
         self.room = room
         self.mode = 'hot'
         self.currentTemp = currentTemp
@@ -72,11 +63,8 @@ class AirClient(object):
 
     def recv_start(self, operate):
         status = {}
-        status['room'] = operate[1]
-        if operate[2] == '1':
-            status['mode'] = 'hot'
-        else:
-            status['mode'] = 'cold'
+        #status['room'] = operate[1]
+        status['mode'] = operate[2]
         status['tempFrom'] = operate[3].split('-')[0]
         status['tempTo'] = operate[3].split('-')[1]
         status['tempWidth'] = operate[4]
@@ -85,7 +73,7 @@ class AirClient(object):
 
     def recv_a(self,operate):
         status = {}
-        status['room'] = operate[1]
+        #status['room'] = operate[1]
         status['currentTemp'] = operate[2]
         status['totalMoney'] = operate[3]
         status['time'] = operate[4]
@@ -115,13 +103,54 @@ class AirClient(object):
         if 'room' in kwargs:
             self.room = kwargs['room']
         if 'currentTemp' in kwargs:
-            self.currentTemp = kwargs['currentTemp']
+            self.currentTemp = float(kwargs['currentTemp'])
         if 'finalTemp' in kwargs:
-            self.finalTemp = kwargs['finalTemp']
+            self.finalTemp = float(kwargs['finalTemp'])
         if 'wind' in kwargs:
-            self.wind = kwargs['wind']
+            self.wind = int(kwargs['wind'])
+        if 'totalMoney' in kwargs:
+            self.totalMoney = float(kwargs['totalMoney'])
+        if 'time'in kwargs:
+            self.lastTime = kwargs['time']
+        if 'tempChange' in kwargs:
+            self.tempChange = int(kwargs['tempChange'])
+        if 'perMoney' in kwargs:
+            self.perMoney = float(kwargs['perMoney'])
+        if 'totalElec' in kwargs:
+            self.totalElec = float(kwargs['totalElec'])
+        if 'mode'in kwargs:
+            if kwargs['mode'] == 1 or kwargs['mode'] == '1':
+                self.mode = 'hot'
+            else:
+                self.mode = 'cold'
+        if 'tempFrom' in kwargs:
+            self.tempFrom = int(kwargs['tempFrom'])
+        if 'tempTo' in kwargs:
+            self.tempTo = int(kwargs['tempTo'])
+        if 'tempWidth' in kwargs:
+            self.tempWidth = int(kwargs['tempWidth'])
+        
+
+
+    #回温计算
+    def work(self):
+        #localTempChange 本地每秒温度变化速率 localTempRange 本地温度变化范围 #本地初始温度
+        if self.sleep:
+            print '[sleeping]'
+            if self.mode == 'hot':
+                self.currentTemp -= localTempChange
+                if self.currentTemp <= self.finalTemp - 3:
+                    self.sleep = False
+                    return self.send_open()
+            else:
+                self.currentTemp += localTempChange
+                if self.currentTemp >= self.finalTemp + 3:
+                    self.sleep = False
+                    return self.send_open()
+        else:
+            return False
 
     #test：展示状态
     def show_status(self):
-        #print 'room:', self.room, 'currentTemp:', self.currentTemp, 'finalTemp:', self.finalTemp, 'wind:', self.wind
-        print dir(self)
+        print 'room:', self.room, 'currentTemp:', self.currentTemp, 'finalTemp:', self.finalTemp,'mode',self.mode , 'wind:', self.wind
+        #print dir(self)
