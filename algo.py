@@ -1,18 +1,18 @@
 import math, time
 
-
 class Algo(object):
 
-	def __init__():
-		self.roomPriority = {'503':1,'504':2,'505':2,'506':3}
-
-		self.roomList = ['503', '504', '505', '506']
+	def __init__(self):
+		#self.roomPriority = {'503':1,'504':2,'505':2,'506':3}
+		self.roomPriority = {}
+		#self.roomList = ['503', '504', '505', '506']
+		self.roomList = []
 
 		self.serverList = []
 		self.waitList = []
 		self.roomStartTime = {}
 
-		self.queueLength = 2
+		self.queueLength = 3
 
 	def req_server(self, roomid):
 		if roomid in self.serverList:
@@ -54,7 +54,7 @@ class Algo(object):
 						earlyRoom = room
 				minRoom = [earlyRoom]
 
-			print minRoom[0], 'pop' 
+			print minRoom[0], 'pop'
 
 			# switch
 			self.serverList.remove(minRoom[0])
@@ -63,6 +63,16 @@ class Algo(object):
 			self.serverList.append(roomid)
 			self.roomPriority[roomid] = time.time()
 
+	def remove_server(self, roomid):
+		if roomid in self.serverList:
+			self.serverList.remove(roomid)
+		if roomid in self.waitList:
+			self.waitList.remove(roomid)
+
+		if len(self.waitList) > 0:
+			self.serverList.append(self.waitList[0])
+
+'''
 	def change_server(self):
 		if len(self.serverList) < self.queueLength:
 			return
@@ -106,3 +116,8 @@ class Algo(object):
 
 		self.waitList.remove(inRoom)
 		self.waitList.append(outRoom)
+
+
+#	def remove_server(self, roomid):
+
+'''

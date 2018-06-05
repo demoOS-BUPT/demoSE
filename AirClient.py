@@ -4,7 +4,7 @@ import time
 import re, ConfigParser
 
 global localTempChange,localTempRange,localInitTemp
-localTempChange=0.2
+localTempChange=0.8
 localTempRange=3.0
 localInitTemp=26
 class AirClient(object):
@@ -111,7 +111,8 @@ class AirClient(object):
         if 'totalMoney' in kwargs:
             self.totalMoney = float(kwargs['totalMoney'])
         if 'time'in kwargs:
-            self.lastTime = kwargs['time']
+            pass
+            #self.lastTime = kwargs['time']
         if 'tempChange' in kwargs:
             self.tempChange = int(kwargs['tempChange'])
         if 'perMoney' in kwargs:

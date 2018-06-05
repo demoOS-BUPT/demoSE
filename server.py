@@ -4,6 +4,7 @@ import time
 from AirService import *
 from setrateui import *
 from formui import *
+from algo import *
 import sqlite3
 import threading
 import sys
@@ -15,7 +16,7 @@ HOST, PORT = "127.0.0.1", int(233)
 # Ui Init
 qtCreatorFile = "./server.ui"  # Window File
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
-
+algo = Algo()
 
 class Server(QtGui.QMainWindow,Ui_MainWindow):
     def __init__(self,server):
@@ -77,6 +78,8 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
             print '[send] start', sendBuf
             time.sleep(0.5)
 
+        algo.req_server(self.objAir.room)
+
         t1 = threading.Thread(target=self.listen, name='listen')
         t2 = threading.Thread(target=self.work, name='work')
         t1.start()
@@ -100,6 +103,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
             if operate[0] == 'r' and operate[-1] == '$':
                 self.objAir.recv_first_open(operate)
+                algo.req_server(self.objAir.room)
                 opStr = ''
                 print operate
             if operate[0] == 'c' and operate[-1] == '$':
@@ -115,25 +119,31 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
 
     def work(self):
+        global algo
         print '[work start]'
         
         while(1):
+            time.sleep(0.2)
             if not self.objAir.open:
                 continue
 
-            self.objAir.work()
+            if self.objAir.sleep:
+                continue
 
-            if not self.objAir.sleep:
+            if self.objAir.room in algo.serverList:
+                self.objAir.work()
+
                 sendBuf = self.objAir.send_answer()
                 #print '[send]', sendBuf
                 self.request.sendall(sendBuf)
                 time.sleep(0.1)
 
-            sendBuf = self.is_sleep()
-            if sendBuf != False and sendBuf != None:
-                self.request.sendall(sendBuf)
-                print '[send]', sendBuf
-                continue
+                sendBuf = self.objAir.is_sleep()
+                if sendBuf != False and sendBuf != None:
+                    self.request.sendall(sendBuf)
+                    algo.remove_server(self.objAir.room)
+                    print '[send]', sendBuf
+                    continue
 
             
 
