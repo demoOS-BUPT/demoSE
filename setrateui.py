@@ -27,14 +27,7 @@ class setrateUI(QtGui.QDialog):
         self.setrateForm.commitBtn.clicked.connect(self.commitAction)
 
     def commitAction(self):
-        if( self.setrateForm.FCFSBtn.isChecked() ):
-            self.schedule = 0
-        else:
-            self.schedule = 1
 
-        #0 制冷 1 制热
-        self.mode = self.setrateForm.modeBox.currentIndex()
-        print self.setrateForm.modeBox.currentIndex()
 
         self.lowrate = float(self.setrateForm.lowRateEdit.text())
         self.midrate = float(self.setrateForm.midRateEdit.text())

@@ -16,6 +16,10 @@ HOST, PORT = "127.0.0.1", int(233)
 # Ui Init
 qtCreatorFile = "./server.ui"  # Window File
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
+
+global serverui
+global airserver
+
 algo = Algo()
 
 class Server(QtGui.QMainWindow,Ui_MainWindow):
@@ -26,9 +30,11 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
 
         # 连接信号和槽
         self.onBtn.clicked.connect(self.on)
-        self.offBtn.clicked.connect(self.off)
+        #self.offBtn.clicked.connect(self.off)
         self.setBtn.clicked.connect(self.setRate)
         self.formBtn.clicked.connect(self.printForm)
+
+        self.serverState()
 
     def setRate(self):
         self.setrate = setrateUI()
@@ -38,13 +44,66 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
             print self.setrate.lowrate
             print self.setrate.midrate
             print self.setrate.highrate
-            print self.setrate.schedule
-            print self.setrate.mode
+
+
+    def serverState(self):
+        serverStr = ''
+        serverStr += u'\n工作模式：\n模式明明是全局的啊\n'
+        serverStr += u'\n工作状态 \n我想想啊\n '
+        serverStr += u'\n当前时间：\n' + str(time.time())
+        self.serverLab.setText(serverStr)
 
     def printForm(self):
         self.formui = formUI()
         self.formui.show()
         #self.formui.exec_()
+
+    def showState(self,status):
+
+        # 房间号，目标温度，当前温度，风速，累计的费用，累计的时长。
+        if (status['wind'] == 3):
+            status['wind'] = u'高风'
+        if (status['wind'] == 2):
+            status['wind'] = u'中风'
+        else:
+            status['wind'] = u'低风'
+
+        showBuf =u'房间号:{room}\n目标温度:{finalTemp}\n当前温度:{currentTemp}\n风速:{wind}\n累计费用:{totalMoney}\n累计时长:{totalTime}\n累计电量:{totalElec}'
+
+        room = status['room']
+        showBuf = showBuf.format(**status)
+
+        if room == '306C':
+            self.C306Lab.setText(showBuf)
+        elif room == '307C':
+            self.C307Lab.setText(showBuf)
+
+        '''
+        '306D'
+        '307C'
+        '307D'
+        '308C'
+        '308D'
+        '309C'
+        '309D'
+        '310C'
+        '''
+    def showSleep(self,room):
+
+        #房间号，目标温度，当前温度，风速，累计的费用，累计的时长。
+        client_str = room + ' is sleeping'
+        if room == '306C':
+            self.C306Lab.setText(client_str)
+        elif room == '307C':
+            self.C307Lab.setText(client_str)
+
+    def showWait(self,room):
+
+        client_str = room + ' is waiting'
+        if room == '306C':
+            self.C306Lab.setText(client_str)
+        elif room == '307C':
+            self.C307Lab.setText(client_str)
 
     def on(self):
         #temperature = float(self.temperaBox.value())
@@ -63,7 +122,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
     # 3 Call this function when recv a connection from client
     def handle(self):
         #req = self.request
-        self.objAir = AirService()
+        self.objAir = airserver
 
         operate = self.request.recv(1024).strip().split("_")
         if operate[0] != 'start' or operate[-1] != '$':
@@ -128,10 +187,24 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 continue
 
             if self.objAir.sleep:
+                serverui.showSleep(self.objAir.room)
                 continue
+
+            if self.objAir.room in algo.waitList:
+                serverui.showWait(self.objAir.room)
 
             if self.objAir.room in algo.serverList:
                 self.objAir.work()
+
+                # 房间号，目标温度，当前温度，风速，累计的费用，累计的时长。
+                status = {'room': self.objAir.room,
+                          'currentTemp': self.objAir.currentTemp,
+                          'finalTemp': self.objAir.finalTemp,
+                          'wind': self.objAir.wind,
+                          'totalMoney': self.objAir.totalMoney,
+                          'totalElec': self.objAir.totalElec,
+                          'totalTime': 999}
+                serverui.showState(status)
 
                 sendBuf = self.objAir.send_answer()
                 #print '[send]', sendBuf
@@ -157,8 +230,10 @@ if __name__ == "__main__":
     server.allow_reuse_address = True
 
     app = QtGui.QApplication(sys.argv)
+    airserver = AirService()
     serverui = Server(server)
     serverui.show()
+
 
     if app.exec_():
         server.shutdown()

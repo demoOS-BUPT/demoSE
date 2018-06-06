@@ -36,19 +36,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>190</y>
-     <width>391</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>展示些什么信息好呢</string>
-   </property>
-  </widget>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
@@ -62,12 +49,63 @@
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>房间号</string>
+       <string>房间：</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QComboBox" name="roomBox"/>
+     <widget class="QComboBox" name="roomBox">
+      <item>
+       <property name="text">
+        <string>全部</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>306C</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>306D</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>307C</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>307D</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>308C</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>308D</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>309C</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>309D</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>310C</string>
+       </property>
+      </item>
+     </widget>
     </item>
    </layout>
   </widget>

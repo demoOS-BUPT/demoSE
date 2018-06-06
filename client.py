@@ -84,10 +84,10 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
             #room=503, currentTemp=15, finalTemp=25, wind=2
             
             self.air = AirClient()
-            status={'room':'307C',
+            status={'room':room,
                     'currentTemp':20.3,
-                    'finalTemp':24.0,
-                    'wind':'2',#中速
+                    'finalTemp':float(self.temperaBox.value()),
+                    'wind':'3',#中速
                     }
             self.air.change_status(status)
 
@@ -165,9 +165,6 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
         temperature = float(self.temperaBox.value())
         on_tips_string = u"您设置了空调温度：" + str(temperature)
         self.tipLabel.setText(on_tips_string)
-
-        status = {'finalTemp':temperature}
-
 
         status = {'room': self.air.room,
                   'currentTemp': self.air.currentTemp,

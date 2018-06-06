@@ -79,7 +79,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="stateTab">
      <attribute name="title">
@@ -268,7 +268,6 @@ p, li { white-space: pre-wrap; }
    <zorder>roomLabel</zorder>
    <zorder>tipLabel</zorder>
    <zorder>tempSlider</zorder>
-   <zorder>commitBtn</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>

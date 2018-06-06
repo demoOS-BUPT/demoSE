@@ -51,13 +51,12 @@ class loginUI(QtGui.QDialog):
             self.client.show()
 
         else:
-            if(user <'509' and user >'501'):
-                if(passwd == '307C'):
-                    self.accept()
-                    self.client = Client(user)
-                    self.client.show()
-                else:
-                    QtGui.QMessageBox.information(self, u"信息提示", u"密码错误")
+            if(passwd == '307C'):
+                self.accept()
+                self.client = Client(user)
+                self.client.show()
+            else:
+                QtGui.QMessageBox.information(self, u"信息提示", u"密码错误")
 
     def bye(self):
         QtGui.QMessageBox.information(self, u"信息提示", u"欢迎下次光临")

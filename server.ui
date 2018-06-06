@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>982</width>
-    <height>732</height>
+    <width>968</width>
+    <height>825</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -48,35 +48,35 @@
     <rect>
      <x>200</x>
      <y>240</y>
-     <width>741</width>
-     <height>251</height>
+     <width>711</width>
+     <height>171</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <widget class="QLabel" name="s1Lab">
+     <widget class="QLabel" name="C306Lab">
       <property name="text">
-       <string>TextLabel</string>
+       <string>这是306C</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="s2Lab">
+     <widget class="QLabel" name="D306Lab">
       <property name="text">
-       <string>TextLabel</string>
+       <string>这是306D</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="s3Lab">
+     <widget class="QLabel" name="C307Lab">
       <property name="text">
-       <string>TextLabel</string>
+       <string>这是307C</string>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="serverLab">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -102,7 +102,7 @@
     <string>开</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>31</x>
@@ -130,6 +130,72 @@
      <widget class="QPushButton" name="setBtn">
       <property name="text">
        <string>设置</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>420</y>
+     <width>711</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <item>
+     <widget class="QLabel" name="D308Lab">
+      <property name="text">
+       <string>这是308D</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="D307Lab">
+      <property name="text">
+       <string>这是307D</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="C308Lab">
+      <property name="text">
+       <string>这是308C</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_3">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>590</y>
+     <width>711</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_5">
+    <item>
+     <widget class="QLabel" name="C309Lab">
+      <property name="text">
+       <string>这是309C</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="D309Lab">
+      <property name="text">
+       <string>这是309D</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="C310Lab">
+      <property name="text">
+       <string>这是310C</string>
       </property>
      </widget>
     </item>
