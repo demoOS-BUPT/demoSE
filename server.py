@@ -3,6 +3,7 @@ import SocketServer
 import time
 from AirService import *
 from setrateui import *
+from checkoutui import *
 from formui import *
 from algo import *
 import sqlite3
@@ -19,7 +20,9 @@ Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
 global serverui
 global airserver
+global onOff
 
+onOff=1
 algo = Algo()
 
 class Server(QtGui.QMainWindow,Ui_MainWindow):
@@ -29,8 +32,8 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         self.setupUi(self)
 
         # 连接信号和槽
-        self.onBtn.clicked.connect(self.on)
-        #self.offBtn.clicked.connect(self.off)
+        self.onBtn.clicked.connect(self.onOff)
+        self.checkoutBtn.clicked.connect(self.checkOut)
         self.setBtn.clicked.connect(self.setRate)
         self.formBtn.clicked.connect(self.printForm)
 
@@ -57,6 +60,10 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         self.formui = formUI()
         self.formui.show()
         #self.formui.exec_()
+
+    def checkOut(self):
+        self.checkoutui = checkoutUI()
+        self.checkoutui.show()
 
     def showState(self,status):
 
@@ -105,18 +112,20 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         elif room == '307C':
             self.C307Lab.setText(client_str)
 
-    def on(self):
-        #temperature = float(self.temperaBox.value())
-        on_tips_string = u"您开启了空调服务器啦！"
-        self.display.setText(on_tips_string)
+    def onOff(self):
+        if(onOff == 1):##开机啦
+            #temperature = float(self.temperaBox.value())
+            on_tips_string = u"您开启了空调服务器啦！"
+            self.display.setText(on_tips_string)
 
-        # 2 Start Server
-        server_thread = threading.Thread(target=server.serve_forever)
-        server_thread.setDaemon(True)
-        server_thread.start()
+            # 2 Start Server
+            server_thread = threading.Thread(target=server.serve_forever)
+            server_thread.setDaemon(True)
+            server_thread.start()
+        else:##按的关机
+            server.shutdown()
 
-    def off(self):
-        server.shutdown()
+
 
 class HandleCheckin(SocketServer.StreamRequestHandler):
     # 3 Call this function when recv a connection from client
