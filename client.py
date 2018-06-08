@@ -58,6 +58,24 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.t = myThread(self.sock, self)
 
+    def getWind(self):
+        if (self.highBtn.isChecked()):
+            wind = HIGHWIND
+        elif (self.midBtn.isChecked()):
+            wind = MIDWIND
+        else:
+            wind = LOWWIND
+        return wind
+
+    def getWindStr(self):
+        if (self.highBtn.isChecked()):
+            wind_str = u'高风'
+        elif (self.midBtn.isChecked()):
+            wind_str = u'中风'
+        else:
+            wind_str = u'低风'
+        return wind_str
+
     def onOroff(self):
         global sock_flag
         if(sock_flag == 0):
@@ -65,12 +83,7 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
             on_tips_string = u"您设置了空调温度：" + str(finalTemp)
             self.tipLabel.setText(on_tips_string)
 
-            if(self.highBtn.isChecked()):
-                wind = HIGHWIND
-            if(self.midBtn.isChecked()):
-                wind = MIDWIND
-            else:
-                wind = LOWWIND
+            win = self.getWind()
 
             #Connect to Server
             #try:
@@ -81,8 +94,7 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
             #    return
 
             time.sleep(0.2)
-            #room=503, currentTemp=15, finalTemp=25, wind=2
-            
+
             self.air = AirClient()
             status={'room':room,
                     'currentTemp':20.3,
@@ -93,8 +105,8 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
 
             ##开机
             sendBuf = self.air.send_start()
-            print sendBuf
             self.sock.send(sendBuf)
+            print sendBuf
 
             time.sleep(0.2)
             opStr = self.sock.recv(1024)
@@ -131,27 +143,34 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
 
             self.commitBtn.clicked.connect(self.setTemp)
             self.cancelBtn.clicked.connect(self.cancelTemp)
-        else:
+
+        else:#关空调
+
             off_tips_string = u"耶 终于关空调了"
             self.tipLabel.setText(off_tips_string)
-            sock_flag = 0;
+
+
 
             self.commitBtn.clicked.disconnect(self.setTemp)
             self.oBtn.setText(u"开机")
 
+            sendBuf = self.air.send_close()
+            self.sock.send(sendBuf)
+
+            #在这可以打印详单
+            self.printDetail()
+            sock_flag = 0;
             self.sock.close()
+
+    def printDetail(self):
+        print u"我打印个详单昂"
 
     def showState(self):
         stateStr = ""
         stateStr += u"\n当前温度："+(str(self.air.currentTemp))
         stateStr += u"\n目标温度：" +(str(self.air.finalTemp))
 
-        if(self.air.wind == HIGHWIND):
-            wind_str = u"高风"
-        if (self.air.wind == MIDWIND):
-            wind_str = u"中风"
-        else:
-            wind_str = u"低风"
+        wind_str = self.getWindStr()
 
         stateStr += u"\n风速：" +(wind_str)
 
@@ -191,10 +210,7 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
     def highBtnSlot(self):
         if (self.highBtn.isChecked()):
             print 'a '
-            status = {'room': self.air.room,
-                      'currentTemp': self.air.currentTemp,
-                      'finalTemp': self.air.finalTemp,
-                      'wind': HIGHWIND,  # 中速
+            status = {'wind': HIGHWIND,  # 高速
                       }
             self.air.change_status(status)
             sendBuf = self.air.send_change()
@@ -203,10 +219,7 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
     def midBtnSlot(self):
         if (self.midBtn.isChecked()):
             print 'b '
-            status = {'room': self.air.room,
-                      'currentTemp': self.air.currentTemp,
-                      'finalTemp': self.air.finalTemp,
-                      'wind': MIDWIND,  # 中速
+            status = {'wind': MIDWIND,  # 中速
                       }
             self.air.change_status(status)
             sendBuf = self.air.send_change()
@@ -215,10 +228,7 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
     def lowBtnSlot(self):
         if (self.lowBtn.isChecked()):
             print 'c '
-        status = {'room': self.air.room,
-                  'currentTemp': self.air.currentTemp,
-                  'finalTemp': self.air.finalTemp,
-                  'wind': LOWWIND,  # 中速
+        status = {'wind': LOWWIND,  # 中速
                   }
         self.air.change_status(status)
         sendBuf = self.air.send_change()

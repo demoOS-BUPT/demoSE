@@ -112,6 +112,16 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         elif room == '307C':
             self.C307Lab.setText(client_str)
 
+
+    def showWait(self,room):
+
+        client_str = room + ' is closed'
+        if room == '306C':
+            self.C306Lab.setText(client_str)
+        elif room == '307C':
+            self.C307Lab.setText(client_str)
+
+
     def onOff(self):
         if(onOff == 1):##开机啦
             #temperature = float(self.temperaBox.value())
@@ -180,6 +190,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 print '[change]',operate
             if operate[0] == 'close' and operate[-1] == '$':
                 self.objAir.recv_close(operate)
+                serverui.showClose(self.objAir.room)
                 opStr = ''
                 #待机
 

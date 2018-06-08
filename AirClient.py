@@ -59,6 +59,7 @@ class AirClient(object):
         sendBuf = 'close_{room}_$'
         status = {'room':self.room}
         sendBuf = sendBuf.format(**status)
+        self.open = False
         return sendBuf
 
     def recv_start(self, operate):
