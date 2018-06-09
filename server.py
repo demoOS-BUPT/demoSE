@@ -37,8 +37,6 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         self.setBtn.clicked.connect(self.setRate)
         self.formBtn.clicked.connect(self.printForm)
 
-        self.serverState()
-
     def setRate(self):
         self.setrate = setrateUI()
         self.setrate.show()
@@ -65,12 +63,16 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         self.checkoutui = checkoutUI()
         self.checkoutui.show()
 
+        if(self.checkoutui.exec_()):
+            #从队列里找到self.checkoutui.room对应的airserver 再sendclose
+            pass
+
     def showState(self,status):
 
         # 房间号，目标温度，当前温度，风速，累计的费用，累计的时长。
         if (status['wind'] == 3):
             status['wind'] = u'高风'
-        if (status['wind'] == 2):
+        elif (status['wind'] == 2):
             status['wind'] = u'中风'
         else:
             status['wind'] = u'低风'
@@ -95,44 +97,30 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         '309D'
         '310C'
         '''
-    def showSleep(self,room):
+    def showRoomState(self,room,state):
 
         #房间号，目标温度，当前温度，风速，累计的费用，累计的时长。
-        client_str = room + ' is sleeping'
+        client_str = room + ' is ' + state
         if room == '306C':
             self.C306Lab.setText(client_str)
         elif room == '307C':
             self.C307Lab.setText(client_str)
-
-    def showWait(self,room):
-
-        client_str = room + ' is waiting'
-        if room == '306C':
-            self.C306Lab.setText(client_str)
-        elif room == '307C':
-            self.C307Lab.setText(client_str)
-
-
-    def showWait(self,room):
-
-        client_str = room + ' is closed'
-        if room == '306C':
-            self.C306Lab.setText(client_str)
-        elif room == '307C':
-            self.C307Lab.setText(client_str)
-
 
     def onOff(self):
         if(onOff == 1):##开机啦
-            #temperature = float(self.temperaBox.value())
             on_tips_string = u"您开启了空调服务器啦！"
             self.display.setText(on_tips_string)
+            self.serverState()
 
             # 2 Start Server
             server_thread = threading.Thread(target=server.serve_forever)
             server_thread.setDaemon(True)
             server_thread.start()
         else:##按的关机
+            onOff == 0
+            on_tips_string = u"您关闭了空调服务器啦！"
+            self.display.setText(on_tips_string)
+
             server.shutdown()
 
 
@@ -190,7 +178,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 print '[change]',operate
             if operate[0] == 'close' and operate[-1] == '$':
                 self.objAir.recv_close(operate)
-                serverui.showClose(self.objAir.room)
+                serverui.showRoomState(self.objAir.room,'closed')
                 opStr = ''
                 #待机
 
@@ -207,11 +195,11 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 continue
 
             if self.objAir.sleep:
-                serverui.showSleep(self.objAir.room)
+                serverui.showRoomState(self.objAir.room,'sleeping')
                 continue
 
             if self.objAir.room in algo.waitList:
-                serverui.showWait(self.objAir.room)
+                serverui.showRoomState(self.objAir.room,'waiting')
 
             if self.objAir.room in algo.serverList:
                 self.objAir.work()

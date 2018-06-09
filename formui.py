@@ -52,7 +52,7 @@ class formUI(QtGui.QDialog):
         font.setBold(True)
         self.formForm.tabWidget.horizontalHeader().setFont(font)
 
-        self.formForm.tabWidget.setRowCount(4)
+        self.formForm.tabWidget.setRowCount(row)
 
         row_index = 0
 

@@ -20,7 +20,8 @@ class checkoutUI(QtGui.QDialog):
         self.checkoutForm.commitBtn.clicked.connect(self.commitAction)
 
     def commitAction(self):
-
+        if (self.checkoutForm.roomBox.currentIndex() == 0):
+            self.room = '307C'
         QtGui.QMessageBox.information(self, u"信息提示", u"OK")
 
 if __name__ == "__main__":

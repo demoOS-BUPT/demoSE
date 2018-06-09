@@ -157,12 +157,31 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
             sendBuf = self.air.send_close()
             self.sock.send(sendBuf)
 
-            #在这可以打印详单
-            self.printDetail()
             sock_flag = 0;
             self.sock.close()
 
     def printDetail(self):
+        self.tabWidget.setCurrentIndex(1)
+
+        column = 10
+        row = 4
+        self.billTable.setColumnCount(column)
+        self.billTable.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+
+        self.billTable.setHorizontalHeaderLabels([u'Room',  u'Operate', u'User','Time','FinalTemperature','Wind','PerMoney', 'TotalMoney'])
+
+        #设置表头字体加粗：
+        font = self.billTable.horizontalHeader().font()
+
+        font.setBold(True)
+        self.billTable.horizontalHeader().setFont(font)
+
+        self.billTable.setRowCount(row)
+        row_index = 0
+
+        self.formForm.tabWidget.setItem(row_index, 0, QtGui.QTableWidgetItem(u"308"))
+        self.formForm.tabWidget.setItem(row_index, 1, QtGui.QTableWidgetItem("199"))
+        self.formForm.tabWidget.setItem(row_index, 2, QtGui.QTableWidgetItem("20.5"))
         print u"我打印个详单昂"
 
     def showState(self):
@@ -262,6 +281,7 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
 
             if operate[0] == 'close' and len(operate) == 4 and operate[-1] == '$':
                 self.client.air.recv_close(operate)
+                self.client.printDetail()
 
             if operate[0] == 'sleep' and len(operate) == 3 and operate[-1] == '$':
                 self.client.air.recv_sleep(operate)
