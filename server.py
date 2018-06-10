@@ -19,11 +19,13 @@ qtCreatorFile = "./server.ui"  # Window File
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
 global serverui
-global airserver
+#global airserver
 global onOff
+global sockList
 
 onOff=1
 algo = Algo()
+airList = []
 
 class Server(QtGui.QMainWindow,Ui_MainWindow):
     def __init__(self,server):
@@ -36,7 +38,6 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         self.checkoutBtn.clicked.connect(self.checkOut)
         self.setBtn.clicked.connect(self.setRate)
         self.formBtn.clicked.connect(self.printForm)
-        self.sockList = []
 
     def setRate(self):
         self.setrate = setrateUI()
@@ -130,7 +131,9 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
     # 3 Call this function when recv a connection from client
     def handle(self):
         #req = self.request
-        self.objAir = airserver
+        #self.objAir = airserver
+        self.objAir = AirService()
+        airList.append(self.objAir)
 
         operate = self.request.recv(1024).strip().split("_")
         if operate[0] != 'start' or operate[-1] != '$':
@@ -212,7 +215,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                           'wind': self.objAir.wind,
                           'totalMoney': self.objAir.totalMoney,
                           'totalElec': self.objAir.totalElec,
-                          'totalTime': str(int(time.time() - self.objAir.startTime))+'秒'}
+                          'totalTime': str(int(time.time() - self.objAir.startTime))+'s'}
                 serverui.showState(status)
 
                 sendBuf = self.objAir.send_answer()
@@ -239,9 +242,10 @@ if __name__ == "__main__":
     server.allow_reuse_address = True
 
     app = QtGui.QApplication(sys.argv)
-    airserver = AirService()
+    #airserver = AirService()
     serverui = Server(server)
     serverui.show()
+
 
     if app.exec_():
         server.shutdown()

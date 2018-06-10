@@ -70,6 +70,7 @@ class AirService(object):
             status['finalTemp'] = DEFAULT_WIND
         self.change_status(status)
         self.sleep = False
+        self.open = True
         return 
 
     def recv_open(self, operate):

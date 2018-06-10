@@ -24,7 +24,8 @@ HIGHWIND = 3
 MIDWIND = 2
 LOWWIND = 1
 
-sock_flag = 0;
+sock_flag = 0
+first_open = 1
 
 class Client(QtGui.QMainWindow,Ui_MainWindow):
     def __init__(self,user):
@@ -56,6 +57,8 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
 
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.connect((HOST, PORT))
+        self.sock.setblocking(0)
         self.t = myThread(self.sock, self)
 
     def getWind(self):
@@ -78,47 +81,41 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
 
     def onOroff(self):
         global sock_flag
+        global first_open
         if(sock_flag == 0):
-            finalTemp = float(self.temperaBox.value())
-            on_tips_string = u"您设置了空调温度：" + str(finalTemp)
-            self.tipLabel.setText(on_tips_string)
 
-            win = self.getWind()
+            if first_open:
+                finalTemp = float(self.temperaBox.value())
+                on_tips_string = u"您设置了空调温度：" + str(finalTemp)
+                self.tipLabel.setText(on_tips_string)
 
-            #Connect to Server
-            #try:
-            self.sock.connect((HOST, PORT))
-            self.sock.setblocking(0)
-            #except Exception:
-            #    print 'Server port not connect!'
-            #    return
+                win = self.getWind()
 
-            time.sleep(0.2)
+                time.sleep(0.2)
 
-            self.air = AirClient()
-            status={'room':room,
-                    'currentTemp':20.3,
-                    'finalTemp':float(self.temperaBox.value()),
-                    'wind':'3',#中速
-                    }
-            self.air.change_status(status)
+                self.air = AirClient()
+                status={'room':room,
+                        'currentTemp':20.3,
+                        'finalTemp':float(self.temperaBox.value()),
+                        'wind':'3',#中速
+                        }
+                self.air.change_status(status)
 
-            ##开机
-            sendBuf = self.air.send_start()
-            self.sock.send(sendBuf)
-            print sendBuf
+                ##开机
+                sendBuf = self.air.send_start()
+                self.sock.send(sendBuf)
+                print sendBuf
 
-            time.sleep(0.2)
-            opStr = self.sock.recv(1024)
-            operate = opStr.split("_")
-            if operate[0] == 'start' and len(operate) == 6 and operate[-1] == '$':
-                self.air.recv_start(operate)
-                print '[recv]first start!'
-                opStr = ''
-            else:
-                print '[error]recv first start error!'
-                exit()
-
+                time.sleep(0.2)
+                opStr = self.sock.recv(1024)
+                operate = opStr.split("_")
+                if operate[0] == 'start' and len(operate) == 6 and operate[-1] == '$':
+                    self.air.recv_start(operate)
+                    print '[recv]first start!'
+                    opStr = ''
+                else:
+                    print '[error]recv first start error!'
+                    exit()
 
             self.air.show_status()
             sendBuf = self.air.send_first_open()
@@ -139,7 +136,9 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
 
             sock_flag = 1
             self.oBtn.setText(u"关机")
-            self.t.start()
+            if first_open:
+                self.t.start()
+                first_open = 0
 
             self.commitBtn.clicked.connect(self.setTemp)
             self.cancelBtn.clicked.connect(self.cancelTemp)
@@ -149,16 +148,14 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
             off_tips_string = u"耶 终于关空调了"
             self.tipLabel.setText(off_tips_string)
 
-
-
             self.commitBtn.clicked.disconnect(self.setTemp)
             self.oBtn.setText(u"开机")
 
             sendBuf = self.air.send_close()
             self.sock.send(sendBuf)
 
-            sock_flag = 0;
-            self.sock.close()
+            sock_flag = 0
+            #self.sock.close()
 
     def printDetail(self):
         self.tabWidget.setCurrentIndex(1)
@@ -265,7 +262,8 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
         global sock_flag
         opStr = ''
 
-        while sock_flag:
+        #while sock_flag:
+        while 1:
             try:
                 res = self.sock.recv(1024)
             except:
