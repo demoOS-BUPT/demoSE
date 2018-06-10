@@ -77,7 +77,7 @@ class AirClient(object):
         #status['room'] = operate[1]
         status['currentTemp'] = operate[2]
         status['totalMoney'] = operate[3]
-        status['time'] = operate[4]
+        status['time'] = self.time_to_stamp(operate[4])
         status['finalTemp'] = operate[5]
         status['wind'] = operate[6]
         status['tempChange'] = operate[7]
@@ -159,6 +159,14 @@ class AirClient(object):
             return False
 
         self.lastTime = nowTime
+
+    def stamp_to_time(self, num):
+        timeArray = time.localtime(num)
+        return time.strftime("%Y/%m/%d/%H/%M/%S", timeArray)
+
+    def time_to_stamp(self, tmpStr):
+        timeArray = time.strptime(tmpStr, "%Y/%m/%d/%H/%M/%S")
+        return int(time.mktime(timeArray))
 
     #test：展示状态
     def show_status(self):

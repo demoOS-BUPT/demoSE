@@ -36,6 +36,7 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         self.checkoutBtn.clicked.connect(self.checkOut)
         self.setBtn.clicked.connect(self.setRate)
         self.formBtn.clicked.connect(self.printForm)
+        self.sockList = []
 
     def setRate(self):
         self.setrate = setrateUI()
@@ -211,7 +212,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                           'wind': self.objAir.wind,
                           'totalMoney': self.objAir.totalMoney,
                           'totalElec': self.objAir.totalElec,
-                          'totalTime': 999}
+                          'totalTime': str(int(time.time() - self.objAir.startTime))+'秒'}
                 serverui.showState(status)
 
                 sendBuf = self.objAir.send_answer()
@@ -241,7 +242,6 @@ if __name__ == "__main__":
     airserver = AirService()
     serverui = Server(server)
     serverui.show()
-
 
     if app.exec_():
         server.shutdown()
