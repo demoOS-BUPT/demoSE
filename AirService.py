@@ -79,6 +79,8 @@ class AirService(object):
         status['currentTemp'] = float(operate[2])
         status['finalTemp'] = float(operate[3])
         status['wind'] = operate[4]
+        self.sleep = False
+        self.open = True
         self.change_status(status)
         return 
 

@@ -22,6 +22,7 @@ global serverui
 #global airserver
 global onOff
 global sockList
+global algo
 
 onOff=1
 algo = Algo()
@@ -86,6 +87,8 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
 
         if room == '306C':
             self.C306Lab.setText(showBuf)
+        elif room == '306D':
+            self.D306Lab.setText(showBuf)
         elif room == '307C':
             self.C307Lab.setText(showBuf)
 
@@ -105,6 +108,8 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         client_str = room + ' is ' + state
         if room == '306C':
             self.C306Lab.setText(client_str)
+        elif room == '306D':
+            self.D306Lab.setText(client_str)
         elif room == '307C':
             self.C307Lab.setText(client_str)
 
@@ -148,8 +153,6 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
             print '[send] start', sendBuf
             time.sleep(0.5)
 
-        algo.req_server(self.objAir.room)
-
         t1 = threading.Thread(target=self.listen, name='listen')
         t2 = threading.Thread(target=self.work, name='work')
         t1.start()
@@ -181,6 +184,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 opStr = ''
                 print '[change]',operate
             if operate[0] == 'close' and operate[-1] == '$':
+                algo.remove_server(self.objAir.room)
                 self.objAir.recv_close(operate)
                 serverui.showRoomState(self.objAir.room,'closed')
                 opStr = ''
@@ -196,9 +200,11 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
         while(1):
             time.sleep(0.2)
             if not self.objAir.open:
+                algo.remove_server(self.objAir.room)
                 continue
 
             if self.objAir.sleep:
+                algo.remove_server(self.objAir.room)
                 serverui.showRoomState(self.objAir.room,'sleeping')
                 continue
 
@@ -207,6 +213,8 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
             if self.objAir.room in algo.serverList:
                 self.objAir.work()
+                if self.objAir.open and not self.objAir.sleep:
+                    algo.req_server(self.objAir.room)
 
                 # 房间号，目标温度，当前温度，风速，累计的费用，累计的时长。
                 status = {'room': self.objAir.room,
