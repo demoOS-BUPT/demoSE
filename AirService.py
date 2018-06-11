@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 import socket
 import time
+from datetime import datetime
 import re, ConfigParser
 
 def read_setting():
@@ -69,6 +70,7 @@ class AirService(object):
             status['finalTemp'] = DEFAULT_WIND
         self.change_status(status)
         self.sleep = False
+        self.open = True
         return 
 
     def recv_open(self, operate):
@@ -77,6 +79,8 @@ class AirService(object):
         status['currentTemp'] = float(operate[2])
         status['finalTemp'] = float(operate[3])
         status['wind'] = operate[4]
+        self.sleep = False
+        self.open = True
         self.change_status(status)
         return 
 
@@ -91,6 +95,7 @@ class AirService(object):
 
     def recv_close(self, operate):
         print operate[1] + 'closed!'
+        self.open = False
         return
 
     def send_start(self):
@@ -113,7 +118,7 @@ class AirService(object):
         status = {'room':self.room,
                     'currentTemp':self.currentTemp,
                     'totalMoney':self.totalMoney,
-                    'time':time.time(),
+                    'time':self.stamp_to_time(time.time()),
                     'finalTemp': self.finalTemp,
                     'wind':self.wind,
                     'tempChange':TEMP_CHANGE,
@@ -144,6 +149,13 @@ class AirService(object):
                     'type':waitType,}
         sendBuf = sendBuf.format(**status)
 
+    def stamp_to_time(self, num):
+        timeArray = time.localtime(num)
+        return time.strftime( "%Y/%m/%d/%H/%M/%S", timeArray)
+
+    def time_to_stamp(self, tmpStr):
+        timeArray = time.strptime(tmpStr, "%Y/%m/%d/%H/%M/%S")
+        return int(time.mktime(timeArray))
 
 
     #改变状态,这里把参数补齐

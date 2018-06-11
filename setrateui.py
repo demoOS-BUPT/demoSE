@@ -22,7 +22,6 @@ class setrateUI(QtGui.QDialog):
         self.setrateForm.lowRateEdit.setText('1.5')
         self.setrateForm.midRateEdit.setText('2')
         self.setrateForm.highRateEdit.setText('2.5')
-        self.setrateForm.FCFSBtn.setChecked(True)
 
         self.setrateForm.commitBtn.clicked.connect(self.commitAction)
 

@@ -33,14 +33,18 @@ class formUI(QtGui.QDialog):
         self.formForm.setupUi(self)
         self.formForm.dayBtn.setChecked(True)
 
+        self.setDate()
         self.connect(self.formForm.printBtn,QtCore.SIGNAL("clicked()"),self.printAction)
         self.formForm.calWidget.clicked.connect(self.setDate)
         self.tableView()
 
     def tableView(self):
-        self.formForm.tabWidget.setColumnCount(3)
-        self.formForm.tabWidget.setRowCount(4)
-        self.formForm.tabWidget.setHorizontalHeaderLabels([u'房间号',  u'金额', u'能耗'])
+        column = 10
+        row = 4
+        self.formForm.tabWidget.setColumnCount(column)
+        self.formForm.tabWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+
+        self.formForm.tabWidget.setHorizontalHeaderLabels([u'Room',  u'Operate', u'User','IP','Time','InitTemperature','FinalTemperature','Wind','PerMoney', 'TotalMoney'])
 
         #设置表头字体加粗：
         font = self.formForm.tabWidget.horizontalHeader().font()
@@ -48,14 +52,13 @@ class formUI(QtGui.QDialog):
         font.setBold(True)
         self.formForm.tabWidget.horizontalHeader().setFont(font)
 
-        newItem = QtGui.QTableWidgetItem(u"308")
-        self.formForm.tabWidget.setItem(0, 0, newItem)
+        self.formForm.tabWidget.setRowCount(row)
 
-        newItem = QtGui.QTableWidgetItem("199")
-        self.formForm.tabWidget.setItem(0, 1, newItem)
+        row_index = 0
 
-        newItem = QtGui.QTableWidgetItem("20.5")
-        self.formForm.tabWidget.setItem(0, 2, newItem)
+        self.formForm.tabWidget.setItem(row_index, 0, QtGui.QTableWidgetItem(u"308"))
+        self.formForm.tabWidget.setItem(row_index, 1, QtGui.QTableWidgetItem("199"))
+        self.formForm.tabWidget.setItem(row_index, 2, QtGui.QTableWidgetItem("20.5"))
 
     def setDate(self):
         self.formForm.dateEdit.setDate(self.formForm.calWidget.selectedDate())
@@ -64,16 +67,26 @@ class formUI(QtGui.QDialog):
     def printAction(self):
         if (self.formForm.dayBtn.isChecked()):
             type = 0
-        if (self.formForm.monthBtn.isChecked()):
+        elif (self.formForm.monthBtn.isChecked()):
             type = 1
         else:
             type = 2
 
+        if (self.formForm.roomBox.currentIndex() == 0):
+            room = '0'
+        elif (self.formForm.roomBox.currentIndex() == 1):
+            room = '306C'
+        #其他房间
+
         #获取所需打印的第一天的年月日
         year,month,day = self.formForm.dateEdit.date().getDate()
+        t = str(year) + '/'+str(month) + '/'+ str(day)
+        import time
+        timeArray = time.strptime(t, "%Y/%m/%d")
+        timeStamp = int(time.mktime(timeArray))
 
         #传类型和日期
-        print '不会打印啦'+str(type)+' year:'+str(year) + ' month: '+str(month) + 'day '+ str(day)
+        print '不会打印啦'+str(type) +t + str(timeStamp) + room
 
         #收一堆信息展示
         '''

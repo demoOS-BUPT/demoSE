@@ -59,6 +59,7 @@ class AirClient(object):
         sendBuf = 'close_{room}_$'
         status = {'room':self.room}
         sendBuf = sendBuf.format(**status)
+        self.open = False
         return sendBuf
 
     def recv_start(self, operate):
@@ -76,7 +77,7 @@ class AirClient(object):
         #status['room'] = operate[1]
         status['currentTemp'] = operate[2]
         status['totalMoney'] = operate[3]
-        status['time'] = operate[4]
+        status['time'] = self.time_to_stamp(operate[4])
         status['finalTemp'] = operate[5]
         status['wind'] = operate[6]
         status['tempChange'] = operate[7]
@@ -142,6 +143,10 @@ class AirClient(object):
         if nowTime <= int( self.lastTime + 3 ):
             return False
 
+        if not self.open:
+            print '[closing]', self.room
+            return False
+
         if self.sleep:
             print '[sleeping]'
             if self.mode == 'hot':
@@ -158,6 +163,14 @@ class AirClient(object):
             return False
 
         self.lastTime = nowTime
+
+    def stamp_to_time(self, num):
+        timeArray = time.localtime(num)
+        return time.strftime("%Y/%m/%d/%H/%M/%S", timeArray)
+
+    def time_to_stamp(self, tmpStr):
+        timeArray = time.strptime(tmpStr, "%Y/%m/%d/%H/%M/%S")
+        return int(time.mktime(timeArray))
 
     #test：展示状态
     def show_status(self):

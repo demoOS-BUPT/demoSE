@@ -24,7 +24,8 @@ HIGHWIND = 3
 MIDWIND = 2
 LOWWIND = 1
 
-sock_flag = 0;
+sock_flag = 0
+first_open = 1
 
 class Client(QtGui.QMainWindow,Ui_MainWindow):
     def __init__(self,user):
@@ -56,57 +57,65 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
 
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.connect((HOST, PORT))
+        self.sock.setblocking(0)
         self.t = myThread(self.sock, self)
+
+    def getWind(self):
+        if (self.highBtn.isChecked()):
+            wind = HIGHWIND
+        elif (self.midBtn.isChecked()):
+            wind = MIDWIND
+        else:
+            wind = LOWWIND
+        return wind
+
+    def getWindStr(self):
+        if (self.highBtn.isChecked()):
+            wind_str = u'高风'
+        elif (self.midBtn.isChecked()):
+            wind_str = u'中风'
+        else:
+            wind_str = u'低风'
+        return wind_str
 
     def onOroff(self):
         global sock_flag
+        global first_open
         if(sock_flag == 0):
-            finalTemp = float(self.temperaBox.value())
-            on_tips_string = u"您设置了空调温度：" + str(finalTemp)
-            self.tipLabel.setText(on_tips_string)
 
-            if(self.highBtn.isChecked()):
-                wind = HIGHWIND
-            if(self.midBtn.isChecked()):
-                wind = MIDWIND
-            else:
-                wind = LOWWIND
+            if first_open:
+                finalTemp = float(self.temperaBox.value())
+                on_tips_string = u"您设置了空调温度：" + str(finalTemp)
+                self.tipLabel.setText(on_tips_string)
 
-            #Connect to Server
-            #try:
-            self.sock.connect((HOST, PORT))
-            self.sock.setblocking(0)
-            #except Exception:
-            #    print 'Server port not connect!'
-            #    return
+                win = self.getWind()
 
-            time.sleep(0.2)
-            #room=503, currentTemp=15, finalTemp=25, wind=2
-            
-            self.air = AirClient()
-            status={'room':room,
-                    'currentTemp':20.3,
-                    'finalTemp':float(self.temperaBox.value()),
-                    'wind':'3',#中速
-                    }
-            self.air.change_status(status)
+                time.sleep(0.2)
 
-            ##开机
-            sendBuf = self.air.send_start()
-            print sendBuf
-            self.sock.send(sendBuf)
+                self.air = AirClient()
+                status={'room':room,
+                        'currentTemp':20.3,
+                        'finalTemp':float(self.temperaBox.value()),
+                        'wind':'3',#中速
+                        }
+                self.air.change_status(status)
 
-            time.sleep(0.2)
-            opStr = self.sock.recv(1024)
-            operate = opStr.split("_")
-            if operate[0] == 'start' and len(operate) == 6 and operate[-1] == '$':
-                self.air.recv_start(operate)
-                print '[recv]first start!'
-                opStr = ''
-            else:
-                print '[error]recv first start error!'
-                exit()
+                ##开机
+                sendBuf = self.air.send_start()
+                self.sock.send(sendBuf)
+                print sendBuf
 
+                time.sleep(0.2)
+                opStr = self.sock.recv(1024)
+                operate = opStr.split("_")
+                if operate[0] == 'start' and len(operate) == 6 and operate[-1] == '$':
+                    self.air.recv_start(operate)
+                    print '[recv]first start!'
+                    opStr = ''
+                else:
+                    print '[error]recv first start error!'
+                    exit()
 
             self.air.show_status()
             sendBuf = self.air.send_first_open()
@@ -127,31 +136,57 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
 
             sock_flag = 1
             self.oBtn.setText(u"关机")
-            self.t.start()
+            if first_open:
+                self.t.start()
+                first_open = 0
 
             self.commitBtn.clicked.connect(self.setTemp)
             self.cancelBtn.clicked.connect(self.cancelTemp)
-        else:
+
+        else:#关空调
+
             off_tips_string = u"耶 终于关空调了"
             self.tipLabel.setText(off_tips_string)
-            sock_flag = 0;
 
             self.commitBtn.clicked.disconnect(self.setTemp)
             self.oBtn.setText(u"开机")
 
-            self.sock.close()
+            sendBuf = self.air.send_close()
+            self.sock.send(sendBuf)
+
+            sock_flag = 0
+            #self.sock.close()
+
+    def printDetail(self):
+        self.tabWidget.setCurrentIndex(1)
+
+        column = 10
+        row = 4
+        self.billTable.setColumnCount(column)
+        self.billTable.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+
+        self.billTable.setHorizontalHeaderLabels([u'Room',  u'Operate', u'User','Time','FinalTemperature','Wind','PerMoney', 'TotalMoney'])
+
+        #设置表头字体加粗：
+        font = self.billTable.horizontalHeader().font()
+
+        font.setBold(True)
+        self.billTable.horizontalHeader().setFont(font)
+
+        self.billTable.setRowCount(row)
+        row_index = 0
+
+        self.formForm.tabWidget.setItem(row_index, 0, QtGui.QTableWidgetItem(u"308"))
+        self.formForm.tabWidget.setItem(row_index, 1, QtGui.QTableWidgetItem("199"))
+        self.formForm.tabWidget.setItem(row_index, 2, QtGui.QTableWidgetItem("20.5"))
+        print u"我打印个详单昂"
 
     def showState(self):
         stateStr = ""
         stateStr += u"\n当前温度："+(str(self.air.currentTemp))
         stateStr += u"\n目标温度：" +(str(self.air.finalTemp))
 
-        if(self.air.wind == HIGHWIND):
-            wind_str = u"高风"
-        if (self.air.wind == MIDWIND):
-            wind_str = u"中风"
-        else:
-            wind_str = u"低风"
+        wind_str = self.getWindStr()
 
         stateStr += u"\n风速：" +(wind_str)
 
@@ -191,10 +226,7 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
     def highBtnSlot(self):
         if (self.highBtn.isChecked()):
             print 'a '
-            status = {'room': self.air.room,
-                      'currentTemp': self.air.currentTemp,
-                      'finalTemp': self.air.finalTemp,
-                      'wind': HIGHWIND,  # 中速
+            status = {'wind': HIGHWIND,  # 高速
                       }
             self.air.change_status(status)
             sendBuf = self.air.send_change()
@@ -203,10 +235,7 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
     def midBtnSlot(self):
         if (self.midBtn.isChecked()):
             print 'b '
-            status = {'room': self.air.room,
-                      'currentTemp': self.air.currentTemp,
-                      'finalTemp': self.air.finalTemp,
-                      'wind': MIDWIND,  # 中速
+            status = {'wind': MIDWIND,  # 中速
                       }
             self.air.change_status(status)
             sendBuf = self.air.send_change()
@@ -215,10 +244,7 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
     def lowBtnSlot(self):
         if (self.lowBtn.isChecked()):
             print 'c '
-        status = {'room': self.air.room,
-                  'currentTemp': self.air.currentTemp,
-                  'finalTemp': self.air.finalTemp,
-                  'wind': LOWWIND,  # 中速
+        status = {'wind': LOWWIND,  # 中速
                   }
         self.air.change_status(status)
         sendBuf = self.air.send_change()
@@ -236,7 +262,8 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
         global sock_flag
         opStr = ''
 
-        while sock_flag:
+        #while sock_flag:
+        while 1:
             try:
                 res = self.sock.recv(1024)
             except:
@@ -252,6 +279,7 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
 
             if operate[0] == 'close' and len(operate) == 4 and operate[-1] == '$':
                 self.client.air.recv_close(operate)
+                self.client.printDetail()
 
             if operate[0] == 'sleep' and len(operate) == 3 and operate[-1] == '$':
                 self.client.air.recv_sleep(operate)
