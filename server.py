@@ -2,9 +2,10 @@
 import SocketServer
 import time
 from AirService import *
-from setrateui import *
-from checkoutui import *
-from formui import *
+from setrate import *
+from checkout import *
+from form import *
+from serverui import *
 from algo import *
 import sqlite3
 import threading
@@ -13,10 +14,6 @@ from PyQt4 import QtCore, QtGui, uic
 
 # 1 Set Host and Port
 HOST, PORT = "127.0.0.1", int(233)
-
-# Ui Init
-qtCreatorFile = "./server.ui"  # Window File
-Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
 global serverui
 #global airserver
@@ -27,17 +24,19 @@ onOff=1
 algo = Algo()
 airList = []
 
-class Server(QtGui.QMainWindow,Ui_MainWindow):
-    def __init__(self,server):
-        QtGui.QMainWindow.__init__(self)
-        Ui_MainWindow.__init__(self)
-        self.setupUi(self)
+class Server(QtGui.QMainWindow):
+    def __init__(self,server,parent=None):
+        super(Server, self).__init__(parent)
 
+        self.serverUI = Ui_Serverui()
+        self.serverUI.setupUi(self)
         # 连接信号和槽
-        self.onBtn.clicked.connect(self.onOff)
-        self.checkoutBtn.clicked.connect(self.checkOut)
-        self.setBtn.clicked.connect(self.setRate)
-        self.formBtn.clicked.connect(self.printForm)
+        self.serverUI.onBtn.clicked.connect(self.onOff)
+        self.serverUI.onBtn.setText(u"开机")
+
+        self.serverUI.checkoutBtn.clicked.connect(self.checkOut)
+        self.serverUI.setBtn.clicked.connect(self.setRate)
+        self.serverUI.formBtn.clicked.connect(self.printForm)
 
     def setRate(self):
         self.setrate = setrateUI()
@@ -54,7 +53,7 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         serverStr += u'\n工作模式：\n模式明明是全局的啊\n'
         serverStr += u'\n工作状态 \n我想想啊\n '
         serverStr += u'\n当前时间：\n' + str(time.time())
-        self.serverLab.setText(serverStr)
+        self.serverUI.serverLab.setText(serverStr)
 
     def printForm(self):
         self.formui = formUI()
@@ -85,9 +84,9 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         showBuf = showBuf.format(**status)
 
         if room == '306C':
-            self.C306Lab.setText(showBuf)
+            self.serverUI.C306Lab.setText(showBuf)
         elif room == '307C':
-            self.C307Lab.setText(showBuf)
+            self.serverUI.C307Lab.setText(showBuf)
 
         '''
         '306D'
@@ -104,26 +103,32 @@ class Server(QtGui.QMainWindow,Ui_MainWindow):
         #房间号，目标温度，当前温度，风速，累计的费用，累计的时长。
         client_str = room + ' is ' + state
         if room == '306C':
-            self.C306Lab.setText(client_str)
+            self.serverUI.C306Lab.setText(client_str)
         elif room == '307C':
-            self.C307Lab.setText(client_str)
+            self.serverUI.C307Lab.setText(client_str)
 
     def onOff(self):
+        global onOff
         if(onOff == 1):##开机啦
             on_tips_string = u"您开启了空调服务器啦！"
-            self.display.setText(on_tips_string)
+            self.serverUI.display.setText(on_tips_string)
             self.serverState()
 
             # 2 Start Server
             server_thread = threading.Thread(target=server.serve_forever)
             server_thread.setDaemon(True)
             server_thread.start()
+            self.serverUI.onBtn.setText(u"关机")
+            onOff = 0
+
         else:##按的关机
-            onOff == 0
-            on_tips_string = u"您关闭了空调服务器啦！"
-            self.display.setText(on_tips_string)
+
+            self.serverUI.onBtn.setText(u"开机")
+            on_tips_string = u"您关闭了啦！"
+            self.serverUI.display.setText(on_tips_string)
 
             server.shutdown()
+            onOff = 1
 
 
 

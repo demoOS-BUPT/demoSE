@@ -1,9 +1,12 @@
-# -*- coding: UTF-8 -*-
-# Ui Init
-from PyQt4 import QtCore, QtGui,uic,Qt
+# -*- coding: utf-8 -*-
 
-form_qtCreatorFile = "form.ui"  # Window File
-form_MainWindow, form_QtBaseClass = uic.loadUiType(form_qtCreatorFile)
+# Form implementation generated from reading ui file 'form.ui'
+#
+# Created by: PyQt4 UI code generator 4.11.4
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt4 import QtCore, QtGui
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -19,84 +22,88 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_formForm(QtGui.QMainWindow,form_MainWindow):
-    def __init__(self):
-        QtGui.QMainWindow.__init__(self)
-        form_MainWindow.__init__(self)
-        self.setupUi(self)
-        self.setWindowTitle( u"报表打印")
+class Ui_Form(object):
+    def setupUi(self, Form):
+        Form.setObjectName(_fromUtf8("Form"))
+        Form.resize(1159, 680)
+        self.printBtn = QtGui.QPushButton(Form)
+        self.printBtn.setGeometry(QtCore.QRect(450, 210, 93, 28))
+        self.printBtn.setObjectName(_fromUtf8("printBtn"))
+        self.dateEdit = QtGui.QDateEdit(Form)
+        self.dateEdit.setGeometry(QtCore.QRect(450, 80, 110, 22))
+        self.dateEdit.setObjectName(_fromUtf8("dateEdit"))
+        self.layoutWidget = QtGui.QWidget(Form)
+        self.layoutWidget.setGeometry(QtCore.QRect(30, 140, 161, 41))
+        self.layoutWidget.setObjectName(_fromUtf8("layoutWidget"))
+        self.horizontalLayout = QtGui.QHBoxLayout(self.layoutWidget)
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        self.label = QtGui.QLabel(self.layoutWidget)
+        self.label.setObjectName(_fromUtf8("label"))
+        self.horizontalLayout.addWidget(self.label)
+        self.roomBox = QtGui.QComboBox(self.layoutWidget)
+        self.roomBox.setObjectName(_fromUtf8("roomBox"))
+        self.roomBox.addItem(_fromUtf8(""))
+        self.roomBox.addItem(_fromUtf8(""))
+        self.roomBox.addItem(_fromUtf8(""))
+        self.roomBox.addItem(_fromUtf8(""))
+        self.roomBox.addItem(_fromUtf8(""))
+        self.roomBox.addItem(_fromUtf8(""))
+        self.roomBox.addItem(_fromUtf8(""))
+        self.roomBox.addItem(_fromUtf8(""))
+        self.roomBox.addItem(_fromUtf8(""))
+        self.roomBox.addItem(_fromUtf8(""))
+        self.horizontalLayout.addWidget(self.roomBox)
+        self.layoutWidget1 = QtGui.QWidget(Form)
+        self.layoutWidget1.setGeometry(QtCore.QRect(453, 112, 101, 91))
+        self.layoutWidget1.setObjectName(_fromUtf8("layoutWidget1"))
+        self.verticalLayout = QtGui.QVBoxLayout(self.layoutWidget1)
+        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        self.dayBtn = QtGui.QRadioButton(self.layoutWidget1)
+        self.dayBtn.setObjectName(_fromUtf8("dayBtn"))
+        self.verticalLayout.addWidget(self.dayBtn)
+        self.monthBtn = QtGui.QRadioButton(self.layoutWidget1)
+        self.monthBtn.setObjectName(_fromUtf8("monthBtn"))
+        self.verticalLayout.addWidget(self.monthBtn)
+        self.yearBtn = QtGui.QRadioButton(self.layoutWidget1)
+        self.yearBtn.setObjectName(_fromUtf8("yearBtn"))
+        self.verticalLayout.addWidget(self.yearBtn)
+        self.calWidget = QtGui.QCalendarWidget(Form)
+        self.calWidget.setGeometry(QtCore.QRect(580, 0, 296, 236))
+        self.calWidget.setObjectName(_fromUtf8("calWidget"))
+        self.tabWidget = QtGui.QTableWidget(Form)
+        self.tabWidget.setGeometry(QtCore.QRect(30, 260, 1091, 391))
+        self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
+        self.tabWidget.setColumnCount(0)
+        self.tabWidget.setRowCount(0)
 
-class formUI(QtGui.QDialog):
-    def __init__(self,parent=None):
-        super(formUI,self).__init__(parent)
-        self.formForm = Ui_formForm()
-        self.formForm.setupUi(self)
-        self.formForm.dayBtn.setChecked(True)
+        self.retranslateUi(Form)
+        QtCore.QMetaObject.connectSlotsByName(Form)
 
-        self.setDate()
-        self.connect(self.formForm.printBtn,QtCore.SIGNAL("clicked()"),self.printAction)
-        self.formForm.calWidget.clicked.connect(self.setDate)
-        self.tableView()
-
-    def tableView(self):
-        column = 10
-        row = 4
-        self.formForm.tabWidget.setColumnCount(column)
-        self.formForm.tabWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
-
-        self.formForm.tabWidget.setHorizontalHeaderLabels([u'Room',  u'Operate', u'User','IP','Time','InitTemperature','FinalTemperature','Wind','PerMoney', 'TotalMoney'])
-
-        #设置表头字体加粗：
-        font = self.formForm.tabWidget.horizontalHeader().font()
-
-        font.setBold(True)
-        self.formForm.tabWidget.horizontalHeader().setFont(font)
-
-        self.formForm.tabWidget.setRowCount(row)
-
-        row_index = 0
-
-        self.formForm.tabWidget.setItem(row_index, 0, QtGui.QTableWidgetItem(u"308"))
-        self.formForm.tabWidget.setItem(row_index, 1, QtGui.QTableWidgetItem("199"))
-        self.formForm.tabWidget.setItem(row_index, 2, QtGui.QTableWidgetItem("20.5"))
-
-    def setDate(self):
-        self.formForm.dateEdit.setDate(self.formForm.calWidget.selectedDate())
-
-    # 0日报表 1周 2月
-    def printAction(self):
-        if (self.formForm.dayBtn.isChecked()):
-            type = 0
-        elif (self.formForm.monthBtn.isChecked()):
-            type = 1
-        else:
-            type = 2
-
-        if (self.formForm.roomBox.currentIndex() == 0):
-            room = '0'
-        elif (self.formForm.roomBox.currentIndex() == 1):
-            room = '306C'
-        #其他房间
-
-        #获取所需打印的第一天的年月日
-        year,month,day = self.formForm.dateEdit.date().getDate()
-        t = str(year) + '/'+str(month) + '/'+ str(day)
-        import time
-        timeArray = time.strptime(t, "%Y/%m/%d")
-        timeStamp = int(time.mktime(timeArray))
-
-        #传类型和日期
-        print '不会打印啦'+str(type) +t + str(timeStamp) + room
-
-        #收一堆信息展示
-        '''
-        self.formForm.tabWidget.setRowCount(4)
-        '''
+    def retranslateUi(self, Form):
+        Form.setWindowTitle(_translate("Form", "Form", None))
+        self.printBtn.setText(_translate("Form", "打印", None))
+        self.label.setText(_translate("Form", "房间：", None))
+        self.roomBox.setItemText(0, _translate("Form", "全部", None))
+        self.roomBox.setItemText(1, _translate("Form", "306C", None))
+        self.roomBox.setItemText(2, _translate("Form", "306D", None))
+        self.roomBox.setItemText(3, _translate("Form", "307C", None))
+        self.roomBox.setItemText(4, _translate("Form", "307D", None))
+        self.roomBox.setItemText(5, _translate("Form", "308C", None))
+        self.roomBox.setItemText(6, _translate("Form", "308D", None))
+        self.roomBox.setItemText(7, _translate("Form", "309C", None))
+        self.roomBox.setItemText(8, _translate("Form", "309D", None))
+        self.roomBox.setItemText(9, _translate("Form", "310C", None))
+        self.dayBtn.setText(_translate("Form", "日报表", None))
+        self.monthBtn.setText(_translate("Form", "周报表", None))
+        self.yearBtn.setText(_translate("Form", "月报表", None))
 
 
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
-    form = formUI()
-    form.show()
+    Form = QtGui.QWidget()
+    ui = Ui_Form()
+    ui.setupUi(Form)
+    Form.show()
     sys.exit(app.exec_())
+
