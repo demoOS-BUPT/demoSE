@@ -143,6 +143,10 @@ class AirClient(object):
         if nowTime <= int( self.lastTime + 3 ):
             return False
 
+        if not self.open:
+            print '[closing]', self.room
+            return False
+
         if self.sleep:
             print '[sleeping]'
             if self.mode == 'hot':
