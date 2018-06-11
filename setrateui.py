@@ -1,47 +1,168 @@
-# -*- coding: UTF-8 -*-
-# Ui Init
-from PyQt4 import QtCore, QtGui,uic
-from client import *
-setrate_qtCreatorFile = "setRate.ui"  # Window File
-setrate_MainWindow, rate_QtBaseClass = uic.loadUiType(setrate_qtCreatorFile)
+# -*- coding: utf-8 -*-
 
-class Ui_setrateForm(QtGui.QMainWindow,setrate_MainWindow):
-    def __init__(self):
-        QtGui.QMainWindow.__init__(self)
-        setrate_MainWindow.__init__(self)
-        self.setupUi(self)
-        self.setWindowTitle( u"设置费率")
+# Form implementation generated from reading ui file 'setRate.ui'
+#
+# Created by: PyQt4 UI code generator 4.11.4
+#
+# WARNING! All changes made in this file will be lost!
 
-class setrateUI(QtGui.QDialog):
-    def __init__(self,parent=None):
-        super(setrateUI,self).__init__(parent)
-        self.setrateForm = Ui_setrateForm()
-        self.setrateForm.setupUi(self)
+from PyQt4 import QtCore, QtGui
 
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    def _fromUtf8(s):
+        return s
 
-        self.setrateForm.lowRateEdit.setText('1.5')
-        self.setrateForm.midRateEdit.setText('2')
-        self.setrateForm.highRateEdit.setText('2.5')
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
 
-        self.setrateForm.commitBtn.clicked.connect(self.commitAction)
+class Ui_Form(object):
+    def setupUi(self, Form):
+        Form.setObjectName(_fromUtf8("Form"))
+        Form.resize(467, 490)
+        self.commitBtn = QtGui.QPushButton(Form)
+        self.commitBtn.setGeometry(QtCore.QRect(320, 340, 93, 28))
+        self.commitBtn.setObjectName(_fromUtf8("commitBtn"))
+        self.tabWidget = QtGui.QTabWidget(Form)
+        self.tabWidget.setGeometry(QtCore.QRect(30, 70, 351, 251))
+        self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
+        self.tab = QtGui.QWidget()
+        self.tab.setObjectName(_fromUtf8("tab"))
+        self.highRateEdit = QtGui.QLineEdit(self.tab)
+        self.highRateEdit.setGeometry(QtCore.QRect(100, 150, 113, 21))
+        self.highRateEdit.setObjectName(_fromUtf8("highRateEdit"))
+        self.label = QtGui.QLabel(self.tab)
+        self.label.setGeometry(QtCore.QRect(40, 70, 72, 15))
+        self.label.setObjectName(_fromUtf8("label"))
+        self.label_4 = QtGui.QLabel(self.tab)
+        self.label_4.setGeometry(QtCore.QRect(40, 40, 72, 15))
+        self.label_4.setObjectName(_fromUtf8("label_4"))
+        self.lowRateEdit = QtGui.QLineEdit(self.tab)
+        self.lowRateEdit.setGeometry(QtCore.QRect(100, 70, 113, 21))
+        self.lowRateEdit.setObjectName(_fromUtf8("lowRateEdit"))
+        self.midRateEdit = QtGui.QLineEdit(self.tab)
+        self.midRateEdit.setGeometry(QtCore.QRect(100, 110, 113, 21))
+        self.midRateEdit.setObjectName(_fromUtf8("midRateEdit"))
+        self.label_3 = QtGui.QLabel(self.tab)
+        self.label_3.setGeometry(QtCore.QRect(40, 150, 72, 15))
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.label_2 = QtGui.QLabel(self.tab)
+        self.label_2.setGeometry(QtCore.QRect(40, 110, 72, 15))
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.label_5 = QtGui.QLabel(self.tab)
+        self.label_5.setGeometry(QtCore.QRect(190, 20, 101, 21))
+        self.label_5.setObjectName(_fromUtf8("label_5"))
+        self.tabWidget_2 = QtGui.QTabWidget(self.tab)
+        self.tabWidget_2.setGeometry(QtCore.QRect(0, -20, 351, 251))
+        self.tabWidget_2.setObjectName(_fromUtf8("tabWidget_2"))
+        self.tab_4 = QtGui.QWidget()
+        self.tab_4.setObjectName(_fromUtf8("tab_4"))
+        self.label_8 = QtGui.QLabel(self.tab_4)
+        self.label_8.setGeometry(QtCore.QRect(220, 20, 111, 21))
+        self.label_8.setObjectName(_fromUtf8("label_8"))
+        self.layoutWidget_2 = QtGui.QWidget(self.tab_4)
+        self.layoutWidget_2.setGeometry(QtCore.QRect(80, 60, 191, 91))
+        self.layoutWidget_2.setObjectName(_fromUtf8("layoutWidget_2"))
+        self.verticalLayout_2 = QtGui.QVBoxLayout(self.layoutWidget_2)
+        self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
+        self.FCFSBtn_2 = QtGui.QRadioButton(self.layoutWidget_2)
+        self.FCFSBtn_2.setObjectName(_fromUtf8("FCFSBtn_2"))
+        self.verticalLayout_2.addWidget(self.FCFSBtn_2)
+        self.priorityBtn_2 = QtGui.QRadioButton(self.layoutWidget_2)
+        self.priorityBtn_2.setObjectName(_fromUtf8("priorityBtn_2"))
+        self.verticalLayout_2.addWidget(self.priorityBtn_2)
+        self.label_9 = QtGui.QLabel(self.tab_4)
+        self.label_9.setGeometry(QtCore.QRect(10, 70, 72, 15))
+        self.label_9.setObjectName(_fromUtf8("label_9"))
+        self.tabWidget_2.addTab(self.tab_4, _fromUtf8(""))
+        self.tab_5 = QtGui.QWidget()
+        self.tab_5.setObjectName(_fromUtf8("tab_5"))
+        self.highRateEdit_2 = QtGui.QLineEdit(self.tab_5)
+        self.highRateEdit_2.setGeometry(QtCore.QRect(100, 190, 113, 21))
+        self.highRateEdit_2.setObjectName(_fromUtf8("highRateEdit_2"))
+        self.label_10 = QtGui.QLabel(self.tab_5)
+        self.label_10.setGeometry(QtCore.QRect(40, 110, 72, 15))
+        self.label_10.setObjectName(_fromUtf8("label_10"))
+        self.label_11 = QtGui.QLabel(self.tab_5)
+        self.label_11.setGeometry(QtCore.QRect(40, 40, 72, 15))
+        self.label_11.setObjectName(_fromUtf8("label_11"))
+        self.lowRateEdit_2 = QtGui.QLineEdit(self.tab_5)
+        self.lowRateEdit_2.setGeometry(QtCore.QRect(100, 110, 113, 21))
+        self.lowRateEdit_2.setObjectName(_fromUtf8("lowRateEdit_2"))
+        self.midRateEdit_2 = QtGui.QLineEdit(self.tab_5)
+        self.midRateEdit_2.setGeometry(QtCore.QRect(100, 150, 113, 21))
+        self.midRateEdit_2.setObjectName(_fromUtf8("midRateEdit_2"))
+        self.label_12 = QtGui.QLabel(self.tab_5)
+        self.label_12.setGeometry(QtCore.QRect(40, 190, 72, 15))
+        self.label_12.setObjectName(_fromUtf8("label_12"))
+        self.label_13 = QtGui.QLabel(self.tab_5)
+        self.label_13.setGeometry(QtCore.QRect(40, 150, 72, 15))
+        self.label_13.setObjectName(_fromUtf8("label_13"))
+        self.elecMonEdit = QtGui.QLineEdit(self.tab_5)
+        self.elecMonEdit.setGeometry(QtCore.QRect(110, 40, 113, 21))
+        self.elecMonEdit.setObjectName(_fromUtf8("elecMonEdit"))
+        self.tempPerElec = QtGui.QLineEdit(self.tab_5)
+        self.tempPerElec.setGeometry(QtCore.QRect(110, 70, 113, 21))
+        self.tempPerElec.setObjectName(_fromUtf8("tempPerElec"))
+        self.tabWidget_2.addTab(self.tab_5, _fromUtf8(""))
+        self.tab_6 = QtGui.QWidget()
+        self.tab_6.setObjectName(_fromUtf8("tab_6"))
+        self.highExpEdit_2 = QtGui.QLabel(self.tab_6)
+        self.highExpEdit_2.setGeometry(QtCore.QRect(70, 40, 72, 15))
+        self.highExpEdit_2.setObjectName(_fromUtf8("highExpEdit_2"))
+        self.midExpEdit_2 = QtGui.QLabel(self.tab_6)
+        self.midExpEdit_2.setGeometry(QtCore.QRect(70, 70, 72, 15))
+        self.midExpEdit_2.setObjectName(_fromUtf8("midExpEdit_2"))
+        self.lowExpEdit_2 = QtGui.QLabel(self.tab_6)
+        self.lowExpEdit_2.setGeometry(QtCore.QRect(70, 100, 72, 15))
+        self.lowExpEdit_2.setObjectName(_fromUtf8("lowExpEdit_2"))
+        self.tabWidget_2.addTab(self.tab_6, _fromUtf8(""))
+        self.tabWidget.addTab(self.tab, _fromUtf8(""))
 
-    def commitAction(self):
+        self.retranslateUi(Form)
+        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget_2.setCurrentIndex(1)
+        QtCore.QMetaObject.connectSlotsByName(Form)
 
+    def retranslateUi(self, Form):
+        Form.setWindowTitle(_translate("Form", "Form", None))
+        self.commitBtn.setText(_translate("Form", "提交", None))
+        self.label.setText(_translate("Form", "低风", None))
+        self.label_4.setText(_translate("Form", "设置费率", None))
+        self.label_3.setText(_translate("Form", "高风", None))
+        self.label_2.setText(_translate("Form", "中风", None))
+        self.label_5.setText(_translate("Form", "风量需要吗", None))
+        self.label_8.setText(_translate("Form", "刷新频率要吗", None))
+        self.FCFSBtn_2.setText(_translate("Form", "先来先调度", None))
+        self.priorityBtn_2.setText(_translate("Form", "优先级调度", None))
+        self.label_9.setText(_translate("Form", "调度选择：", None))
+        self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_4), _translate("Form", "工作模式", None))
+        self.label_10.setText(_translate("Form", "低风", None))
+        self.label_11.setText(_translate("Form", "设置费率", None))
+        self.label_12.setText(_translate("Form", "高风", None))
+        self.label_13.setText(_translate("Form", "中风", None))
+        self.elecMonEdit.setText(_translate("Form", "元/度", None))
+        self.tempPerElec.setText(_translate("Form", "温度℃/一度电", None))
+        self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_5), _translate("Form", "设置费率", None))
+        self.highExpEdit_2.setText(_translate("Form", "TextLabel", None))
+        self.midExpEdit_2.setText(_translate("Form", "TextLabel", None))
+        self.lowExpEdit_2.setText(_translate("Form", "TextLabel", None))
+        self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_6), _translate("Form", "设置耗电量", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("Form", "设置电率", None))
 
-        self.lowrate = float(self.setrateForm.lowRateEdit.text())
-        self.midrate = float(self.setrateForm.midRateEdit.text())
-        self.highrate = float(self.setrateForm.highRateEdit.text())
-
-
-        if self.lowrate < 10 and self.lowrate >1:
-            QtGui.QMessageBox.information(self, u"信息提示", u"修改成功")
-            self.accept()
-        else:
-            QtGui.QMessageBox.information(self, u"信息提示", u"修改规则：嗯嗯没写")
 
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
-    setrate = setrateUI()
-    setrate.show()
+    Form = QtGui.QWidget()
+    ui = Ui_Form()
+    ui.setupUi(Form)
+    Form.show()
     sys.exit(app.exec_())
+

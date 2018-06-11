@@ -5,10 +5,8 @@ import sys
 from PyQt4 import QtCore, QtGui, uic
 import threading
 from AirClient import *
+from clientui import *
 
-# Ui Init
-qtCreatorFile = "client.ui"  # Window File
-Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
 # Socket Init
 HOST, PORT = "127.0.0.1", int(233)
@@ -27,33 +25,29 @@ LOWWIND = 1
 sock_flag = 0
 first_open = 1
 
-class Client(QtGui.QMainWindow,Ui_MainWindow):
-    def __init__(self,user):
-        QtGui.QMainWindow.__init__(self)
-        Ui_MainWindow.__init__(self)
-        self.setupUi(self)
+class Client(QtGui.QMainWindow):
+    def __init__(self,user,parent=None):
+        super(Client, self).__init__(parent)
+        self.clientUI  = Ui_MainWindow()
+        self.clientUI.setupUi(self)
+
         global room
         room = user
 
-        # 开始装载样式表
-        qss_file = open('clientQSS.qss').read()
-        self.setStyleSheet(qss_file)
-
         # 设置滑动条控件的最大最小值
-        self.tempSlider.setMinimum(limit_l)
-        self.tempSlider.setMaximum(limit_h)
+        self.clientUI.tempSlider.setMinimum(limit_l)
+        self.clientUI.tempSlider.setMaximum(limit_h)
         # 设置滑动条控件的初始值
-        self.tempSlider.setValue(defalt_temp)
+        self.clientUI.tempSlider.setValue(defalt_temp)
 
         # 连接信号和槽
-        self.tempSlider.valueChanged[int].connect(self.changeBoxTemp)
-        self.temperaBox.valueChanged[float].connect(self.changeSliderTemp)
-        self.oBtn.clicked.connect(self.onOroff)
-        self.commitBtn.setDisabled(False)
+        self.clientUI.tempSlider.valueChanged[int].connect(self.changeBoxTemp)
+        self.clientUI.temperaBox.valueChanged[float].connect(self.changeSliderTemp)
+        self.clientUI.oBtn.clicked.connect(self.onOroff)
 
-        self.highBtn.toggled[bool].connect(self.highBtnSlot)
-        self.midBtn.toggled[bool].connect(self.midBtnSlot)
-        self.lowBtn.toggled[bool].connect(self.lowBtnSlot)
+        self.clientUI.highBtn.toggled[bool].connect(self.highBtnSlot)
+        self.clientUI.midBtn.toggled[bool].connect(self.midBtnSlot)
+        self.clientUI.lowBtn.toggled[bool].connect(self.lowBtnSlot)
 
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -61,23 +55,12 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
         self.sock.setblocking(0)
         self.t = myThread(self.sock, self)
 
-    def getWind(self):
-        if (self.highBtn.isChecked()):
-            wind = HIGHWIND
-        elif (self.midBtn.isChecked()):
-            wind = MIDWIND
-        else:
-            wind = LOWWIND
-        return wind
 
-    def getWindStr(self):
-        if (self.highBtn.isChecked()):
-            wind_str = u'高风'
-        elif (self.midBtn.isChecked()):
-            wind_str = u'中风'
-        else:
-            wind_str = u'低风'
-        return wind_str
+    def setTime(self,t):
+        s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~"
+        t = time.strftime("%Y-%m-%d %H:%M:%S",time.strptime(t,"%Y/%m/%d/%H/%M/%S"))
+        s += (u"\n当前时间为：" + str(t))
+        self.clientUI.roomLabel.setText(s)
 
     def onOroff(self):
         global sock_flag
@@ -85,19 +68,18 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
         if(sock_flag == 0):
 
             if first_open:
-                finalTemp = float(self.temperaBox.value())
+                finalTemp = float(self.clientUI.temperaBox.value())
                 on_tips_string = u"您设置了空调温度：" + str(finalTemp)
-                self.tipLabel.setText(on_tips_string)
+                self.clientUI.tipLabel.setText(on_tips_string)
 
                 win = self.getWind()
-
                 time.sleep(0.2)
 
                 self.air = AirClient()
                 status={'room':room,
                         'currentTemp':20.3,
-                        'finalTemp':float(self.temperaBox.value()),
-                        'wind':'3',#中速
+                        'finalTemp':float(self.clientUI.temperaBox.value()),
+                        'wind':win,#中速
                         }
                 self.air.change_status(status)
 
@@ -112,7 +94,6 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
                 if operate[0] == 'start' and len(operate) == 6 and operate[-1] == '$':
                     self.air.recv_start(operate)
                     print '[recv]first start!'
-                    opStr = ''
                 else:
                     print '[error]recv first start error!'
                     exit()
@@ -132,79 +113,74 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
             s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~"
             starttime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.air.startTime))
             s += ( u"\n开机时间为：" + str(starttime) )
-            self.roomLabel.setText(s)
+            self.clientUI.roomLabel.setText(s)
 
             sock_flag = 1
-            self.oBtn.setText(u"关机")
+            self.clientUI.oBtn.setText(u"关机")
             if first_open:
                 self.t.start()
                 first_open = 0
 
-            self.commitBtn.clicked.connect(self.setTemp)
-            self.cancelBtn.clicked.connect(self.cancelTemp)
+            self.clientUI.tabWidget.setCurrentIndex(0)
 
         else:#关空调
 
             off_tips_string = u"耶 终于关空调了"
-            self.tipLabel.setText(off_tips_string)
+            self.clientUI.tipLabel.setText(off_tips_string)
 
-            self.commitBtn.clicked.disconnect(self.setTemp)
-            self.oBtn.setText(u"开机")
+            self.clientUI.oBtn.setText(u"开机")
 
             sendBuf = self.air.send_close()
             self.sock.send(sendBuf)
 
             sock_flag = 0
+
+            s=''
+            self.clientUI.roomLabel.setText(s)
             #self.sock.close()
 
+            self.clientUI.tabWidget.setCurrentIndex(2)
+
     def printDetail(self):
-        self.tabWidget.setCurrentIndex(1)
+        self.clientUI.tabWidget.setCurrentIndex(1)
 
         column = 10
         row = 4
-        self.billTable.setColumnCount(column)
-        self.billTable.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        self.clientUI.billTable.setColumnCount(column)
+        self.clientUI.billTable.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 
-        self.billTable.setHorizontalHeaderLabels([u'Room',  u'Operate', u'User','Time','FinalTemperature','Wind','PerMoney', 'TotalMoney'])
+        self.clientUI.billTable.setHorizontalHeaderLabels([u'Room',  u'Operate', u'User','Time','FinalTemperature','Wind','PerMoney', 'TotalMoney'])
 
         #设置表头字体加粗：
-        font = self.billTable.horizontalHeader().font()
+        font = self.clientUI.billTable.horizontalHeader().font()
 
         font.setBold(True)
-        self.billTable.horizontalHeader().setFont(font)
+        self.clientUI.billTable.horizontalHeader().setFont(font)
 
-        self.billTable.setRowCount(row)
+        self.clientUI.billTable.setRowCount(row)
+
         row_index = 0
-
-        self.formForm.tabWidget.setItem(row_index, 0, QtGui.QTableWidgetItem(u"308"))
-        self.formForm.tabWidget.setItem(row_index, 1, QtGui.QTableWidgetItem("199"))
-        self.formForm.tabWidget.setItem(row_index, 2, QtGui.QTableWidgetItem("20.5"))
+        self.clientUI.formForm.tabWidget.setItem(row_index, 0, QtGui.QTableWidgetItem(u"308"))
+        self.clientUI.formForm.tabWidget.setItem(row_index, 1, QtGui.QTableWidgetItem("199"))
+        self.clientUI.formForm.tabWidget.setItem(row_index, 2, QtGui.QTableWidgetItem("20.5"))
         print u"我打印个详单昂"
 
     def showState(self):
         stateStr = ""
         stateStr += u"\n当前温度："+(str(self.air.currentTemp))
         stateStr += u"\n目标温度：" +(str(self.air.finalTemp))
-
-        wind_str = self.getWindStr()
-
-        stateStr += u"\n风速：" +(wind_str)
-
-
+        stateStr += u"\n风速：" + self.getWindStr()
         stateStr += u"\n工作模式：" +self.air.mode
         stateStr += u"\n消费金额：" +str(self.air.totalMoney)
-        self.showLab.setText(stateStr)
+        self.clientUI.showLab.setText(stateStr)
 
     #修改目标温度参数
     def setTemp(self):
         temperature = float(self.temperaBox.value())
         on_tips_string = u"您设置了空调温度：" + str(temperature)
-        self.tipLabel.setText(on_tips_string)
+        self.clientUI.tipLabel.setText(on_tips_string)
 
-        status = {'room': self.air.room,
-                  'currentTemp': self.air.currentTemp,
-                  'finalTemp': temperature,
-                  'wind': self.air.wind,  # 中速
+        status = { 'finalTemp': temperature,
                   }
         self.air.change_status(status)
         sendBuf = self.air.send_change()
@@ -212,20 +188,21 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
 
     def cancelTemp(self):
         on_tips_string = u"成功取消目标温度更改"
-        self.tipLabel.setText(on_tips_string)
+        self.clientUI.tipLabel.setText(on_tips_string)
 
-        self.temperaBox.setValue(self.air.finalTemp)
-        self.tempSlider.setValue(self.air.finaltemp)
+        self.clientUI.temperaBox.setValue(self.air.finalTemp)
+        self.clientUI.tempSlider.setValue(self.air.finaltemp)
 
     def changeBoxTemp(self,value):
-        self.temperaBox.setValue(value)
+        self.clientUI.temperaBox.setValue(value)
+        if sock_flag :
+            self.setTemp()
 
     def changeSliderTemp(self, value):
-        self.tempSlider.setValue(int(value))
+        self.clientUI.tempSlider.setValue(int(value))
 
     def highBtnSlot(self):
-        if (self.highBtn.isChecked()):
-            print 'a '
+        if (self.clientUI.highBtn.isChecked()):
             status = {'wind': HIGHWIND,  # 高速
                       }
             self.air.change_status(status)
@@ -233,8 +210,7 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
             self.sock.send(sendBuf)
 
     def midBtnSlot(self):
-        if (self.midBtn.isChecked()):
-            print 'b '
+        if (self.clientUI.midBtn.isChecked()):
             status = {'wind': MIDWIND,  # 中速
                       }
             self.air.change_status(status)
@@ -242,13 +218,30 @@ class Client(QtGui.QMainWindow,Ui_MainWindow):
             self.sock.send(sendBuf)
 
     def lowBtnSlot(self):
-        if (self.lowBtn.isChecked()):
-            print 'c '
-        status = {'wind': LOWWIND,  # 中速
-                  }
-        self.air.change_status(status)
-        sendBuf = self.air.send_change()
-        self.sock.send(sendBuf)
+        if (self.clientUI.lowBtn.isChecked()):
+            status = {'wind': LOWWIND,  # 中速
+                      }
+            self.air.change_status(status)
+            sendBuf = self.air.send_change()
+            self.sock.send(sendBuf)
+
+    def getWind(self):
+        if (self.clientUI.highBtn.isChecked()):
+            wind = HIGHWIND
+        elif (self.clientUI.midBtn.isChecked()):
+            wind = MIDWIND
+        else:
+            wind = LOWWIND
+        return wind
+
+    def getWindStr(self):
+        if (self.clientUI.highBtn.isChecked()):
+            wind_str = u'高风'
+        elif (self.clientUI.midBtn.isChecked()):
+            wind_str = u'中风'
+        else:
+            wind_str = u'低风'
+        return wind_str
 
 
 
@@ -274,8 +267,10 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
             #print opStr
             operate = opStr.split("_")
 
+
             if operate[0] == 'a' and len(operate) == 11 and operate[-1] == '$':
                 self.client.air.recv_a(operate)
+                self.client.setTime(operate[4])
 
             if operate[0] == 'close' and len(operate) == 4 and operate[-1] == '$':
                 self.client.air.recv_close(operate)
@@ -287,6 +282,7 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
                 #待机
             if operate[0] == 'wait' and len(operate) == 5 and operate[-1] == '$':
                 self.client.air.recv_wait(operate)
+
 
             opStr = ''
 
