@@ -11,6 +11,7 @@ import sqlite3
 import threading
 import sys
 from PyQt4 import QtCore, QtGui, uic
+from report import *
 
 # 1 Set Host and Port
 HOST, PORT = "127.0.0.1", int(233)
@@ -179,16 +180,20 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 self.objAir.recv_first_open(operate)
                 algo.req_server(self.objAir.room)
                 opStr = ''
+                database.insert_operate(self.objAir,"zxh","open")#------------------!!!!!!!!!!!!!!!!!!1---------
                 print operate
             if operate[0] == 'c' and operate[-1] == '$':
+                database.insert_operate(self.objAir,"zxh","serve")#------------------!!!!!!!!!!!!!!!!!!1---------
                 self.objAir.recv_change(operate)
                 opStr = ''
                 print '[change]',operate
+
             if operate[0] == 'close' and operate[-1] == '$':
                 algo.remove_server(self.objAir.room)
                 self.objAir.recv_close(operate)
                 serverui.showRoomState(self.objAir.room,'closed')
                 opStr = ''
+                database.insert_operate(self.objAir,"zxh","close")#------------------!!!!!!!!!!!!!!!!!!1---------
                 #待机
 
             time.sleep(0.1)
@@ -247,6 +252,8 @@ class ThreadedServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 
 if __name__ == "__main__":
     read_setting()
+    database = Database()
+    database.init()
     server = ThreadedServer((HOST, PORT), HandleCheckin)
     server.allow_reuse_address = True
 

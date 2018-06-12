@@ -12,7 +12,37 @@ class Database(object):
     def init(self):
         #每个房间一个数据表
         create_table = [
-            'DROP TABLE IF EXISTS `room307C`;',
+            'DROP TABLE IF EXISTS `room306C`;',
+            '''
+        CREATE TABLE IF NOT EXISTS `room306C` (
+          `id` INTEGER PRIMARY KEY NOT NULL,
+          `operate` varchar(20) NOT NULL,
+          `user` varchar(20) NOT NULL,
+          `ip` varchar(20) NOT NULL,
+          `date` timestamp NOT NULL,
+          `timeLen` double NOT NULL ,
+          `currentTemp` double DEFAULT NULL,
+          `finalTemp` double DEFAULT NULL,
+          `wind` int(5) DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL
+        );''',
+             'DROP TABLE IF EXISTS `room306D`;',
+            '''
+        CREATE TABLE IF NOT EXISTS `room306D` (
+          `id` INTEGER PRIMARY KEY NOT NULL,
+          `operate` varchar(20) NOT NULL,
+          `user` varchar(20) NOT NULL,
+          `ip` varchar(20) NOT NULL,
+          `date` timestamp NOT NULL,
+          `timeLen` double NOT NULL ,
+          `currentTemp` double DEFAULT NULL,
+          `finalTemp` double DEFAULT NULL,
+          `wind` int(5) DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL
+        );''',
+             'DROP TABLE IF EXISTS `room307C`;',
             '''
         CREATE TABLE IF NOT EXISTS `room307C` (
           `id` INTEGER PRIMARY KEY NOT NULL,
@@ -41,6 +71,66 @@ class Database(object):
           `wind` int(5) DEFAULT NULL,
           `totalMoney` double DEFAULT NULL,
           `perMoney` double DEFAULT NULL
+        );''',
+        'DROP TABLE IF EXISTS `room308C`;',
+            '''
+        CREATE TABLE IF NOT EXISTS `room308C` (
+          `id` INTEGER PRIMARY KEY NOT NULL,
+          `operate` varchar(20) NOT NULL,
+          `user` varchar(20) NOT NULL,
+          `ip` varchar(20) NOT NULL,
+          `date` timestamp NOT NULL,
+          `timeLen` double NOT NULL ,
+          `currentTemp` double DEFAULT NULL,
+          `finalTemp` double DEFAULT NULL,
+          `wind` int(5) DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL
+        );''',
+        'DROP TABLE IF EXISTS `room308D`;',
+            '''
+        CREATE TABLE IF NOT EXISTS `room308D` (
+          `id` INTEGER PRIMARY KEY NOT NULL,
+          `operate` varchar(20) NOT NULL,
+          `user` varchar(20) NOT NULL,
+          `ip` varchar(20) NOT NULL,
+          `date` timestamp NOT NULL,
+          `timeLen` double NOT NULL ,
+          `currentTemp` double DEFAULT NULL,
+          `finalTemp` double DEFAULT NULL,
+          `wind` int(5) DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL
+        );''',
+        'DROP TABLE IF EXISTS `room309C`;',
+            '''
+        CREATE TABLE IF NOT EXISTS `room309C` (
+          `id` INTEGER PRIMARY KEY NOT NULL,
+          `operate` varchar(20) NOT NULL,
+          `user` varchar(20) NOT NULL,
+          `ip` varchar(20) NOT NULL,
+          `date` timestamp NOT NULL,
+          `timeLen` double NOT NULL ,
+          `currentTemp` double DEFAULT NULL,
+          `finalTemp` double DEFAULT NULL,
+          `wind` int(5) DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL
+        );''',
+        'DROP TABLE IF EXISTS `room309D`;',
+            '''
+        CREATE TABLE IF NOT EXISTS `room309D` (
+          `id` INTEGER PRIMARY KEY NOT NULL,
+          `operate` varchar(20) NOT NULL,
+          `user` varchar(20) NOT NULL,
+          `ip` varchar(20) NOT NULL,
+          `date` timestamp NOT NULL,
+          `timeLen` double NOT NULL ,
+          `currentTemp` double DEFAULT NULL,
+          `finalTemp` double DEFAULT NULL,
+          `wind` int(5) DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL
         );''',]
         for sqlQuery in create_table:
             cursor = self.conn.cursor()
@@ -50,10 +140,10 @@ class Database(object):
 
     def test_unit(self):
         insert_table=[
-            "INSERT INTO `room307C` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, 'open', 'client', '127.0.0.1', '2018-04-25 00:00:00','0', '25.0', '28.0', '2', '15.2', '0.3');",
-            "INSERT INTO `room307C` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, 'serve', 'client', '127.0.0.1', '2018-04-25 00:00:00','30','25.0', '28.0', '2', '15.2', '0.3');",
-            "INSERT INTO `room307C` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, 'serve', 'client', '127.0.0.1', '2018-04-25 00:00:00','15', '25.0', '28.0', '2', '15.2', '0.3');",
-            "INSERT INTO `room307D` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, 'close', 'client', '127.0.0.1', '2018-04-25 00:00:00','0', '25.0', '28.0', '2', '15.2', '0.3');"]
+            "INSERT INTO `room307C` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, 'open', 'client', '127.0.0.1', '2018-06-11 00:00:00','25', '25.0', '28.0', '2', '15.2', '0.3');",
+            "INSERT INTO `room307C` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, 'serve', 'client', '127.0.0.1', '2018-06-11 00:00:00','30','25.0', '27.0', '3', '15.2', '0.3');",
+            "INSERT INTO `room307C` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, 'serve', 'client2', '127.0.0.1', '2018-06-11 00:00:00','15', '25.0', '28.0', '2', '15.2', '0.3');",
+            "INSERT INTO `room307D` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, 'close', 'client', '127.0.0.1', '2018-06-11 00:00:00','0', '25.0', '28.0', '2', '15.2', '0.3');"]
 
         for sqlQuery in insert_table:
             cursor = self.conn.cursor()
@@ -61,20 +151,20 @@ class Database(object):
             cursor.close()
             self.conn.commit()
 
-
+    #插入的函数还没调用
     def insert_operate(self,  objAir, user,op):
         if not isinstance(objAir, AirService):
             print 'not a airObj!'
             return
         insert=[
-            "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, '\"open\"', '{user}', '{ip}', '{date}',0 , '{currentTemp}', '{finalTemp}', '{wind}', 0, 0);".format(
-            tableName=objAir.room, user=user, ip='127.0.0.1', date=int(time.time()),#时间有问题！！！！！！
+            "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, '\"open\"', '{user}', '{ip}', datetime(),0 , '{currentTemp}', '{finalTemp}', '{wind}', 0, 0);".format(
+            tableName=objAir.room, user=user, ip='127.0.0.1', #时间有问题！！！！！！
             currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind) ,
-             "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, '\"close\"', '{user}', '{ip}', '{date}','{timeLen}', '{currentTemp}', '{finalTemp}', '{wind}', '{totalMoney}', '{perMoney}');".format(
-            tableName=objAir.room, user=user, ip='127.0.0.1', date=int(time.time()),timeLen=objAir.lastTime,#时间有问题！！！！！！
+             "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, '\"close\"', '{user}', '{ip}',  datetime(),'{timeLen}', '{currentTemp}', '{finalTemp}', '{wind}', '{totalMoney}', '{perMoney}');".format(
+            tableName=objAir.room, user=user, ip='127.0.0.1', timeLen=objAir.lastTime,#时间有问题！！！！！！
             currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind, totalMoney=objAir.totalMoney,perMoney=objAir.perMoney) ,
-            "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, '\"serve\"', '{user}', '{ip}', '{date}','{timeLen}', '{currentTemp}', '{finalTemp}', '{wind}', '{totalMoney}', '{perMoney}');".format(
-            tableName=objAir.room, user=user, ip='127.0.0.1', date=int(time.time()),timeLen=objAir.lastTime,#时间有问题！！！！！！
+            "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, '\"serve\"', '{user}', '{ip}', datetime(),'{timeLen}', '{currentTemp}', '{finalTemp}', '{wind}', '{totalMoney}', '{perMoney}');".format(
+            tableName=objAir.room, user=user, ip='127.0.0.1',timeLen=objAir.lastTime,#时间有问题！！！！！！
             currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind, totalMoney=objAir.totalMoney,perMoney=objAir.perMoney ) ,
         ]
 
@@ -88,142 +178,103 @@ class Database(object):
         cursor.close()
         self.conn.commit()
 
-
-    def report(self,objDate,objRoom):
+    #报表 房间objRoom所在日期objDate的type类型报表 objDate有类型要求！！
+    def report(self,objDate,objRoom,type):
+        if type==0:
+            pattern="%Y-%m-%d"
+        elif type==1:
+            pattern="%Y-%W"
+        elif type==2:
+            pattern="%Y-%m"
         select = [
-            'Select  count(operate) from {tableName} where date="{queryDate}" and operate=="open";'.format(tableName=objRoom,queryDate=objDate),
+            'Select  count(operate) from {tableName} where strftime("{pattern}",date)="{queryDate}" and operate=="open";'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
             #房间使用空调的次数（一次开关）
 
             '''
-            Select  finalTemp  from {tableName} where date="{queryDate}" and sum(time)>= (
-            Select  sum(time)  from {tableName} where date="{queryDate}" and group by finalTemp)group by finalTemp;
-            '''.format(tableName=objRoom,queryDate=objDate),#最常用目标温度（该房间使用时间最长的目标温度）
+            Select  finalTemp,MAX(sumTime)from( select finalTemp,sum(timeLen)sumTime from {tableName} where strftime("{pattern}",date)="{queryDate}"
+            group by finalTemp);
+            '''.format(tableName=objRoom,queryDate=objDate,pattern=pattern),#最常用目标温度（该房间使用时间最长的目标温度）
 
             '''
-          Select  wind  from {tableName} where date="{queryDate}" and sum(time)>= (
-          Select  sum(time)  from {tableName} where date="{queryDate}" and group by wind)group by wind
-          ;'''.format(tableName=objRoom,queryDate=objDate),#最常用风速（时间最长的风速）
+            Select  wind,MAX(sumTime)from( select wind,sum(timeLen)sumTime from {tableName} where strftime("{pattern}",date)="{queryDate}"
+            group by wind)
+            ;'''.format(tableName=objRoom,queryDate=objDate,pattern=pattern),#最常用风速（时间最长的风速）
 
-            'Select  count(*) from {tableName} where date="{queryDate}" and operate=="serve" ;'.format(tableName=objRoom,queryDate=objDate),
+            'Select  count(*) from {tableName} where strftime("{pattern}",date)="{queryDate}" and operate=="serve" ;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
             #达到目标温度次数---------没有考虑调度算法！！！！！！！
 
-            'Select  count(operate) from {tableName} where date="{queryDate}" and operate=="serve" ;'.format(tableName=objRoom,queryDate=objDate),
+            'Select  count(operate) from {tableName} where strftime("{pattern}",date)="{queryDate}" and operate=="serve" ;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
             #被调次数---------没有考虑调度算法！！！！！！！
 
-            'Select  count(*) from {tableName} where date="{queryDate}" group by user;'.format(tableName=objRoom,queryDate=objDate),
+            'Select  count(*) from {tableName} where strftime("{pattern}",date)="{queryDate}" group by user;'.format(tableName=objRoom,queryDate=objDate,pattern={pattern}),
             #详单数
 
-            'Select sum(totalMoney) from {tableName} where date="{queryDate}" and operate=="serve"  group user;'.format(tableName=objRoom,queryDate=objDate)
+            'Select sum(totalMoney) from {tableName} where strftime("{pattern}",date)="{queryDate}" and operate=="serve"  group by user;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern)
             #总费用
             ]
-        print(objRoom),
+        print(objRoom)
+        list=[]
         for sqlQuery in select:
             cursor = self.conn.cursor()
             cursor.execute(sqlQuery)
             for row in cursor:
-                print(row[0]),
-            print ("\n")
+                list.append(row[0])
+                #print(row[0]),
             cursor.close()
             self.conn.commit()
+        print list
+        return list
 
+    #详单 用户user的所在房间objRoom的objDate那天的详单 以及总费用
+    def detailed_bill(self,objDate,objRoom,user):
+        select = [
+            'Select  * from {tableName} where strftime("%Y-%m-%d",date)="{queryDate}" and user="{user}";'.format(tableName=objRoom,queryDate=objDate,user=user),
+            #详单 是否要加日期？？？？一个用户多天都使用这个房间？？
 
+            'Select  sum(totalMoney) from (Select  totalMoney from {tableName} where strftime("%Y-%m-%d",date)="{queryDate}" and user="{user}");'.format(tableName=objRoom,queryDate=objDate,user=user),
+            #总钱数
 
-
-
-    def select_operate(self, date,type, objroom):
-        #print type(objAir)
-        '''
-        if not isinstance(objAir, AirService):
-            print 'not a airObj!'
-            return
-        '''
-        date = time.gmtime(date)
-        if type == 0:
-            # 日报表
-            #time.strftime("%Y-%m-%d",date)
-            #sqlQuery = "SELECT * FROM `operate` "
-            if objroom.strip()=='':
-                sqlQuery = "SELECT * FROM `operate` WHERE strftime('\"%Y-%m-%d\"',time)=='\"{date}\"' ORDER BY TIME".format(
-                    date= time.strftime("%Y-%m-%d", date)
-                )
-            else:
-                sqlQuery = "SELECT * FROM `operate` WHERE room=='\"{objroom}\"' AND strftime('\"%Y-%m-%d\"',time)=='\"{date}\"' ORDER BY TIME".format(
-                    date= time.strftime("%Y-%m-%d", date), objroom=objroom
-                )
-            #sqlQuery = "SELECT * FROM `operate` WHERE '\"2018-04-25\"'=='\"{date}\"' ORDER BY TIME".format(
-             #   date=date
-            #)
-            print (sqlQuery)
-            print("{date}日报表\n".format(date=date))
-        elif type == 1:
-            # 周报表
-            if objroom.strip()=='':
-                sqlQuery = "SELECT * FROM `operate` WHERE strftime('%Y-%W','TIME')=={date} ORDER BY TIME".format(
-                    date=time.strftime("%Y-%W",date)
-                )
-            else:
-                sqlQuery = "SELECT * FROM `operate` WHERE  room=='\"{objroom}\"' AND strftime('%Y-%W','TIME')=={date} ORDER BY TIME".format(
-                    date=time.strftime("%Y-%W",date),objroom=objroom
-                )
-            print("{date}周报表\n".format(date=date))
-        elif type == 2:
-            # 月报表
-            if objroom.strip()=='':
-                sqlQuery = "SELECT * FROM `operate` WHERE strftime('%Y-%m','TIME')=={date} ORDER BY TIME".format(
-                    date=time.strftime("%Y-%m",date)
-                )
-            else:
-                sqlQuery = "SELECT * FROM `operate` WHERE room=='\"{objroom}\"' AND strftime('%Y-%m','TIME')=={date} ORDER BY TIME".format(
-                    date=time.strftime("%Y-%m",date),objroom=objroom
-                )
-            print("{date}月报表\n".format(date=date))
-
-        cursor = self.conn.cursor()
-        cursor.execute(sqlQuery)
-
-        print('%5s' % 'Room'),
-        print('%10s' % 'Operate'),
-        print('%8s' % 'User'),
-        print('%15s' % 'IP'),
-        print('%15s' % 'Time'),
-        print('%15s' % 'InitTemperature'),
-        print('%15s' % 'FinalTemperature'),
-        print('%5s' % 'Wind'),
-        print('%15s' % 'PerMoney'),
-        print('%15s' % 'TotalMoney')
-
-        for row in cursor:
-            # print "id_operate_room_user_ip_time_currentTemp_finalTemp_wind_totalMoney_perMonet"
-            print('%5s' % row[2]),
-            print('%10s' % row[1]),
-            print('%8s' % row[3]),
-            print('%15s' % row[4]),
-            print('%15s' % row[5]),
-            print('%15s' % row[6]),
-            print('%15s' % row[7]),
-            print('%5s' % row[8]),
-            print('%15s' % row[10]),
-            print('%15s' % row[9])
-
-        cursor.close()
-        self.conn.commit()
-
+            ]
+        list=[]
+        for sqlQuery in select:
+            cursor = self.conn.cursor()
+            cursor.execute(sqlQuery)
+            for row in cursor:
+                list.append(row)
+                #print(row[0]),
+            cursor.close()
+            self.conn.commit()
+        print list
+        return list
 
 
 if __name__ == '__main__':
+    read_setting()
     air = AirService()
-    air.init()
-    print air
+    air.__init__("room307C",15,25,2)
+    #print air
     database = Database()
     database.init()
     #执行动作时插入空调
-    database.insert_operate(AirService,"room523","open")
+    database.insert_operate(air,"client1","open")
+    database.insert_operate(air,"zxh","open")
+    database.insert_operate(air,"zxh","close")
+    database.insert_operate(air,"zxh","serve")
+    air.room="room307D"
+    database.insert_operate(air,"307D","open")
+    database.insert_operate(air,"307D","close")
     #database.test_unit()
     #room在实例里修改 时间和类型在前端给出
 
     t = '2018-06-11'
     timeArray = time.strptime(t, "%Y-%m-%d")
     timeStamp = int(time.mktime(timeArray))
+    print"日报表"
+    database.report("2018-06-12","room307C",0)
+    print"周报表"
+    database.report("2018-24","room307C",1)
+    print"月报表"
+    database.report("2018-06","room307C",2)
 
-    database.report("2018-06-11","room307C")
-    #database.select_operate(timeStamp,0 , '501')
+    print "zxh","detailed_bill"
+    database.detailed_bill("2018-06-12","room307C","zxh")

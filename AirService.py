@@ -39,7 +39,7 @@ class AirService(object):
     
     def __init__(self, room=503, currentTemp=15, finalTemp=25, wind=2):
         self.room = room
-        self.mode = MODE
+        self.mode = 0
         self.currentTemp = currentTemp
         self.finalTemp = finalTemp
         self.wind = wind
