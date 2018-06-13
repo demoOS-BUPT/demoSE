@@ -45,7 +45,7 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
-
+.idea/*
 # Translations
 *.mo
 *.pot
@@ -99,3 +99,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# db
+./air.db

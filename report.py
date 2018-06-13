@@ -179,13 +179,16 @@ class Database(object):
         self.conn.commit()
 
     #报表 房间objRoom所在日期objDate的type类型报表 objDate有类型要求！！
-    def report(self,objDate,objRoom,type):
+    def report(self,t,objRoom,type):
         if type==0:
             pattern="%Y-%m-%d"
+            objDate=time.strftime("%Y-%m-%d",t)
         elif type==1:
             pattern="%Y-%W"
+            objDate=time.strftime("%Y-%W", t)
         elif type==2:
             pattern="%Y-%m"
+            objDate=time.strftime("%Y-%m", t)
         select = [
             'Select  count(operate) from {tableName} where strftime("{pattern}",date)="{queryDate}" and operate=="open";'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
             #房间使用空调的次数（一次开关）
@@ -226,14 +229,12 @@ class Database(object):
         return list
 
     #详单 用户user的所在房间objRoom的objDate那天的详单 以及总费用
-    def detailed_bill(self,objDate,objRoom,user):
+    def detailed_bill(self,objRoom,user):
         select = [
-            'Select  * from {tableName} where strftime("%Y-%m-%d",date)="{queryDate}" and user="{user}";'.format(tableName=objRoom,queryDate=objDate,user=user),
-            #详单 是否要加日期？？？？一个用户多天都使用这个房间？？
-
-            'Select  sum(totalMoney) from (Select  totalMoney from {tableName} where strftime("%Y-%m-%d",date)="{queryDate}" and user="{user}");'.format(tableName=objRoom,queryDate=objDate,user=user),
+            'Select  sum(totalMoney) from (Select  totalMoney from {tableName} where user="{user}");'.format(tableName=objRoom,user=user),
             #总钱数
-
+            'Select  * from {tableName} where user="{user}";'.format(tableName=objRoom,user=user),
+            #详单 是否要加日期？？？？一个用户多天都使用这个房间？？
             ]
         list=[]
         for sqlQuery in select:
@@ -256,25 +257,24 @@ if __name__ == '__main__':
     database = Database()
     database.init()
     #执行动作时插入空调
-    database.insert_operate(air,"client1","open")
-    database.insert_operate(air,"zxh","open")
-    database.insert_operate(air,"zxh","close")
-    database.insert_operate(air,"zxh","serve")
+    #database.insert_operate(air,"client1","open")
+    #database.insert_operate(air,"zxh","open")
+    #database.insert_operate(air,"zxh","close")
+    #database.insert_operate(air,"zxh","serve")
     air.room="room307D"
-    database.insert_operate(air,"307D","open")
-    database.insert_operate(air,"307D","close")
-    #database.test_unit()
+    #database.insert_operate(air,"307D","open")
+    #database.insert_operate(air,"307D","close")
+    database.test_unit()
     #room在实例里修改 时间和类型在前端给出
 
-    t = '2018-06-11'
-    timeArray = time.strptime(t, "%Y-%m-%d")
-    timeStamp = int(time.mktime(timeArray))
+    t = (2018, 6, 11, 17, 3, 38, 1, 48, 0)
+    t = time.mktime(t)
     print"日报表"
-    database.report("2018-06-12","room307C",0)
+    database.report(time.gmtime(t),"room307C",0)
     print"周报表"
-    database.report("2018-24","room307C",1)
+    database.report(time.gmtime(t),"room307C",1)
     print"月报表"
-    database.report("2018-06","room307C",2)
+    database.report(time.gmtime(t),"room307C",2)
 
     print "zxh","detailed_bill"
-    database.detailed_bill("2018-06-12","room307C","zxh")
+    database.detailed_bill("room307C","zxh")
