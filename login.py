@@ -23,7 +23,7 @@ except AttributeError:
 class loginUI(QtGui.QDialog):
     def __init__(self,parent=None):
         super(loginUI,self).__init__(parent)
-        self.LoginForm = Ui_Login()
+        self.LoginForm = Ui_Dialog()
         self.LoginForm.setupUi(self)
 
         self.connect(self.LoginForm.Loginbtn,QtCore.SIGNAL("clicked()"),self.LoginAction)

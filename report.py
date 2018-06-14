@@ -248,6 +248,19 @@ class Database(object):
         print list
         return list
 
+    def getTotalMoney(self,objRoom,user):
+        select = 'Select  sum(totalMoney) from (Select  totalMoney from {tableName} where user="{user}");'.format(tableName=objRoom,user=user)
+            #总钱数
+        cursor = self.conn.cursor()
+        cursor.execute(select)
+        for row in cursor:
+            money = row
+
+        cursor.close()
+        self.conn.commit()
+        print money[0]
+        return money[0]
+
 
 if __name__ == '__main__':
     read_setting()

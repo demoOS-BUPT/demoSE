@@ -2,7 +2,7 @@
 # Ui Init
 from PyQt4 import QtCore, QtGui,uic
 from client import *
-from setRateui import *
+from setrateui import *
 
 class setrateUI(QtGui.QDialog):
     def __init__(self,parent=None):
@@ -15,11 +15,10 @@ class setrateUI(QtGui.QDialog):
         self.setrateForm.midRateEdit.setText('2')
         self.setrateForm.highRateEdit.setText('2.5')
 
+        self.setrateForm.cancel.clicked.connect(self.bye)
         self.setrateForm.commitBtn.clicked.connect(self.commitAction)
 
     def commitAction(self):
-
-
         self.lowrate = float(self.setrateForm.lowRateEdit.text())
         self.midrate = float(self.setrateForm.midRateEdit.text())
         self.highrate = float(self.setrateForm.highRateEdit.text())
@@ -30,6 +29,9 @@ class setrateUI(QtGui.QDialog):
             self.accept()
         else:
             QtGui.QMessageBox.information(self, u"信息提示", u"修改规则：嗯嗯没写")
+
+    def bye(self):
+        self.close()
 
 if __name__ == "__main__":
     import sys

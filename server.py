@@ -40,22 +40,23 @@ class Server(QtGui.QMainWindow):
         self.serverUI.setBtn.clicked.connect(self.setRate)
         self.serverUI.formBtn.clicked.connect(self.printForm)
 
-    def setRate(self):
-        self.setrate = setrateUI()
-        self.setrate.show()
-
-        if(self.setrate.exec_()):
-            print self.setrate.lowrate
-            print self.setrate.midrate
-            print self.setrate.highrate
-
-
     def serverState(self):
         serverStr = ''
         serverStr += u'\n工作模式：\n模式明明是全局的啊\n'
         serverStr += u'\n工作状态 \n我想想啊\n '
         serverStr += u'\n当前时间：\n' + str(time.time())
         self.serverUI.serverLab.setText(serverStr)
+
+    ######################服务端的几个功能
+
+    def setRate(self):
+        self.setrate = setrateUI()
+        self.setrate.show()
+
+        if (self.setrate.exec_()):
+            print self.setrate.lowrate
+            print self.setrate.midrate
+            print self.setrate.highrate
 
     def printForm(self):
         self.formui = formUI()
@@ -69,6 +70,10 @@ class Server(QtGui.QMainWindow):
         if(self.checkoutui.exec_()):
             #从队列里找到self.checkoutui.room对应的airserver 再sendclose
             pass
+
+    ######################
+
+    ######################展示房间状态
 
     def showState(self,status):
 
@@ -85,29 +90,35 @@ class Server(QtGui.QMainWindow):
         room = status['room']
         showBuf = showBuf.format(**status)
 
+        self.everyRoomLab(room,showBuf)
+
+    def showRoomState(self,room,state):
+
+        #房间号，目标温度，当前温度，风速，累计的费用，累计的时长。
+        showBuf = room + ' is ' + state
+        self.everyRoomLab(room, showBuf)
+
+    def everyRoomLab(self, room, showBuf):
         if room == '306C':
             self.serverUI.C306Lab.setText(showBuf)
         elif room == '307C':
             self.serverUI.C307Lab.setText(showBuf)
+        elif room == '306D':
+            self.serverUI.D306Lab.setText(showBuf)
+        elif room == '307D':
+            self.serverUI.D307Lab.setText(showBuf)
+        elif room == '308C':
+            self.serverUI.C308Lab.setText(showBuf)
+        elif room == '308D':
+            self.serverUI.D308Lab.setText(showBuf)
+        elif room == '309C':
+            self.serverUI.C309Lab.setText(showBuf)
+        elif room == '309D':
+            self.serverUI.D309Lab.setText(showBuf)
+        elif room == '310C':
+            self.serverUI.C310Lab.setText(showBuf)
 
-        '''
-        '306D'
-        '307C'
-        '307D'
-        '308C'
-        '308D'
-        '309C'
-        '309D'
-        '310C'
-        '''
-    def showRoomState(self,room,state):
-
-        #房间号，目标温度，当前温度，风速，累计的费用，累计的时长。
-        client_str = room + ' is ' + state
-        if room == '306C':
-            self.serverUI.C306Lab.setText(client_str)
-        elif room == '307C':
-            self.serverUI.C307Lab.setText(client_str)
+    ######################
 
     def onOff(self):
         global onOff
