@@ -3,6 +3,7 @@ import socket
 import time
 from datetime import datetime
 import re, ConfigParser
+from report import *
 
 def read_setting():
     cp = ConfigParser.SafeConfigParser()
@@ -71,6 +72,7 @@ class AirService(object):
         self.change_status(status)
         self.sleep = False
         self.open = True
+        database.insert_operate(self,"firstopen",0)
         return 
 
     def recv_open(self, operate):
@@ -82,15 +84,19 @@ class AirService(object):
         self.sleep = False
         self.open = True
         self.change_status(status)
+        database.insert_operate(self,"open",0)
         return 
 
     def recv_change(self, operate):
+        timeLen=(int(time.time())-self.lastTime)/3
+        database.insert_operate(self,"serve",timeLen)
         status = {}
         status['room'] = operate[1]
         status['currentTemp'] = float(operate[2])
         status['finalTemp'] = float(operate[3])
         status['wind'] = operate[4]
         self.change_status(status)
+        #database.insert_operate(self,"serve")
         return 
 
     def recv_close(self, operate):
@@ -133,12 +139,15 @@ class AirService(object):
         status = {'room':self.room,
                     'flag':flag}
         sendBuf = sendBuf.format(**status)
+        database.insert_operate(self,"close",0)
         return sendBuf
 
     def send_sleep(self):
         sendBuf = 'sleep_{room}_$'
         status = {'room':self.room}
         sendBuf = sendBuf.format(**status)
+        timeLen=(int(time.time())-self.lastTime)/3
+        database.insert_operate(self,"serve",timeLen)
         return sendBuf
 
     def send_wait(self, waitNum, waitType):

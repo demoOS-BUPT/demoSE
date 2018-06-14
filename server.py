@@ -180,10 +180,8 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 self.objAir.recv_first_open(operate)
                 algo.req_server(self.objAir.room)
                 opStr = ''
-                database.insert_operate(self.objAir,"zxh","open")#------------------!!!!!!!!!!!!!!!!!!1---------
                 print operate
             if operate[0] == 'c' and operate[-1] == '$':
-                database.insert_operate(self.objAir,"zxh","serve")#------------------!!!!!!!!!!!!!!!!!!1---------
                 self.objAir.recv_change(operate)
                 opStr = ''
                 print '[change]',operate
@@ -193,7 +191,6 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 self.objAir.recv_close(operate)
                 serverui.showRoomState(self.objAir.room,'closed')
                 opStr = ''
-                database.insert_operate(self.objAir,"zxh","close")#------------------!!!!!!!!!!!!!!!!!!1---------
                 #待机
 
             time.sleep(0.1)
