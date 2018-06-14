@@ -260,8 +260,7 @@ class ThreadedServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
 
 if __name__ == "__main__":
     read_setting()
-    database = Database()
-    database.init()
+
     server = ThreadedServer((HOST, PORT), HandleCheckin)
     server.allow_reuse_address = True
 

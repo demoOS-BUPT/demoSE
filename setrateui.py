@@ -24,10 +24,10 @@ except AttributeError:
 
 class Ui_Form(object):
     def setupUi(self, Form):
-        Form.setWindowFlags(Qt.Qt.FramelessWindowHint)
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(598, 793)
         Form.setStyleSheet(_fromUtf8(""))
+        Form.setWindowFlags(Qt.Qt.FramelessWindowHint)
         self.commitBtn = QtGui.QPushButton(Form)
         self.commitBtn.setGeometry(QtCore.QRect(410, 630, 111, 41))
         self.commitBtn.setStyleSheet(_fromUtf8("QPushButton { \n"
@@ -36,7 +36,9 @@ class Ui_Form(object):
 "border-radius:16px;}\n"
 "\n"
 "QPushButton:hover {\n"
-"background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(0, 255, 125, 255), stop:0.52 rgba(0, 0, 0, 0), stop:0.565 rgba(82, 121, 76, 33), stop:0.65 rgba(159, 235, 148, 64), stop:0.721925 rgba(255, 238, 150, 129), stop:0.77 rgba(255, 128, 128, 204), stop:0.89 rgba(191, 128, 255, 64), stop:1 rgba(0, 0, 0, 0));}\n"
+"background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(0, 255, 125, 255), stop:0.52 rgba(0, 0, 0, 0), stop:0.565 rgba(82, 121, 76, 33), stop:0.65 rgba(159, 235, 148, 64), stop:0.721925 rgba(255, 238, 150, 129), stop:0.77 rgba(255, 128, 128, 204), stop:0.89 rgba(191, 128, 255, 64), stop:1 rgba(0, 0, 0, 0));\n"
+"    color: rgb(7, 94, 85);\n"
+"}\n"
 ""))
         self.commitBtn.setObjectName(_fromUtf8("commitBtn"))
         self.tabWidget = QtGui.QTabWidget(Form)
@@ -69,8 +71,8 @@ class Ui_Form(object):
         self.tabWidget.addTab(self.tab, _fromUtf8(""))
         self.setRatePic = QtGui.QLabel(Form)
         self.setRatePic.setGeometry(QtCore.QRect(0, 0, 600, 591))
-
-        #------------lx
+        
+         #------------lx
         self.setRatePic.setScaledContents(True)
         setRatePic = QtGui.QMovie("./images/lost7_boy.gif") 
         #设置cacheMode为CacheAll时表示gif无限循环，注意此时loopCount()返回-1
@@ -97,7 +99,9 @@ class Ui_Form(object):
 "border-radius:16px;}\n"
 "\n"
 "QPushButton:hover {\n"
-"background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(0, 255, 125, 255), stop:0.52 rgba(0, 0, 0, 0), stop:0.565 rgba(82, 121, 76, 33), stop:0.65 rgba(159, 235, 148, 64), stop:0.721925 rgba(255, 238, 150, 129), stop:0.77 rgba(255, 128, 128, 204), stop:0.89 rgba(191, 128, 255, 64), stop:1 rgba(0, 0, 0, 0));}\n"
+"background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 rgba(0, 255, 125, 255), stop:0.52 rgba(0, 0, 0, 0), stop:0.565 rgba(82, 121, 76, 33), stop:0.65 rgba(159, 235, 148, 64), stop:0.721925 rgba(255, 238, 150, 129), stop:0.77 rgba(255, 128, 128, 204), stop:0.89 rgba(191, 128, 255, 64), stop:1 rgba(0, 0, 0, 0));\n"
+"    color: rgb(7, 94, 85);\n"
+"}\n"
 ""))
         self.cancel.setObjectName(_fromUtf8("cancel"))
         self.bgWhite.raise_()

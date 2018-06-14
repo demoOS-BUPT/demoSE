@@ -8,7 +8,6 @@
 
 from PyQt4 import QtCore, QtGui,Qt
 
-
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -25,10 +24,10 @@ except AttributeError:
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
-        MainWindow.setWindowFlags(Qt.Qt.FramelessWindowHint)
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(1155, 771)
         MainWindow.setStyleSheet(_fromUtf8("background-color: rgb(16, 132, 134);"))
+        MainWindow.setWindowFlags(Qt.Qt.FramelessWindowHint)
         self.centralWidget = QtGui.QWidget(MainWindow)
         self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
         self.oBtn = QtGui.QPushButton(self.centralWidget)
@@ -46,7 +45,7 @@ class Ui_MainWindow(object):
 ""))
         self.oBtn.setObjectName(_fromUtf8("oBtn"))
         self.winFrame = QtGui.QFrame(self.centralWidget)
-        self.winFrame.setGeometry(QtCore.QRect(140, 630, 261, 43))
+        self.winFrame.setGeometry(QtCore.QRect(110, 640, 361, 43))
         self.winFrame.setStyleSheet(_fromUtf8("border-radius:25px;\n"
 "background-color: rgb(16, 148, 153);"))
         self.winFrame.setFrameShape(QtGui.QFrame.StyledPanel)
@@ -84,6 +83,7 @@ class Ui_MainWindow(object):
         self.billTab.setObjectName(_fromUtf8("billTab"))
         self.billLab = QtGui.QLabel(self.billTab)
         self.billLab.setGeometry(QtCore.QRect(20, 20, 411, 191))
+        self.billTab.setStyleSheet(_fromUtf8("background-color: rgb(39, 90, 92);color:#99e2f4;"))
         self.billLab.setText(_fromUtf8(""))
         self.billLab.setObjectName(_fromUtf8("billLab"))
         self.tabWidget.addTab(self.billTab, _fromUtf8(""))
@@ -95,7 +95,7 @@ class Ui_MainWindow(object):
         self.textEdit.setObjectName(_fromUtf8("textEdit"))
         self.tabWidget.addTab(self.condiTab, _fromUtf8(""))
         self.layoutWidget = QtGui.QWidget(self.centralWidget)
-        self.layoutWidget.setGeometry(QtCore.QRect(140, 550, 261, 51))
+        self.layoutWidget.setGeometry(QtCore.QRect(110, 570, 361, 51))
         self.layoutWidget.setObjectName(_fromUtf8("layoutWidget"))
         self.horizontalLayout = QtGui.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout.setMargin(11)
@@ -116,7 +116,7 @@ class Ui_MainWindow(object):
         self.temperaBox.setObjectName(_fromUtf8("temperaBox"))
         self.horizontalLayout.addWidget(self.temperaBox)
         self.tempSlider = QtGui.QSlider(self.centralWidget)
-        self.tempSlider.setGeometry(QtCore.QRect(110, 550, 21, 121))
+        self.tempSlider.setGeometry(QtCore.QRect(70, 570, 21, 121))
         self.tempSlider.setStyleSheet(_fromUtf8("color:#99e2f4;\n"
 "background-color: rgb(16, 148, 153);\n"
 "border-radius:25px;"))
@@ -124,8 +124,7 @@ class Ui_MainWindow(object):
         self.tempSlider.setObjectName(_fromUtf8("tempSlider"))
         self.clientPic = QtGui.QLabel(self.centralWidget)
         self.clientPic.setGeometry(QtCore.QRect(0, 0, 1161, 931))
-
- #------------lx
+         #------------lx
         
         self.clientPic.setScaledContents(True)
         clientPic = QtGui.QMovie("./images/lost7_sleep.gif") 
@@ -137,13 +136,14 @@ class Ui_MainWindow(object):
         self.clientPic.setMovie(clientPic)   
         #开始播放，对应的是movie.start()
         clientPic.start()
-
+        
         self.clientPic.setText(_fromUtf8(""))
         self.clientPic.setObjectName(_fromUtf8("clientPic"))
         self.tipLabel = QtGui.QLabel(self.centralWidget)
-        self.tipLabel.setGeometry(QtCore.QRect(110, 510, 291, 31))
+        self.tipLabel.setGeometry(QtCore.QRect(70, 520, 411, 31))
         self.tipLabel.setStyleSheet(_fromUtf8("background-color: rgb(16, 148, 153);\n"
-"border-radius:35px;"))
+"border-radius:35px;\n"
+"color:#99e2f4;"))
         self.tipLabel.setText(_fromUtf8(""))
         self.tipLabel.setObjectName(_fromUtf8("tipLabel"))
         self.roomLabel = QtGui.QLabel(self.centralWidget)
@@ -152,23 +152,10 @@ class Ui_MainWindow(object):
 "background-color: rgba(255, 255, 255, 0);color:#99e2f4;"))
         self.roomLabel.setText(_fromUtf8(""))
         self.roomLabel.setObjectName(_fromUtf8("roomLabel"))
-        self.commitBtn = QtGui.QPushButton(self.centralWidget)
-        self.commitBtn.setGeometry(QtCore.QRect(110, 690, 121, 31))
-        self.commitBtn.setStyleSheet(_fromUtf8("color:#99e2f4;\n"
-"background-color: rgb(16, 148, 153);\n"
-"border-radius:12px;"))
-        self.commitBtn.setObjectName(_fromUtf8("commitBtn"))
-        self.cancelBtn = QtGui.QPushButton(self.centralWidget)
-        self.cancelBtn.setGeometry(QtCore.QRect(280, 690, 121, 31))
-        self.cancelBtn.setStyleSheet(_fromUtf8("color:#99e2f4;\n"
-"background-color: rgb(16, 148, 153);\n"
-"border-radius:12px;"))
-        self.cancelBtn.setObjectName(_fromUtf8("cancelBtn"))
         self.clientPic.raise_()
         self.oBtn.raise_()
         self.winFrame.raise_()
         self.tabWidget.raise_()
-        self.layoutWidget.raise_()
         self.layoutWidget.raise_()
         self.tempSlider.raise_()
         self.tipLabel.raise_()
@@ -204,7 +191,5 @@ class Ui_MainWindow(object):
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600; color:#9ae1f4;\">emmmm....等我去注册个邮箱先昂~</span></p></body></html>", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.condiTab), _translate("MainWindow", "空调使用手册", None))
         self.aimtemLabel.setText(_translate("MainWindow", "目标温度：", None))
-        self.commitBtn.setText(_translate("MainWindow", "更改目标温度", None))
-        self.cancelBtn.setText(_translate("MainWindow", "取消更改", None))
 
 import loginqrc_rc

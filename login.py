@@ -3,8 +3,6 @@
 from PyQt4 import QtCore, QtGui,uic
 from client import *
 from loginui import *
-login_qtCreatorFile = "login.ui"  # Window File
-login_MainWindow, login_QtBaseClass = uic.loadUiType(login_qtCreatorFile)
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8

@@ -102,6 +102,20 @@ class Ui_Form(object):
         self.yearBtn.setGeometry(QtCore.QRect(31, 225, 72, 19))
         self.yearBtn.setStyleSheet(_fromUtf8("color: rgb(240, 211, 177);"))
         self.yearBtn.setObjectName(_fromUtf8("yearBtn"))
+        self.gobackBtn = QtGui.QPushButton(Form)
+        self.gobackBtn.setEnabled(True)
+        self.gobackBtn.setGeometry(QtCore.QRect(30, 810, 51, 41))
+        self.gobackBtn.setStyleSheet(_fromUtf8("QPushButton { \n"
+"font: 8pt \"Adobe Arabic\";\n"
+"color: rgb(240, 211, 177);\n"
+"background-color: rgb(109, 94, 89);\n"
+"border-radius:18px;}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.9, fx:0.5, fy:0.5, stop:0 rgba(222, 163, 94, 255), stop:1 rgba(255, 255, 255, 255));\n"
+"    color: rgb(79, 68, 64);\n"
+"}"))
+        self.gobackBtn.setObjectName(_fromUtf8("gobackBtn"))
         self.label_2.raise_()
         self.printBtn.raise_()
         self.dateEdit.raise_()
@@ -111,6 +125,7 @@ class Ui_Form(object):
         self.monthBtn.raise_()
         self.yearBtn.raise_()
         self.tabWidget.raise_()
+        self.gobackBtn.raise_()
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -132,5 +147,6 @@ class Ui_Form(object):
         self.dayBtn.setText(_translate("Form", "日报表", None))
         self.monthBtn.setText(_translate("Form", "周报表", None))
         self.yearBtn.setText(_translate("Form", "月报表", None))
+        self.gobackBtn.setText(_translate("Form", "返回", None))
 
 import loginqrc_rc

@@ -3,6 +3,7 @@
 from PyQt4 import QtCore, QtGui,uic
 from client import *
 from checkoutui import *
+from Dform import *
 from report import *
 
 class checkoutUI(QtGui.QDialog):
@@ -12,6 +13,8 @@ class checkoutUI(QtGui.QDialog):
         self.checkoutForm.setupUi(self)
         self.checkoutForm.commitBtn.clicked.connect(self.commitAction)
         self.checkoutForm.cancelBtn.clicked.connect(self.bye)
+        self.checkoutForm.gotoDform.clicked.connect(self.dform)
+        self.checkoutForm.gotoDform.hide()
 
     def commitAction(self):
         if (self.checkoutForm.roomBox.currentIndex() == 0):
@@ -40,9 +43,11 @@ class checkoutUI(QtGui.QDialog):
         '''
         self.checkoutForm.priceLab.setText(str(money))
         QtGui.QMessageBox.information(self, u"信息提示", u"OK")
+        self.checkoutForm.gotoDform.show()
 
-        ##不好意思 我们每次只退一个房
-        self.accept()
+    def dform(self):
+        self.Dform = DformUI(self.room)
+        self.Dform.show()
 
     def bye(self):
         self.close()

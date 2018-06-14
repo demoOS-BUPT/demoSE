@@ -9,19 +9,23 @@ class formUI(QtGui.QDialog):
         self.formForm = Ui_Form()
         self.formForm.setupUi(self)
         self.formForm.dayBtn.setChecked(True)
+        self.formForm.gobackBtn.clicked.connect(self.bye)
 
         self.setDate()
         self.connect(self.formForm.printBtn,QtCore.SIGNAL("clicked()"),self.printAction)
         self.formForm.calWidget.clicked.connect(self.setDate)
         self.tableView()
 
+    def bye(self):
+        self.close()
+
     def tableView(self):
-        column = 10
-        row = 4
+        column = 7
+        row = 1
         self.formForm.tabWidget.setColumnCount(column)
         self.formForm.tabWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 
-        self.formForm.tabWidget.setHorizontalHeaderLabels([u'Room',  u'Operate', u'User','IP','Time','InitTemperature','FinalTemperature','Wind','PerMoney', 'TotalMoney'])
+        self.formForm.tabWidget.setHorizontalHeaderLabels([u'开关次数',  u'常用目标温度', u'常用风速',u'达到目标温度次数',u'被服务次数',u'详单数',u'总费用'])
 
         #设置表头字体加粗：
         font = self.formForm.tabWidget.horizontalHeader().font()
@@ -33,9 +37,8 @@ class formUI(QtGui.QDialog):
 
         row_index = 0
 
-        self.formForm.tabWidget.setItem(row_index, 0, QtGui.QTableWidgetItem(u"308"))
-        self.formForm.tabWidget.setItem(row_index, 1, QtGui.QTableWidgetItem("199"))
-        self.formForm.tabWidget.setItem(row_index, 2, QtGui.QTableWidgetItem("20.5"))
+        for i in list(range(0,7)):
+            self.formForm.tabWidget.setItem(row_index, i, QtGui.QTableWidgetItem(u"-"))
 
     def setDate(self):
         self.formForm.dateEdit.setDate(self.formForm.calWidget.selectedDate())

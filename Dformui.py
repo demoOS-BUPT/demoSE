@@ -57,15 +57,8 @@ class Ui_MainWindow(object):
 "horizontalHeaderItem-background-color:rgba(184, 215, 255, 0);"))
         self.tableWidget.setObjectName(_fromUtf8("tableWidget"))
         self.tableWidget.setColumnCount(6)
-        self.tableWidget.setRowCount(1)
+        self.tableWidget.setRowCount(0)
 
-#lx------------------------------------------
-        '''
-        for x in range(self.tableWidget.columnCount()):
-            headItem = self.tableWidget.horizontalHeaderItem(x)   #获得水平方向表头的Item对象
-            headItem.setBackgroundColor(QtGui.QColor(47,47,47))      #设置单元格背景颜色
-            headItem.setTextColor(QtGui.QColor(240,211,177))         #设置文字颜色
-        '''
         
         item = QtGui.QTableWidgetItem()
         item.setBackground(QtGui.QColor(255, 255, 255, 0))
@@ -106,7 +99,7 @@ class Ui_MainWindow(object):
 "\n"
 ""))
         self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
-#        MainWindow.setCentralWidget(self.centralwidget)????????????????????????????????它说报错
+        #MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
