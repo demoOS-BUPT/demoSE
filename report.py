@@ -17,120 +17,136 @@ class Database(object):
         CREATE TABLE IF NOT EXISTS `room306C` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
-          `user` varchar(20) NOT NULL,
-          `ip` varchar(20) NOT NULL,
+          `user` int(5) DEFAULT NULL,
           `date` timestamp NOT NULL,
           `timeLen` double NOT NULL ,
           `currentTemp` double DEFAULT NULL,
           `finalTemp` double DEFAULT NULL,
           `wind` int(5) DEFAULT NULL,
-          `totalMoney` double DEFAULT NULL,
-          `perMoney` double DEFAULT NULL
+          `singleElec`double DEFAULT NULL,
+          `totalElec`double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL,
+          `singleMoney`double DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL
         );''',
              'DROP TABLE IF EXISTS `room306D`;',
             '''
         CREATE TABLE IF NOT EXISTS `room306D` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
-          `user` varchar(20) NOT NULL,
-          `ip` varchar(20) NOT NULL,
+          `user` int(5) DEFAULT NULL,
           `date` timestamp NOT NULL,
           `timeLen` double NOT NULL ,
           `currentTemp` double DEFAULT NULL,
           `finalTemp` double DEFAULT NULL,
           `wind` int(5) DEFAULT NULL,
-          `totalMoney` double DEFAULT NULL,
-          `perMoney` double DEFAULT NULL
+          `singleElec`double DEFAULT NULL,
+          `totalElec`double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL,
+          `singleMoney`double DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL
         );''',
              'DROP TABLE IF EXISTS `room307C`;',
             '''
         CREATE TABLE IF NOT EXISTS `room307C` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
-          `user` varchar(20) NOT NULL,
-          `ip` varchar(20) NOT NULL,
+          `user` int(5) DEFAULT NULL,
           `date` timestamp NOT NULL,
           `timeLen` double NOT NULL ,
           `currentTemp` double DEFAULT NULL,
           `finalTemp` double DEFAULT NULL,
           `wind` int(5) DEFAULT NULL,
-          `totalMoney` double DEFAULT NULL,
-          `perMoney` double DEFAULT NULL
+          `singleElec`double DEFAULT NULL,
+          `totalElec`double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL,
+          `singleMoney`double DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL
         );''',
         'DROP TABLE IF EXISTS `room307D`;',
             '''
         CREATE TABLE IF NOT EXISTS `room307D` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
-          `user` varchar(20) NOT NULL,
-          `ip` varchar(20) NOT NULL,
+          `user` int(5) DEFAULT NULL,
           `date` timestamp NOT NULL,
           `timeLen` double NOT NULL ,
           `currentTemp` double DEFAULT NULL,
           `finalTemp` double DEFAULT NULL,
           `wind` int(5) DEFAULT NULL,
-          `totalMoney` double DEFAULT NULL,
-          `perMoney` double DEFAULT NULL
+          `singleElec`double DEFAULT NULL,
+          `totalElec`double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL,
+          `singleMoney`double DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL
         );''',
         'DROP TABLE IF EXISTS `room308C`;',
             '''
         CREATE TABLE IF NOT EXISTS `room308C` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
-          `user` varchar(20) NOT NULL,
-          `ip` varchar(20) NOT NULL,
+          `user` int(5) DEFAULT NULL,
           `date` timestamp NOT NULL,
           `timeLen` double NOT NULL ,
           `currentTemp` double DEFAULT NULL,
           `finalTemp` double DEFAULT NULL,
           `wind` int(5) DEFAULT NULL,
-          `totalMoney` double DEFAULT NULL,
-          `perMoney` double DEFAULT NULL
+          `singleElec`double DEFAULT NULL,
+          `totalElec`double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL,
+          `singleMoney`double DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL
         );''',
         'DROP TABLE IF EXISTS `room308D`;',
             '''
         CREATE TABLE IF NOT EXISTS `room308D` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
-          `user` varchar(20) NOT NULL,
-          `ip` varchar(20) NOT NULL,
+          `user` int(5) DEFAULT NULL,
           `date` timestamp NOT NULL,
           `timeLen` double NOT NULL ,
           `currentTemp` double DEFAULT NULL,
           `finalTemp` double DEFAULT NULL,
           `wind` int(5) DEFAULT NULL,
-          `totalMoney` double DEFAULT NULL,
-          `perMoney` double DEFAULT NULL
+          `singleElec`double DEFAULT NULL,
+          `totalElec`double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL,
+          `singleMoney`double DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL
         );''',
         'DROP TABLE IF EXISTS `room309C`;',
             '''
         CREATE TABLE IF NOT EXISTS `room309C` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
-          `user` varchar(20) NOT NULL,
-          `ip` varchar(20) NOT NULL,
+          `user` int(5) DEFAULT NULL,
           `date` timestamp NOT NULL,
           `timeLen` double NOT NULL ,
           `currentTemp` double DEFAULT NULL,
           `finalTemp` double DEFAULT NULL,
           `wind` int(5) DEFAULT NULL,
-          `totalMoney` double DEFAULT NULL,
-          `perMoney` double DEFAULT NULL
+          `singleElec`double DEFAULT NULL,
+          `totalElec`double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL,
+          `singleMoney`double DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL
         );''',
         'DROP TABLE IF EXISTS `room309D`;',
             '''
         CREATE TABLE IF NOT EXISTS `room309D` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
-          `user` varchar(20) NOT NULL,
-          `ip` varchar(20) NOT NULL,
+          `user` int(5) DEFAULT NULL,
           `date` timestamp NOT NULL,
           `timeLen` double NOT NULL ,
           `currentTemp` double DEFAULT NULL,
           `finalTemp` double DEFAULT NULL,
           `wind` int(5) DEFAULT NULL,
-          `totalMoney` double DEFAULT NULL,
-          `perMoney` double DEFAULT NULL
+          `singleElec`double DEFAULT NULL,
+          `totalElec`double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL,
+          `singleMoney`double DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL
         );''',]
         for sqlQuery in create_table:
             cursor = self.conn.cursor()
@@ -151,30 +167,106 @@ class Database(object):
             cursor.close()
             self.conn.commit()
 
+    def getUser(self,objRoom):
+        select = [
+            'Select  count(*) from {tableName} where  operate=="firstopen";'.format(tableName=objRoom),
+            ]
+        user=0
+        for sqlQuery in select:
+            cursor = self.conn.cursor()
+            cursor.execute(sqlQuery)
+            for row in cursor:
+                user=row[0]
+            cursor.close()
+            self.conn.commit()
+        return (user+1)
+
+    def getId(self,objRoom):
+        select = [
+            'Select  count(*) from {tableName} ;'.format(tableName=objRoom),
+            #房间使用空调的次数（一次开关）
+        ]
+        id=0
+        for sqlQuery in select:
+            cursor = self.conn.cursor()
+            cursor.execute(sqlQuery)
+            for row in cursor:
+                id=row[0]
+            cursor.close()
+            self.conn.commit()
+        return id+1
+
+    def getLastTotalElec(self,user,objRoom):
+        select = [
+            'Select  max(totalElec) from {tableName} where user == "{user}" ;'.format(tableName=objRoom,user=user),
+            #房间使用空调的次数（一次开关）
+        ]
+        elec=0
+        for sqlQuery in select:
+            cursor = self.conn.cursor()
+            cursor.execute(sqlQuery)
+            for row in cursor:
+                if row[0]==None:
+                    elec=0
+                else:
+                    elec=row[0]
+                #print elec
+            cursor.close()
+            self.conn.commit()
+        float(elec)
+        return elec
+
+    def getLastTotalMoney(self,user,objRoom):
+        select = [
+            'Select  max(totalMoney) from {tableName} where user=="{user}";'.format(tableName=objRoom,user=user),
+            #房间使用空调的次数（一次开关）
+        ]
+        money=0
+        for sqlQuery in select:
+            cursor = self.conn.cursor()
+            cursor.execute(sqlQuery)
+            for row in cursor:
+                if row[0]==None:
+                    money=0
+                else:
+                    money=row[0]
+            cursor.close()
+            self.conn.commit()
+        float (money)
+        return money
+
     #插入的函数还没调用
-    def insert_operate(self,  objAir, user,op):
+    def insert_operate(self,objAir,op,timeLen):
         if not isinstance(objAir, AirService):
             print 'not a airObj!'
             return
+        user=database.getUser(objAir.room)
+        id=database.getId(objAir.room)
+        singleElec=objAir.totalElec-database.getLastTotalElec(user,objAir.room)
+        singleMoney=objAir.totalMoney-database.getLastTotalMoney(user,objAir.room)
         insert=[
-            "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, '\"open\"', '{user}', '{ip}', datetime(),0 , '{currentTemp}', '{finalTemp}', '{wind}', 0, 0);".format(
-            tableName=objAir.room, user=user, ip='127.0.0.1', #时间有问题！！！！！！
-            currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind) ,
-             "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, '\"close\"', '{user}', '{ip}',  datetime(),'{timeLen}', '{currentTemp}', '{finalTemp}', '{wind}', '{totalMoney}', '{perMoney}');".format(
-            tableName=objAir.room, user=user, ip='127.0.0.1', timeLen=objAir.lastTime,#时间有问题！！！！！！
-            currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind, totalMoney=objAir.totalMoney,perMoney=objAir.perMoney) ,
-            "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `ip`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `totalMoney`, `perMoney`) VALUES (NULL, '\"serve\"', '{user}', '{ip}', datetime(),'{timeLen}', '{currentTemp}', '{finalTemp}', '{wind}', '{totalMoney}', '{perMoney}');".format(
-            tableName=objAir.room, user=user, ip='127.0.0.1',timeLen=objAir.lastTime,#时间有问题！！！！！！
-            currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind, totalMoney=objAir.totalMoney,perMoney=objAir.perMoney ) ,
+            "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `singleElec`,`totalElec`,`perMoney`,`singleMoney`, `totalMoney`) VALUES ('{id}', 'firstopen', '{user}', '{date} ',0 , '{currentTemp}', '{finalTemp}', '{wind}', 0, 0,'{perMoney}',0,0);".format(
+            tableName=objAir.room,id=id, user=user,date= time.strftime("%Y-%m-%d", time.localtime(objAir.lastTime))  ,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,perMoney=objAir.perMoney) ,
+            "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `singleElec`,`totalElec`,`perMoney`,`singleMoney`, `totalMoney`) VALUES ('{id}', 'open', '{user}', '{date} ',0, '{currentTemp}', '{finalTemp}', '{wind}', 0, '{totalElec}', '{perMoney}', 0, '{totalMoney}');".format(
+            tableName=objAir.room,id=id, user=user,date= time.strftime("%Y-%m-%d", time.localtime(objAir.lastTime))  ,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
+            totalElec=objAir.totalElec,perMoney=objAir.perMoney,totalMoney=objAir.totalMoney) ,
+             "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `singleElec`,`totalElec`,`perMoney`,`singleMoney`, `totalMoney`) VALUES ('{id}', 'close', '{user}', '{date} ',0, '{currentTemp}', '{finalTemp}', '{wind}', 0, '{totalElec}', '{perMoney}',0, '{totalMoney}');".format(
+            tableName=objAir.room,id=id, user=user,date= time.strftime("%Y-%m-%d", time.localtime(objAir.lastTime))  ,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
+            totalElec=objAir.totalElec,perMoney=objAir.perMoney,totalMoney=objAir.totalMoney) ,
+            "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `singleElec`,`totalElec`,`perMoney`,`singleMoney`, `totalMoney`) VALUES ('{id}', 'serve', '{user}', '{date} ','{timeLen}', '{currentTemp}', '{finalTemp}', '{wind}', '{singleElec}', '{totalElec}', '{perMoney}', '{singleMoney}', '{totalMoney}');".format(
+            tableName=objAir.room,id=id, user=user,date= time.strftime("%Y-%m-%d", time.localtime(objAir.lastTime)) ,timeLen=timeLen,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
+            singleElec=singleElec,totalElec=objAir.totalElec,perMoney=objAir.perMoney,singleMoney=singleMoney,totalMoney=objAir.totalMoney ) ,
         ]
 
         cursor = self.conn.cursor()
-        if op=="open":
+        if op=="firstopen":
             cursor.execute(insert[0])
-        elif op=="close":
+        elif op=="open":
             cursor.execute(insert[1])
-        elif op=="serve":
+        elif op=="close":
             cursor.execute(insert[2])
+        elif op=="serve":
+            cursor.execute(insert[3])
         cursor.close()
         self.conn.commit()
 
@@ -190,7 +282,7 @@ class Database(object):
             pattern="%Y-%m"
             objDate=time.strftime("%Y-%m", t)
         select = [
-            'Select  count(operate) from {tableName} where strftime("{pattern}",date)="{queryDate}" and operate=="open";'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
+            'Select  count(operate) from {tableName} where strftime("{pattern}",date)="{queryDate}" and (operate=="open" or operate=="firstopen");'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
             #房间使用空调的次数（一次开关）
 
             '''
@@ -212,7 +304,7 @@ class Database(object):
             'Select  count(*) from {tableName} where strftime("{pattern}",date)="{queryDate}" group by user;'.format(tableName=objRoom,queryDate=objDate,pattern={pattern}),
             #详单数
 
-            'Select sum(totalMoney) from {tableName} where strftime("{pattern}",date)="{queryDate}" and operate=="serve"  group by user;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern)
+            'Select sum(totalMoney) from {tableName} where strftime("{pattern}",date)="{queryDate}" and operate=="close"  group by user;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern)
             #总费用
             ]
         print(objRoom)
@@ -229,12 +321,13 @@ class Database(object):
         return list
 
     #详单 用户user的所在房间objRoom的objDate那天的详单 以及总费用
-    def detailed_bill(self,objRoom,user):
+    def detailed_bill(self,objRoom):
+        user=database.getUser(objRoom)-1
         select = [
-            'Select  sum(totalMoney) from (Select  totalMoney from {tableName} where user="{user}");'.format(tableName=objRoom,user=user),
+            'Select totalMoney from {tableName} where user="{user}"and operate=="close";'.format(tableName=objRoom,user=user),
             #总钱数
-            'Select  * from {tableName} where user="{user}";'.format(tableName=objRoom,user=user),
-            #详单 是否要加日期？？？？一个用户多天都使用这个房间？？
+            'Select * from {tableName} where user="{user}";'.format(tableName=objRoom,user=user),
+            #详单
             ]
         list=[]
         for sqlQuery in select:
@@ -269,18 +362,25 @@ if __name__ == '__main__':
     #print air
     database = Database()
     database.init()
+    air.totalElec=30
+    air.totalMoney=110
     #执行动作时插入空调
-    #database.insert_operate(air,"client1","open")
-    #database.insert_operate(air,"zxh","open")
-    #database.insert_operate(air,"zxh","close")
-    #database.insert_operate(air,"zxh","serve")
+    database.insert_operate(air,"firstopen",0)
+    database.insert_operate(air,"serve",30)
+    database.insert_operate(air,"serve",20)
+    database.insert_operate(air,"close",0)
+    air.wind=1.5
+    air.perMoney=3
+    database.insert_operate(air,"open",0)
+    database.insert_operate(air,"serve",20)
+    database.insert_operate(air,"close",0)
     air.room="room307D"
-    #database.insert_operate(air,"307D","open")
-    #database.insert_operate(air,"307D","close")
-    database.test_unit()
+    database.insert_operate(air,"open",0)
+    database.insert_operate(air,"close",0)
+    #database.test_unit()
     #room在实例里修改 时间和类型在前端给出
 
-    t = (2018, 6, 11, 17, 3, 38, 1, 48, 0)
+    t = (2018, 6, 14, 17, 3, 38, 1, 48, 0)
     t = time.mktime(t)
     print"日报表"
     database.report(time.gmtime(t),"room307C",0)
@@ -290,4 +390,4 @@ if __name__ == '__main__':
     database.report(time.gmtime(t),"room307C",2)
 
     print "zxh","detailed_bill"
-    database.detailed_bill("room307C","zxh")
+    database.detailed_bill("room307C")
