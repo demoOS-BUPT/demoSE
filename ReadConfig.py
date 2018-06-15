@@ -26,7 +26,9 @@ TEMP_TO = int(cp.get('air', 'tempTo'))
 TEMP_WIDTH = int(cp.get('air', 'tempWidth'))
 TEMP_CHANGE = 1
 
-DEFAULT_WIND = cp.get('air', 'defaultWind')
-DEFAULT_TEMP = cp.get('air', 'defaultTemp')
+DEFAULT_WIND = int(cp.get('air', 'defaultWind'))
+DEFAULT_TEMP = float(cp.get('air', 'defaultTemp'))
 
 SYSTEM_TIME = 60 * 1.0 / float(cp.get('system', 'systemTime'))
+
+CURRENT_TEMP = 21

@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import math, time
 
 class Algo(object):
@@ -74,9 +75,25 @@ class Algo(object):
         if roomid in self.waitList:
             self.waitList.remove(roomid)
 
-        if len(self.waitList) > 0:
-            self.serverList.append(self.waitList[0])
+        if len(self.serverList) < self.queueLength:
+            #找优先级最高的
+            maxPriority = -1
+            maxRoom = []
+            for room in self.waitList:
+                if self.roomPriority[room] > maxPriority:
+                    maxPriority = self.roomPriority[room]
+                    maxRoom = [room]
+                elif self.roomPriority[room] == maxPriority:
+                    maxRoom.append(room)
+                else:
+                    pass
 
+            if maxRoom == []:
+                return
+
+            maxRoom = maxRoom[0]
+            self.serverList.append(maxRoom)
+            self.waitList.remove(maxRoom)
 
     def change_server(self):
         print self.serverList, self.waitList, self.roomStartTime
