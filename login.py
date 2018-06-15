@@ -3,8 +3,6 @@
 from PyQt4 import QtCore, QtGui,uic
 from client import *
 from loginui import *
-login_qtCreatorFile = "login.ui"  # Window File
-login_MainWindow, login_QtBaseClass = uic.loadUiType(login_qtCreatorFile)
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -23,7 +21,7 @@ except AttributeError:
 class loginUI(QtGui.QDialog):
     def __init__(self,parent=None):
         super(loginUI,self).__init__(parent)
-        self.LoginForm = Ui_Login()
+        self.LoginForm = Ui_Dialog()
         self.LoginForm.setupUi(self)
 
         self.connect(self.LoginForm.Loginbtn,QtCore.SIGNAL("clicked()"),self.LoginAction)

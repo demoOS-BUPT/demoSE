@@ -7,14 +7,14 @@ from AirService import *
 
 class Database(object):
     def __init__(self):
-        self.conn = sqlite3.connect('air.db')
+        self.conn = sqlite3.connect('air.db',check_same_thread=False)
 
     def init(self):
         #每个房间一个数据表
         create_table = [
-            'DROP TABLE IF EXISTS `room306C`;',
+            'DROP TABLE IF EXISTS `306C`;',
             '''
-        CREATE TABLE IF NOT EXISTS `room306C` (
+        CREATE TABLE IF NOT EXISTS `306C` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
           `user` int(5) DEFAULT NULL,
@@ -29,9 +29,9 @@ class Database(object):
           `singleMoney`double DEFAULT NULL,
           `totalMoney` double DEFAULT NULL
         );''',
-             'DROP TABLE IF EXISTS `room306D`;',
+             'DROP TABLE IF EXISTS `306D`;',
             '''
-        CREATE TABLE IF NOT EXISTS `room306D` (
+        CREATE TABLE IF NOT EXISTS `306D` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
           `user` int(5) DEFAULT NULL,
@@ -46,9 +46,9 @@ class Database(object):
           `singleMoney`double DEFAULT NULL,
           `totalMoney` double DEFAULT NULL
         );''',
-             'DROP TABLE IF EXISTS `room307C`;',
+             'DROP TABLE IF EXISTS `307C`;',
             '''
-        CREATE TABLE IF NOT EXISTS `room307C` (
+        CREATE TABLE IF NOT EXISTS `307C` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
           `user` int(5) DEFAULT NULL,
@@ -63,9 +63,9 @@ class Database(object):
           `singleMoney`double DEFAULT NULL,
           `totalMoney` double DEFAULT NULL
         );''',
-        'DROP TABLE IF EXISTS `room307D`;',
+        'DROP TABLE IF EXISTS `307D`;',
             '''
-        CREATE TABLE IF NOT EXISTS `room307D` (
+        CREATE TABLE IF NOT EXISTS `307D` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
           `user` int(5) DEFAULT NULL,
@@ -80,9 +80,9 @@ class Database(object):
           `singleMoney`double DEFAULT NULL,
           `totalMoney` double DEFAULT NULL
         );''',
-        'DROP TABLE IF EXISTS `room308C`;',
+        'DROP TABLE IF EXISTS `308C`;',
             '''
-        CREATE TABLE IF NOT EXISTS `room308C` (
+        CREATE TABLE IF NOT EXISTS `308C` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
           `user` int(5) DEFAULT NULL,
@@ -97,9 +97,9 @@ class Database(object):
           `singleMoney`double DEFAULT NULL,
           `totalMoney` double DEFAULT NULL
         );''',
-        'DROP TABLE IF EXISTS `room308D`;',
+        'DROP TABLE IF EXISTS `308D`;',
             '''
-        CREATE TABLE IF NOT EXISTS `room308D` (
+        CREATE TABLE IF NOT EXISTS `308D` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
           `user` int(5) DEFAULT NULL,
@@ -114,9 +114,9 @@ class Database(object):
           `singleMoney`double DEFAULT NULL,
           `totalMoney` double DEFAULT NULL
         );''',
-        'DROP TABLE IF EXISTS `room309C`;',
+        'DROP TABLE IF EXISTS `309C`;',
             '''
-        CREATE TABLE IF NOT EXISTS `room309C` (
+        CREATE TABLE IF NOT EXISTS `309C` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
           `user` int(5) DEFAULT NULL,
@@ -131,9 +131,9 @@ class Database(object):
           `singleMoney`double DEFAULT NULL,
           `totalMoney` double DEFAULT NULL
         );''',
-        'DROP TABLE IF EXISTS `room309D`;',
+        'DROP TABLE IF EXISTS `309D`;',
             '''
-        CREATE TABLE IF NOT EXISTS `room309D` (
+        CREATE TABLE IF NOT EXISTS `309D` (
           `id` INTEGER PRIMARY KEY NOT NULL,
           `operate` varchar(20) NOT NULL,
           `user` int(5) DEFAULT NULL,
@@ -169,7 +169,7 @@ class Database(object):
 
     def getUser(self,objRoom):
         select = [
-            'Select  count(*) from {tableName} where  operate=="firstopen";'.format(tableName=objRoom),
+            'Select  count(*) from {tableName} where operate=="firstopen" ;'.format(tableName=objRoom),
             ]
         user=0
         for sqlQuery in select:
@@ -237,9 +237,11 @@ class Database(object):
 
     #插入的函数还没调用
     def insert_operate(self,objAir,op,timeLen):
-        if not isinstance(objAir, AirService):
+        '''
+        if not isinstance(objAir,AirService):
             print 'not a airObj!'
             return
+        '''
         user=database.getUser(objAir.room)
         id=database.getId(objAir.room)
         singleElec=objAir.totalElec-database.getLastTotalElec(user,objAir.room)
@@ -341,6 +343,21 @@ class Database(object):
         print list
         return list
 
+    def getTotalMoney(self,objRoom,user):
+        select = 'Select  sum(totalMoney) from (Select  totalMoney from {tableName} where user="{user}");'.format(tableName=objRoom,user=user)
+            #总钱数
+        cursor = self.conn.cursor()
+        cursor.execute(select)
+        for row in cursor:
+            money = row
+
+        cursor.close()
+        self.conn.commit()
+        print money[0]
+        return money[0]
+
+database = Database()
+database.init()
 
 if __name__ == '__main__':
     read_setting()
