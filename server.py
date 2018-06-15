@@ -46,8 +46,14 @@ class Server(QtGui.QMainWindow):
 
     def serverState(self):
         serverStr = ''
-        serverStr += u'\n工作模式：\n模式明明是全局的啊\n'
-        serverStr += u'\n工作状态 \n我想想啊\n '
+        serverStr += u'\n工作模式：\n'+ MODE
+        serverStr += u'\n工作状态：'
+        '''
+        if(onOff == 0):
+            serverStr += u'\n开机'
+        elif:
+            serverStr += u'\n关机'
+        '''
         serverStr += u'\n当前时间：\n' + str(time.time())
         self.serverUI.serverLab.setText(serverStr)
 

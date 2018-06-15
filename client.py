@@ -31,12 +31,13 @@ class Client(QtGui.QMainWindow):
         self.clientUI.setupUi(self)
 
         self.room = user
-        MODE = 'hot'
-        TEMP_FROM = 10
-        TEMP_TO =30
-        DEFAULT_WIND = 2
-        DEFAULT_TEMP = 17
 
+        if DEFAULT_WIND == 1:
+            self.clientUI.lowBtn.isChecked(True)
+        elif DEFAULT_WIND == 2:
+            self.clientUI.midBtn.isChecked(True)
+        elif DEFAULT_WIND == 3:
+            self.clientUI.highBtn.isChecked(True)
 
         # 设置温度控件的最大最小值
         self.clientUI.tempSlider.setMinimum(TEMP_FROM)
@@ -45,17 +46,13 @@ class Client(QtGui.QMainWindow):
         self.clientUI.temperaBox.setMaximum(TEMP_TO)
 
         # 设置温度条控件的初始值
-        self.clientUI.tempSlider.setValue(DEFAULT_TEMP)
-        self.clientUI.temperaBox.setValue(DEFAULT_TEMP)
+        self.clientUI.tempSlider.setValue(int(DEFAULT_TEMP))
+        self.clientUI.temperaBox.setValue(float(DEFAULT_TEMP))
 
         # 连接信号和槽
         self.clientUI.tempSlider.valueChanged[int].connect(self.changeBoxTemp)
         self.clientUI.temperaBox.valueChanged[float].connect(self.changeSliderTemp)
         self.clientUI.oBtn.clicked.connect(self.onOroff)
-
-        self.clientUI.highBtn.toggled[bool].connect(self.highBtnSlot)
-        self.clientUI.midBtn.toggled[bool].connect(self.midBtnSlot)
-        self.clientUI.lowBtn.toggled[bool].connect(self.lowBtnSlot)
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((HOST, PORT))
@@ -85,7 +82,7 @@ class Client(QtGui.QMainWindow):
                 status={'room':self.room,
                         'currentTemp':CURRENT_TEMP,
                         'finalTemp':float(self.clientUI.temperaBox.value()),
-                        'wind':win,#中速
+                        'wind':win,
                         }
                 self.air.change_status(status)
 
@@ -103,6 +100,10 @@ class Client(QtGui.QMainWindow):
                 else:
                     print '[error]recv first start error!'
                     exit()
+
+                self.clientUI.highBtn.toggled[bool].connect(self.highBtnSlot)
+                self.clientUI.midBtn.toggled[bool].connect(self.midBtnSlot)
+                self.clientUI.lowBtn.toggled[bool].connect(self.lowBtnSlot)
 
             self.air.show_status()
             sendBuf = self.air.send_first_open()
@@ -142,27 +143,6 @@ class Client(QtGui.QMainWindow):
 
     def printDetail(self):
         self.clientUI.tabWidget.setCurrentIndex(1)
-
-        column = 10
-        row = 4
-        self.clientUI.billTable.setColumnCount(column)
-        self.clientUI.billTable.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
-
-        self.clientUI.billTable.setHorizontalHeaderLabels([u'Room',  u'Operate', u'User','Time','FinalTemperature','Wind','PerMoney', 'TotalMoney'])
-
-        #设置表头字体加粗：
-        font = self.clientUI.billTable.horizontalHeader().font()
-
-        font.setBold(True)
-        self.clientUI.billTable.horizontalHeader().setFont(font)
-
-        self.clientUI.billTable.setRowCount(row)
-
-        row_index = 0
-        self.clientUI.formForm.tabWidget.setItem(row_index, 0, QtGui.QTableWidgetItem(u"308"))
-        self.clientUI.formForm.tabWidget.setItem(row_index, 1, QtGui.QTableWidgetItem("199"))
-        self.clientUI.formForm.tabWidget.setItem(row_index, 2, QtGui.QTableWidgetItem("20.5"))
-        print u"我打印个详单昂"
 
     def showState(self):
         stateStr = ""
