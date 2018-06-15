@@ -1,6 +1,9 @@
 # -*- coding: UTF-8 -*-
 # Ui Init
 from PyQt4 import QtCore, QtGui,Qt
+
+import sys
+sys.path.append("./ui/")
 from formui import *
 from report import *
 

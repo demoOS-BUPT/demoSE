@@ -2,6 +2,9 @@
 # Ui Init
 from PyQt4 import QtCore, QtGui
 from client import *
+
+import sys
+sys.path.append("./ui/")
 from checkoutui import *
 from Dform import *
 from report import *

@@ -5,11 +5,13 @@ from AirService import *
 from setrate import *
 from checkout import *
 from form import *
+
+import sys
+sys.path.append("./ui/")
 from serverui import *
 from algo import *
 import sqlite3
 import threading
-import sys
 from PyQt4 import QtCore, QtGui
 from report import *
 
