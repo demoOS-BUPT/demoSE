@@ -3,6 +3,8 @@
 from PyQt4 import QtCore, QtGui
 
 from report import *
+import sys;
+sys.path.append("./ui/")
 from Dformui import *
 
 

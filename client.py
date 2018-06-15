@@ -6,6 +6,8 @@ from PyQt4 import QtCore, QtGui
 import threading
 from AirClient import *
 
+import sys
+sys.path.append("./ui/")
 from clientui import *
 from ReadConfig import *
 
@@ -36,10 +38,13 @@ class Client(QtGui.QMainWindow):
         DEFAULT_TEMP = 17
 
 
-        # 设置滑动条控件的最大最小值
+        # 设置温度控件的最大最小值
         self.clientUI.tempSlider.setMinimum(TEMP_FROM)
         self.clientUI.tempSlider.setMaximum(TEMP_TO)
-        # 设置滑动条控件的初始值
+        self.clientUI.temperaBox.setMinimum(TEMP_FROM)
+        self.clientUI.temperaBox.setMaximum(TEMP_TO)
+
+        # 设置温度条控件的初始值
         self.clientUI.tempSlider.setValue(DEFAULT_TEMP)
         self.clientUI.temperaBox.setValue(DEFAULT_TEMP)
 
@@ -51,7 +56,6 @@ class Client(QtGui.QMainWindow):
         self.clientUI.highBtn.toggled[bool].connect(self.highBtnSlot)
         self.clientUI.midBtn.toggled[bool].connect(self.midBtnSlot)
         self.clientUI.lowBtn.toggled[bool].connect(self.lowBtnSlot)
-
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((HOST, PORT))
