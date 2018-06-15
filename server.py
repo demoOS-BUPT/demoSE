@@ -71,10 +71,10 @@ class Server(QtGui.QMainWindow):
         self.checkoutui = checkoutUI()
         self.checkoutui.show()
         if(self.checkoutui.exec_()):
-            print '[in] checkoutList'
             #从队列里找到self.checkoutui.room对应的airserver 再sendclose
             global checkoutList
             checkoutList = self.checkoutui.roomList
+            print checkoutList
             print '[sync] checkoutList'
 
 
