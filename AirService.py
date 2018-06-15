@@ -46,7 +46,7 @@ def read_setting():
     DEFAULT_WIND = cp.get('air', 'defaultWind')
     DEFAULT_TEMP = cp.get('air', 'defaultTemp')
 
-    SYSTEM_TIME = cp.get('system', 'systemTime')
+    SYSTEM_TIME = 60 * 1.0 / float(cp.get('system', 'systemTime'))
 
 class AirService(object):
     #初始化
@@ -226,7 +226,7 @@ class AirService(object):
         self.status_syn()
 
         #模拟运行
-        if nowTime <= self.lastTime + 3:
+        if nowTime <= self.lastTime + SYSTEM_TIME:
             return False
 
         if not self.sleep:

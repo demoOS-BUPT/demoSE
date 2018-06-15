@@ -3,9 +3,7 @@ import math, time
 class Algo(object):
 
     def __init__(self):
-        #self.roomPriority = {'503':1,'504':2,'505':2,'506':3}
         self.roomPriority = {'307C':2, '306C':2,'306D':2,'307D':2}
-        #self.roomList = ['503', '504', '505', '506']
         self.roomList = []
 
         self.serverList = []
@@ -13,10 +11,12 @@ class Algo(object):
         self.roomStartTime = {}
         self.time = int(time.time())
         self.queueLength = 2
+        self.queueTime = 2
 
-    def req_server(self, roomid):
+    def req_server(self, roomid, priority):
+        self.roomPriority[roomid] = priority
         #print '[queueueueueue]', roomid, '[request]'
-        if int(time.time())-self.time >= 2:
+        if int(time.time())-self.time >= self.queueTime:
             self.time = int(time.time())
             self.change_server()
         
@@ -109,34 +109,32 @@ class Algo(object):
         if minPriority > maxPriority:
             return
 
-        if len(minRoom) > 1:
+        turns = min(len(minRoom),len(maxRoom))
+        for turn in range(turns):
             minStartTime = 0xffffffffffffff
             earlyRoom = ''
             for room in minRoom:
                 if self.roomStartTime[room] < minStartTime:
                     minStartTime = self.roomStartTime[room]
                     earlyRoom = room
-            minRoom = [earlyRoom]
+            minRoom.remove(earlyRoom)
 
-        print minRoom[0], 'oldest' 
+            outRoom = earlyRoom
+            inRoom = ''
+            for room in self.waitList:
+                if minPriority == self.roomPriority[room]:
+                    inRoom = room
+                    break
+            maxRoom.remove(inRoom)
+            if inRoom == '':
+                return
 
-        outRoom = minRoom[0]
+            self.serverList.remove(outRoom)
+            self.serverList.append(inRoom)
+            self.roomStartTime[inRoom] = time.time()
 
-        inRoom = ''
-        for room in self.waitList:
-            if minPriority == self.roomPriority[room]:
-                inRoom = room
-                break
-
-        if inRoom == '':
-            return
-
-        self.serverList.remove(outRoom)
-        self.serverList.append(inRoom)
-        self.roomStartTime[inRoom] = time.time()
-
-        self.waitList.remove(inRoom)
-        self.waitList.append(outRoom)
+            self.waitList.remove(inRoom)
+            self.waitList.append(outRoom)
 
 
 #    def remove_server(self, roomid):
