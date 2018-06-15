@@ -52,7 +52,7 @@ class checkoutUI(QtGui.QDialog):
         self.Dform.show()
 
     def bye(self):
-        self.close()
+        self.accept()
 
 if __name__ == "__main__":
     import sys
