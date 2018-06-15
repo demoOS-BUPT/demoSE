@@ -52,9 +52,9 @@ class AirService(object):
         status['finalTemp'] = operate[3]
         if operate[3] == '#':
             status['finalTemp'] = DEFAULT_TEMP
-        status['wind'] = operate[4]
+        #status['wind'] = operate[4]
         if operate[4] == '#':
-            status['finalTemp'] = DEFAULT_WIND
+            status['wind'] = DEFAULT_WIND
         self.change_status(status)
         self.sleep = False
         self.open = True
@@ -74,7 +74,7 @@ class AirService(object):
         return 
 
     def recv_change(self, operate):
-        timeLen=(int(time.time())-self.lastTime)/3
+        timeLen=round((time.time()-self.lastTime)/3,2)
         database.insert_operate(self,"serve",timeLen)
         status = {}
         status['room'] = operate[1]
@@ -133,7 +133,7 @@ class AirService(object):
         sendBuf = 'sleep_{room}_$'
         status = {'room':self.room}
         sendBuf = sendBuf.format(**status)
-        timeLen=(int(time.time())-self.lastTime)/3
+        timeLen=round((time.time()-self.lastTime)/3,2)
         database.insert_operate(self,"serve",timeLen)
         return sendBuf
 

@@ -32,12 +32,13 @@ class Client(QtGui.QMainWindow):
 
         self.room = user
 
-        if DEFAULT_WIND == 1:
-            self.clientUI.lowBtn.isChecked(True)
-        elif DEFAULT_WIND == 2:
-            self.clientUI.midBtn.isChecked(True)
-        elif DEFAULT_WIND == 3:
-            self.clientUI.highBtn.isChecked(True)
+        if DEFAULT_WIND == "1":
+            self.clientUI.lowBtn.setChecked(True)
+        elif DEFAULT_WIND == "2":
+            self.clientUI.midBtn.setChecked(True)
+        elif DEFAULT_WIND == "3":
+            self.clientUI.highBtn.setChecked(True)
+
 
         # 设置温度控件的最大最小值
         self.clientUI.tempSlider.setMinimum(TEMP_FROM)

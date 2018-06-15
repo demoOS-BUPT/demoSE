@@ -50,8 +50,8 @@ class AirClient(object):
         sendBuf = 'r_{room}_{currentTemp}_{finalTemp}_{wind}_$'
         status = {'room':self.room,
                                     'currentTemp':self.currentTemp,
-                                    'finalTemp':self.finalTemp,
-                                    'wind':self.wind}
+                                    'finalTemp':'#',
+                                    'wind':'#'}
         sendBuf = sendBuf.format(**status)
         return sendBuf
 
