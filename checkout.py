@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 # Ui Init
-from PyQt4 import QtCore, QtGui,uic
+from PyQt4 import QtCore, QtGui
 from client import *
 from checkoutui import *
 from Dform import *
@@ -37,10 +37,9 @@ class checkoutUI(QtGui.QDialog):
             self.room = '310C'
 
         money = 0
-        '''
-        user = "zxh"
-        money = database.getTotalMoney("room"+self.room,user)
-        '''
+
+        money = database.getTotalMoney(self.room)
+
         self.checkoutForm.priceLab.setText(str(money))
         QtGui.QMessageBox.information(self, u"信息提示", u"OK")
         self.checkoutForm.gotoDform.show()

@@ -1,7 +1,8 @@
 # -*- coding: UTF-8 -*-
 # Ui Init
-from PyQt4 import QtCore, QtGui,uic
+from PyQt4 import QtCore, QtGui
 
+from report import *
 from Dformui import *
 
 
@@ -18,8 +19,8 @@ class DformUI(QtGui.QDialog):
         self.close()
     def showTab(self):
 
-        column = 7
-        row = 1
+        column = 13
+        row = 10
         self.Dform.tableWidget.setColumnCount(column)
         self.Dform.tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 
@@ -36,11 +37,15 @@ class DformUI(QtGui.QDialog):
 
         row_index = 0
 
-        for i in list(range(0, 7)):
-            self.Dform.tableWidget.setItem(row_index, i, QtGui.QTableWidgetItem(u"-"))
-        '''
-        user = "zxh"
-        money = database.getTotalMoney("room"+self.room,user)
+        list = database.detailed_bill(self.room)
+
+        row = 0
+        column = 0
+        for items in list:
+            for item in items:
+                self.Dform.tableWidget.setItem(row, column, QtGui.QTableWidgetItem(str(item)))
+                column +=1
+            row +=1
         '''
         QtGui.QMessageBox.information(self, u"信息提示", u"OK")
 
@@ -50,3 +55,4 @@ if __name__ == "__main__":
     Dform = DformUI()
     Dform.show()
     sys.exit(app.exec_())
+    '''

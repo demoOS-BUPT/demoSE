@@ -1,7 +1,8 @@
 # -*- coding: UTF-8 -*-
 # Ui Init
-from PyQt4 import QtCore, QtGui,uic,Qt
+from PyQt4 import QtCore, QtGui,Qt
 from formui import *
+from report import *
 
 class formUI(QtGui.QDialog):
     def __init__(self,parent=None):
@@ -56,24 +57,32 @@ class formUI(QtGui.QDialog):
             room = '0'
         elif (self.formForm.roomBox.currentIndex() == 1):
             room = '306C'
+        elif (self.formForm.roomBox.currentIndex() == 2):
+            room = '306D'
+        elif (self.formForm.roomBox.currentIndex() == 3):
+            room = '307C'
         #其他房间
+        room ='307C'
 
         #获取所需打印的第一天的年月日
         year,month,day = self.formForm.dateEdit.date().getDate()
         t = str(year) + '/'+str(month) + '/'+ str(day)
+
         import time
         timeArray = time.strptime(t, "%Y/%m/%d")
+        '''
         timeStamp = int(time.mktime(timeArray))
-
+        '''
         #传类型和日期
-        print '不会打印啦'+str(type) +t + str(timeStamp) + room
+        #print '不会打印啦'+str(type) +t + str(timeStamp) + room
 
         #收一堆信息展示
         '''
         self.formForm.tabWidget.setRowCount(4)
         '''
-
-
+        list = database.report(timeArray,room,type)
+        for i in list:
+            self.formForm.tabWidget.setItem(0, i, QtGui.QTableWidgetItem(str(list[i])))
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)

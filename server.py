@@ -10,7 +10,7 @@ from algo import *
 import sqlite3
 import threading
 import sys
-from PyQt4 import QtCore, QtGui, uic
+from PyQt4 import QtCore, QtGui
 from report import *
 
 # 1 Set Host and Port
