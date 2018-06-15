@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 # Ui Init
-from PyQt4 import QtCore, QtGui,uic
+from PyQt4 import QtCore, QtGui
 from client import *
 from loginui import *
 

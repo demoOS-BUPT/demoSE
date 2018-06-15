@@ -2,7 +2,7 @@
 import socket
 import time
 import sys
-from PyQt4 import QtCore, QtGui, uic
+from PyQt4 import QtCore, QtGui
 import threading
 from AirClient import *
 

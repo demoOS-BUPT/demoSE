@@ -116,6 +116,7 @@ class AirService(object):
     def recv_close(self, operate):
         print operate[1] + 'closed!'
         self.open = False
+        database.insert_operate(self,"close",0)
         return
 
     def send_start(self):
@@ -153,7 +154,7 @@ class AirService(object):
         status = {'room':self.room,
                     'flag':flag}
         sendBuf = sendBuf.format(**status)
-        database.insert_operate(self,"close",0)
+        #database.insert_operate(self,"close",0)
         return sendBuf
 
     def send_sleep(self):
