@@ -36,12 +36,12 @@ class checkoutUI(QtGui.QDialog):
         elif (self.checkoutForm.roomBox.currentIndex() == 8):
             self.room = '310C'
 
-        money = 0
-
+        QtGui.QMessageBox.information(self, u"信息提示", str(self.room) + u"退房成功")
         money = database.getTotalMoney(self.room)
-
+        if money == None:
+            money = 0
         self.checkoutForm.priceLab.setText(str(money))
-        QtGui.QMessageBox.information(self, u"信息提示", u"OK")
+
         self.checkoutForm.gotoDform.show()
 
     def dform(self):

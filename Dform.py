@@ -21,12 +21,33 @@ class DformUI(QtGui.QDialog):
     def showTab(self):
 
         column = 13
-        row = 10
         self.Dform.tableWidget.setColumnCount(column)
         self.Dform.tableWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 
         self.Dform.tableWidget.setHorizontalHeaderLabels(
-            [u'开关次数', u'常用目标温度', u'常用风速', u'达到目标温度次数', u'被服务次数', u'详单数', u'总费用'])
+            ['id',u'操作','user',u'日期', u'时长', u'室温', u'目标温度', u'风速', u'每度电费',u'总耗电量',u'permoney?',u'singlemoney?',u'总金额'])
+        self.Dform.tableWidget.setColumnHidden(0,True)
+        self.Dform.tableWidget.setColumnHidden(2,True)
+        #设置100%填充
+        #item=self.tableWidget.horizontalHeader()
+        #item.setStretchLastSection(1)
+        
+        #self.Dform.tableWidget.setRowHeight(1,50)
+
+        #设置指定列宽
+        self.Dform.tableWidget.setColumnWidth(1,80)
+        self.Dform.tableWidget.setColumnWidth(2,70)
+        self.Dform.tableWidget.setColumnWidth(3,70)
+        self.Dform.tableWidget.setColumnWidth(4,60)
+        self.Dform.tableWidget.setColumnWidth(5,60)
+        self.Dform.tableWidget.setColumnWidth(6,80)
+        self.Dform.tableWidget.setColumnWidth(7,57)
+        self.Dform.tableWidget.setColumnWidth(8,80)
+        self.Dform.tableWidget.setColumnWidth(9,80)
+        self.Dform.tableWidget.setColumnWidth(10,60)
+        self.Dform.tableWidget.setColumnWidth(11,60)
+        self.Dform.tableWidget.setColumnWidth(12,61)
+        self.Dform.tableWidget.setColumnWidth(13,55)
 
         # 设置表头字体加粗：
         font = self.Dform.tableWidget.horizontalHeader().font()
@@ -34,12 +55,10 @@ class DformUI(QtGui.QDialog):
         font.setBold(True)
         self.Dform.tableWidget.horizontalHeader().setFont(font)
 
-        self.Dform.tableWidget.setRowCount(row)
-
-        row_index = 0
 
         list = database.detailed_bill(self.room)
-
+        print len(list)
+        self.Dform.tableWidget.setRowCount(len(list))
         row = 0
         column = 0
         for items in list:
@@ -47,13 +66,10 @@ class DformUI(QtGui.QDialog):
                 self.Dform.tableWidget.setItem(row, column, QtGui.QTableWidgetItem(str(item)))
                 column +=1
             row +=1
-        '''
-        QtGui.QMessageBox.information(self, u"信息提示", u"OK")
 
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
-    Dform = DformUI()
+    Dform = DformUI("307C")
     Dform.show()
     sys.exit(app.exec_())
-    '''
