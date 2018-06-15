@@ -7,7 +7,7 @@ import threading
 from AirClient import *
 
 from clientui import *
-from AirService import *
+from ReadConfig import *
 
 
 # Socket Init

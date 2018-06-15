@@ -2,51 +2,9 @@
 import socket
 import time
 from datetime import datetime
-import re, ConfigParser
+import re
 from report import *
-
-WIND = 0
-ELEC_MONEY = 0
-ELEC_TEMP = 0
-MODE = 0
-TEMP_FROM = 0
-TEMP_TO = 0
-TEMP_WIDTH = 0
-DEFAULT_WIND = 0
-DEFAULT_TEMP = 0
-SYSTEM_TIME = 0
-TEMP_CHANGE = 0
-
-def read_setting():
-    cp = ConfigParser.SafeConfigParser()
-    cp.read('Air.conf')
-
-    global WIND
-    global ELEC_MONEY
-    global ELEC_TEMP
-    global MODE
-    global TEMP_FROM
-    global TEMP_TO
-    global TEMP_WIDTH
-    global DEFAULT_WIND
-    global DEFAULT_TEMP
-    global SYSTEM_TIME
-    global TEMP_CHANGE
-
-    TEMP_CHANGE = 1
-
-    WIND = [0,float(cp.get('wind','low')), float(cp.get('wind','medium')), float(cp.get('wind', 'high'))]
-    ELEC_MONEY = float(cp.get('elec', 'money'))
-    ELEC_TEMP = float(cp.get('elec', 'temp'))
-    MODE = cp.get('air', 'mode')
-    TEMP_FROM = int(cp.get('air', 'tempFrom'))
-    TEMP_TO = int(cp.get('air', 'tempTo'))
-    TEMP_WIDTH = int(cp.get('air', 'tempWidth'))
-
-    DEFAULT_WIND = cp.get('air', 'defaultWind')
-    DEFAULT_TEMP = cp.get('air', 'defaultTemp')
-
-    SYSTEM_TIME = 60 * 1.0 / float(cp.get('system', 'systemTime'))
+from ReadConfig import *
 
 class AirService(object):
     #初始化
@@ -203,7 +161,7 @@ class AirService(object):
         if 'totalElec' in kwargs:
             self.totalElec = float(kwargs['totalElec'])
         if 'mode'in kwargs:
-            if kwargs['mode'] == 1 or kwargs['mode'] == '1':
+            if kwargs['mode'] == 1 or kwargs['mode'] == '1' or kwargs['mode'] == 'hot':
                 self.mode = 'hot'
             else:
                 self.mode = 'cold'

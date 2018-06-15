@@ -7,6 +7,9 @@ global localTempChange,localTempRange,localInitTemp
 localTempChange=0.8
 localTempRange=3.0
 localInitTemp=26
+
+
+
 class AirClient(object):
 
     def __init__(self, room=503, currentTemp=15, finalTemp=25, wind=2):

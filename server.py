@@ -7,6 +7,7 @@ from checkout import *
 from form import *
 from serverui import *
 from algo import *
+from ReadConfig import *
 import sqlite3
 import threading
 import sys
@@ -14,7 +15,7 @@ from PyQt4 import QtCore, QtGui
 from report import *
 
 # 1 Set Host and Port
-HOST, PORT = "127.0.0.1", int(233)
+HOST, PORT = "0.0.0.0", int(233)
 
 global serverui
 #global airserver
@@ -189,7 +190,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
             if operate[0] == 'r' and operate[-1] == '$':
                 self.objAir.recv_first_open(operate)
-                algo.req_server(self.objAir.room)
+                algo.req_server(self.objAir.room, self.objAir.wind)
                 opStr = ''
                 print operate
             if operate[0] == 'c' and operate[-1] == '$':
@@ -228,7 +229,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
             if self.objAir.room in algo.serverList:
                 self.objAir.work()
                 if self.objAir.open and not self.objAir.sleep:
-                    algo.req_server(self.objAir.room)
+                    algo.req_server(self.objAir.room, self.objAir.wind)
 
                 # 房间号，目标温度，当前温度，风速，累计的费用，累计的时长。
                 status = {'room': self.objAir.room,
@@ -259,9 +260,6 @@ class ThreadedServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
 if __name__ == "__main__":
-
-    read_setting()
-
     server = ThreadedServer((HOST, PORT), HandleCheckin)
     server.allow_reuse_address = True
 
