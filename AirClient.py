@@ -23,7 +23,22 @@ class AirClient(object):
         self.lastTime = int(time.time())
         self.sleep = False
         self.open = True
+        self.tempWidth = 2
         #self.is_sleep()
+
+    def reset(self):
+        self.mode = MODE
+        self.currentTemp = DEFAULT_TEMP - 3
+        self.finalTemp = DEFAULT_TEMP
+        self.wind = DEFAULT_WIND
+        self.totalMoney = 0.0
+        self.perMoney = 1.2
+        self.startTime = int(time.time())
+        self.lastTime = int(time.time())
+        self.sleep = False
+        self.open = False
+        self.totalElec = 0
+        self.status_syn()
 
     def send_start(self):
         #{:0>2d} 左边补0
@@ -92,8 +107,9 @@ class AirClient(object):
     def recv_close(self, operate):
         if operate[2] == '1':
             print('退房了!')
+            self.reset()
             return False
-        self.open = True
+        self.open = False
         return True
 
     def recv_sleep(self, operate):
@@ -154,12 +170,12 @@ class AirClient(object):
             print '[sleeping]'
             if self.mode == 'hot':
                 self.currentTemp -= localTempChange
-                if self.currentTemp <= self.finalTemp - 3:
+                if self.currentTemp <= self.finalTemp - self.tempWidth:
                     self.sleep = False
                     return self.send_open()
             else:
                 self.currentTemp += localTempChange
-                if self.currentTemp >= self.finalTemp + 3:
+                if self.currentTemp >= self.finalTemp + self.tempWidth:
                     self.sleep = False
                     return self.send_open()
         else:

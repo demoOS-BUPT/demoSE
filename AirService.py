@@ -12,10 +12,24 @@ class AirService(object):
 
     def __init__(self, room=503, currentTemp=15, finalTemp=25, wind=2):
         self.room = room
-        self.mode = 0
-        self.currentTemp = currentTemp
-        self.finalTemp = finalTemp
-        self.wind = wind
+        self.mode = MODE
+        self.currentTemp = DEFAULT_TEMP-3
+        self.finalTemp = DEFAULT_TEMP
+        self.wind = DEFAULT_WIND
+        self.totalMoney = 0.0
+        self.perMoney = 1.2
+        self.startTime = int(time.time())
+        self.lastTime = int(time.time())
+        self.sleep = False
+        self.open = True
+        self.totalElec = 0
+        self.status_syn()
+
+    def reset(self):
+        self.mode = MODE
+        self.currentTemp = DEFAULT_TEMP-3
+        self.finalTemp = DEFAULT_TEMP
+        self.wind = DEFAULT_WIND
         self.totalMoney = 0.0
         self.perMoney = 1.2
         self.startTime = int(time.time())

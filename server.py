@@ -28,6 +28,7 @@ global algo
 onOff=1
 algo = Algo()
 airList = []
+checkoutList = []
 
 class Server(QtGui.QMainWindow):
     def __init__(self,server,parent=None):
@@ -69,10 +70,13 @@ class Server(QtGui.QMainWindow):
     def checkOut(self):
         self.checkoutui = checkoutUI()
         self.checkoutui.show()
-
         if(self.checkoutui.exec_()):
+            print '[in] checkoutList'
             #从队列里找到self.checkoutui.room对应的airserver 再sendclose
-            pass
+            global checkoutList
+            checkoutList = self.checkoutui.roomList
+            print '[sync] checkoutList'
+
 
     ######################
 
@@ -146,8 +150,6 @@ class Server(QtGui.QMainWindow):
             server.shutdown()
             onOff = 1
 
-
-
 class HandleCheckin(SocketServer.StreamRequestHandler):
     # 3 Call this function when recv a connection from client
     def handle(self):
@@ -212,10 +214,20 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
     def work(self):
         global algo
+        global checkoutList
         print '[work start]'
-        
+
         while(1):
-            time.sleep(0.2)
+            time.sleep(0.1)
+            if self.objAir.room in checkoutList:
+                checkoutList.remove(self.objAir.room)
+                sendBuf = self.objAir.send_close('1')
+                self.request.sendall(sendBuf)
+                self.objAir.reset()
+                self.objAir.open = False
+                self.objAir.sleep = False
+
+
             if not self.objAir.open:
                 algo.remove_server(self.objAir.room)
                 continue
