@@ -5,6 +5,18 @@ from datetime import datetime
 import re, ConfigParser
 from report import *
 
+WIND = 0
+ELEC_MONEY = 0
+ELEC_TEMP = 0
+MODE = 0
+TEMP_FROM = 0
+TEMP_TO = 0
+TEMP_WIDTH = 0
+DEFAULT_WIND = 0
+DEFAULT_TEMP = 0
+SYSTEM_TIME = 0
+TEMP_CHANGE = 0
+
 def read_setting():
     cp = ConfigParser.SafeConfigParser()
     cp.read('Air.conf')
@@ -20,6 +32,7 @@ def read_setting():
     global DEFAULT_TEMP
     global SYSTEM_TIME
     global TEMP_CHANGE
+
     TEMP_CHANGE = 1
 
     WIND = [0,float(cp.get('wind','low')), float(cp.get('wind','medium')), float(cp.get('wind', 'high'))]

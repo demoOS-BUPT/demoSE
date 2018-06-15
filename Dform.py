@@ -12,10 +12,11 @@ class DformUI(QtGui.QDialog):
         self.Dform.setupUi(self)
         self.room = room
         self.showTab()
-        self.Dform.pushButton_2.clicked.connect(self.bye)
+        self.Dform.gobackBtn.clicked.connect(self.bye)
 
     def bye(self):
         self.close()
+
     def showTab(self):
 
         column = 7

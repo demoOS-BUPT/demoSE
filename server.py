@@ -259,6 +259,7 @@ class ThreadedServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
 if __name__ == "__main__":
+
     read_setting()
 
     server = ThreadedServer((HOST, PORT), HandleCheckin)
