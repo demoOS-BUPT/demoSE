@@ -191,7 +191,10 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
             print operate
 
             if operate[0] == 'r' and operate[-1] == '$':
-                self.objAir.recv_first_open(operate)
+                if operate[3]=='#'and operate[4]=='#':
+                    self.objAir.recv_first_open(operate)
+                else:
+                    self.objAir.recv_open(operate)
                 algo.req_server(self.objAir.room, self.objAir.wind)
                 opStr = ''
                 print operate
