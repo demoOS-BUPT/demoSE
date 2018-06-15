@@ -29,12 +29,12 @@ class Client(QtGui.QMainWindow):
         self.clientUI.setupUi(self)
 
         self.room = user
-        global MODE
-        global TEMP_FROM
-        global TEMP_TO
-        global DEFAULT_WIND
-        global DEFAULT_TEMP
-        print TEMP_FROM
+        MODE = 'hot'
+        TEMP_FROM = 16
+        TEMP_TO =20
+        DEFAULT_WIND = 2
+        DEFAULT_TEMP = 17
+
 
         # 设置滑动条控件的最大最小值
         self.clientUI.tempSlider.setMinimum(TEMP_FROM)
@@ -57,7 +57,6 @@ class Client(QtGui.QMainWindow):
         self.sock.connect((HOST, PORT))
         self.sock.setblocking(0)
         self.t = myThread(self.sock, self)
-
 
     def setTime(self,t):
         s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~"
@@ -113,7 +112,12 @@ class Client(QtGui.QMainWindow):
                 first_open = 0
 
             self.clientUI.tabWidget.setCurrentIndex(0)
-            self.setTime(time.time())
+
+            s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~"
+            t = time.strftime("%Y-%m-%d %H:%M:%S",time.gmtime(time.time()))
+            s += (u"\n当前时间为：" + str(t))
+            self.clientUI.roomLabel.setText(s)
+
             self.clientUI.oBtn.setText(u"关机")
 
 

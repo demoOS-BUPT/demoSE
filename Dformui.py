@@ -50,15 +50,12 @@ class Ui_MainWindow(object):
         self.tableWidget.setGeometry(QtCore.QRect(20, 30, 751, 431))
         self.tableWidget.setStyleSheet(_fromUtf8("background-color: rgba(184, 215, 255, 0);\n"
 "color: rgb(45, 91, 90);\n"
-"font: 75 14pt \"Adobe Arabic\";\n"
+"font: 75 9pt \"Adobe Arabic\";\n"
 "alternate-background-color: rgb(93, 178, 134);\n"
 "selection-background-color: rgb(48, 115, 90);\n"
-"gridline-color: rgb(44, 99, 85);\n"
-"headIterm-background-color:rgba(184, 215, 255, 0);\n"
-"horizontalHeaderItem-background-color:rgba(184, 215, 255, 0);"))
+"gridline-color: rgb(44, 99, 85);\n"))
         self.tableWidget.setObjectName(_fromUtf8("tableWidget"))
-        self.tableWidget.setColumnCount(6)
-        self.tableWidget.setRowCount(0)
+        
         item = QtGui.QTableWidgetItem()
         item.setBackground(QtGui.QColor(255, 255, 255, 0))
         self.tableWidget.setHorizontalHeaderItem(0, item)
@@ -92,18 +89,6 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
-        item = self.tableWidget.horizontalHeaderItem(0)
-        item.setText(_translate("MainWindow", "test1", None))
-        item = self.tableWidget.horizontalHeaderItem(1)
-        item.setText(_translate("MainWindow", "test2", None))
-        item = self.tableWidget.horizontalHeaderItem(2)
-        item.setText(_translate("MainWindow", "test3", None))
-        item = self.tableWidget.horizontalHeaderItem(3)
-        item.setText(_translate("MainWindow", "test4", None))
-        item = self.tableWidget.horizontalHeaderItem(4)
-        item.setText(_translate("MainWindow", "test5", None))
-        item = self.tableWidget.horizontalHeaderItem(5)
-        item.setText(_translate("MainWindow", "test6", None))
         self.gobackBtn.setText(_translate("MainWindow", "返回", None))
 
 import loginqrc_rc
