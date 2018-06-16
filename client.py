@@ -13,11 +13,9 @@ from ReadConfig import *
 
 
 # Socket Init
-<<<<<<< HEAD
+
 HOST, PORT = "127.0.0.1", int(233)
-=======
-HOST, PORT = "127.0.0.1", int(8002)
->>>>>>> 055d13e823684e36457b551474f34ffd75d81ec6
+
 
 HIGHWIND = 3
 MIDWIND = 2

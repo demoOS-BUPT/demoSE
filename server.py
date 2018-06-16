@@ -17,14 +17,9 @@ from PyQt4 import QtCore, QtGui
 from report import *
 
 # 1 Set Host and Port
-<<<<<<< HEAD
+
 HOST, PORT = "127.0.0.1", int(233)
-=======
 
-
-HOST, PORT = "127.0.0.1", int(8002)
-
->>>>>>> 055d13e823684e36457b551474f34ffd75d81ec6
 
 global serverui
 #global airserver

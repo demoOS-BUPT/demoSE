@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from PyQt4 import QtCore, QtGui,Qt
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -26,6 +26,7 @@ class Ui_Serverui(object):
     def setupUi(self, Serverui):
         Serverui.setObjectName(_fromUtf8("Serverui"))
         Serverui.resize(960, 963)
+        Serverui.setWindowFlags(Qt.Qt.FramelessWindowHint)
         self.frame = QtGui.QFrame(Serverui)
         self.frame.setGeometry(QtCore.QRect(0, 10, 131, 31))
         self.frame.setStyleSheet(_fromUtf8("color:rgb(185, 223, 244);"))
@@ -71,6 +72,8 @@ class Ui_Serverui(object):
 "    background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.9, fx:0.5, fy:0.5, stop:0 rgba(0, 41, 71, 255), stop:1 rgba(255, 255, 255, 255));\n"
 "    color: rgb(231, 240, 248);\n"
 "}"))
+
+
         self.onBtn.setObjectName(_fromUtf8("onBtn"))
         self.layoutWidget_2 = QtGui.QWidget(Serverui)
         self.layoutWidget_2.setGeometry(QtCore.QRect(130, 290, 711, 171))
@@ -108,7 +111,19 @@ class Ui_Serverui(object):
         self.horizontalLayout_5.addWidget(self.C310Lab)
         self.serverPic = QtGui.QLabel(Serverui)
         self.serverPic.setGeometry(QtCore.QRect(0, -90, 971, 1191))
-        self.serverPic.setStyleSheet(_fromUtf8("border-image: url(:/aaa/images/server.gif);"))
+
+
+        self.serverPic.setScaledContents(True)
+        serverPic = QtGui.QMovie("./images/server.gif")
+        # 设置cacheMode为CacheAll时表示gif无限循环，注意此时loopCount()返回-1
+        serverPic.setCacheMode(QtGui.QMovie.CacheAll)
+        # 播放速度
+        serverPic.setSpeed(100)
+        # self.movie_screen是在qt designer里定义的一个QLabel对象的对象名，将gif显示在label上
+        self.serverPic.setMovie(serverPic)
+        # 开始播放，对应的是movie.start()
+        serverPic.start()
+
         self.serverPic.setText(_fromUtf8(""))
         self.serverPic.setObjectName(_fromUtf8("serverPic"))
         self.setBtn = QtGui.QPushButton(Serverui)
