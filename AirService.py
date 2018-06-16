@@ -49,12 +49,14 @@ class AirService(object):
         status = {}
         status['room'] = operate[1]
         status['currentTemp'] = float(operate[2])
-        status['finalTemp'] = operate[3]
         if operate[3] == '#':
             status['finalTemp'] = DEFAULT_TEMP
-        #status['wind'] = operate[4]
+        else:
+            status['finalTemp'] = float(operate[3])
         if operate[4] == '#':
             status['wind'] = DEFAULT_WIND
+        else:
+            status['wind'] = int(operate[4])
         self.change_status(status)
         self.sleep = False
         self.open = True
@@ -66,7 +68,7 @@ class AirService(object):
         status['room'] = operate[1]
         status['currentTemp'] = float(operate[2])
         status['finalTemp'] = float(operate[3])
-        status['wind'] = operate[4]
+        status['wind'] = int(operate[4])
         self.sleep = False
         self.open = True
         self.change_status(status)
@@ -79,8 +81,17 @@ class AirService(object):
         status = {}
         status['room'] = operate[1]
         status['currentTemp'] = float(operate[2])
-        status['finalTemp'] = float(operate[3])
-        status['wind'] = operate[4]
+
+        if operate[3] == '#':
+            status['finalTemp'] = DEFAULT_TEMP
+        else:
+            status['finalTemp'] = float(operate[3])
+        #status['wind'] = operate[4]
+        if operate[4] == '#':
+            status['wind'] = DEFAULT_WIND
+        else:
+            status['wind'] = operate[4]
+
         self.change_status(status)
         return 
 

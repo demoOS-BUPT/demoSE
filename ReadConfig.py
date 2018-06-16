@@ -32,3 +32,7 @@ DEFAULT_TEMP = float(cp.get('air', 'defaultTemp'))
 SYSTEM_TIME = 60 * 1.0 / float(cp.get('system', 'systemTime'))
 
 CURRENT_TEMP = 21
+
+localTempChange = 0.2
+localTempRange = 20
+localInitTemp = 20

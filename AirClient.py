@@ -6,11 +6,6 @@ import re, ConfigParser
 from ReadConfig import *
 global localTempChange,localTempRange,localInitTemp
 
-localTempChange = 0.2
-localTempRange = 20
-localInitTemp = 20
-
-
 class AirClient(object):
 
     def __init__(self, room=503, currentTemp=15, finalTemp=25, wind=2):
