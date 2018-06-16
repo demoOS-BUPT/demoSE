@@ -17,7 +17,11 @@ from PyQt4 import QtCore, QtGui
 from report import *
 
 # 1 Set Host and Port
+<<<<<<< HEAD
 HOST, PORT = "127.0.0.1", int(8002)
+=======
+HOST, PORT = "0.0.0.0", int(8002)
+>>>>>>> 0cf2604d59d75865437a783e01f6b150f5c886ae
 
 global serverui
 #global airserver
@@ -232,10 +236,12 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
             if self.objAir.room in checkoutList:
                 checkoutList.remove(self.objAir.room)
                 sendBuf = self.objAir.send_close('1')
+                print '[close]',sendBuf
                 self.request.sendall(sendBuf)
                 self.objAir.reset()
                 self.objAir.open = False
                 self.objAir.sleep = False
+                time.sleep(0.2)
 
 
             if not self.objAir.open:

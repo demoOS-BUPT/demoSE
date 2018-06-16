@@ -30,7 +30,6 @@ class Client(QtGui.QMainWindow):
         self.clientUI= Ui_MainWindow()
         self.clientUI.setupUi(self)
 
-
         self.room = user
 
         if DEFAULT_WIND == "1":
@@ -113,7 +112,11 @@ class Client(QtGui.QMainWindow):
                 self.clientUI.lowBtn.toggled[bool].connect(self.lowBtnSlot)
 
             self.air.show_status()
-            sendBuf = self.air.send_first_open()
+            if self.air.is_reset:
+                sendBuf = self.air.send_first_open()
+                self.air.is_reset = False
+            else:
+                sendBuf = self.air.send_open()
             print sendBuf
             self.sock.send(sendBuf)
             time.sleep(0.2)
@@ -269,7 +272,7 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
                     self.client.setTime(operate[4])
                 if operate[0] == 'close' and len(operate) == 4 and operate[-1] == '$':
                     self.client.printDetail()
-                    self.client.bye()
+                    #self.client.bye()
                     self.client.air.recv_close(operate)
 
                 if operate[0] == 'sleep' and len(operate) == 3 and operate[-1] == '$':
