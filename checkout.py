@@ -9,6 +9,8 @@ from checkoutui import *
 from Dform import *
 from report import *
 
+checkoutList = []
+
 class checkoutUI(QtGui.QDialog):
     def __init__(self,parent=None):
         super(checkoutUI,self).__init__(parent)
@@ -18,7 +20,6 @@ class checkoutUI(QtGui.QDialog):
         self.checkoutForm.cancelBtn.clicked.connect(self.bye)
         self.checkoutForm.gotoDform.clicked.connect(self.dform)
         self.checkoutForm.gotoDform.hide()
-        self.checkoutForm.cancelBtn.setText(u"提交操作")
         self.roomList = []
 
     def commitAction(self):
@@ -41,13 +42,22 @@ class checkoutUI(QtGui.QDialog):
         elif (self.checkoutForm.roomBox.currentIndex() == 8):
             self.room = '310C'
 
+        global checkoutList
         self.roomList.append(self.room)
+        checkoutList.append(self.room)
+        print 'append '+checkoutList[0]
+        r_str = ''
+        for r in self.roomList:
+            r_str += r+' '
+        self.checkoutForm.roomListLab.setText(r_str+u"成功退房")
 
-        QtGui.QMessageBox.information(self, u"信息提示", str(self.room) + u"已加入退房列表")
+        QtGui.QMessageBox.information(self, u"信息提示", str(self.room) + u"已退房")
         money = database.getTotalMoney(self.room)
         if money == None:
             money = 0
-        self.checkoutForm.priceLab.setText(str(money))
+        self.checkoutForm.priceLab.setText(str(money)+u"元")
+
+
 
         self.checkoutForm.gotoDform.setText(self.room+u"详单")
         self.checkoutForm.gotoDform.show()

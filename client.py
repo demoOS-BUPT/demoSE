@@ -13,7 +13,7 @@ from ReadConfig import *
 
 
 # Socket Init
-HOST, PORT = "192.168.137.110", int(8002)
+HOST, PORT = "127.0.0.1", int(233)
 
 HIGHWIND = 3
 MIDWIND = 2
@@ -23,13 +23,10 @@ sock_flag = 0
 first_open = 1
 
 class Client(QtGui.QMainWindow):
-
-
     def __init__(self,user,parent=None):
         super(Client, self).__init__(parent)
         self.clientUI= Ui_MainWindow()
         self.clientUI.setupUi(self)
-
 
         self.room = user
 
@@ -269,7 +266,7 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
                     self.client.setTime(operate[4])
                 if operate[0] == 'close' and len(operate) == 4 and operate[-1] == '$':
                     self.client.printDetail()
-                    self.client.bye()
+                    #self.client.bye()
                     self.client.air.recv_close(operate)
 
                 if operate[0] == 'sleep' and len(operate) == 3 and operate[-1] == '$':

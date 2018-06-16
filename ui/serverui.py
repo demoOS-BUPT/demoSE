@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui,Qt
+from PyQt4 import QtCore, QtGui
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -26,7 +26,6 @@ class Ui_Serverui(object):
     def setupUi(self, Serverui):
         Serverui.setObjectName(_fromUtf8("Serverui"))
         Serverui.resize(960, 963)
-        Serverui.setWindowFlags(Qt.Qt.FramelessWindowHint)
         self.frame = QtGui.QFrame(Serverui)
         self.frame.setGeometry(QtCore.QRect(0, 10, 131, 31))
         self.frame.setStyleSheet(_fromUtf8("color:rgb(185, 223, 244);"))
@@ -41,7 +40,7 @@ class Ui_Serverui(object):
         self.display.setText(_fromUtf8(""))
         self.display.setObjectName(_fromUtf8("display"))
         self.layoutWidget = QtGui.QWidget(Serverui)
-        self.layoutWidget.setGeometry(QtCore.QRect(210, 60, 711, 171))
+        self.layoutWidget.setGeometry(QtCore.QRect(130, 120, 711, 171))
         self.layoutWidget.setObjectName(_fromUtf8("layoutWidget"))
         self.horizontalLayout_2 = QtGui.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
@@ -58,8 +57,7 @@ class Ui_Serverui(object):
         self.C307Lab.setObjectName(_fromUtf8("C307Lab"))
         self.horizontalLayout_2.addWidget(self.C307Lab)
         self.serverLab = QtGui.QLabel(Serverui)
-        self.serverLab.setGeometry(QtCore.QRect(10, 230, 201, 171))
-        self.serverLab.setStyleSheet(_fromUtf8("color:rgb(185, 223, 244);"))
+        self.serverLab.setGeometry(QtCore.QRect(690, -20, 171, 141))
         self.serverLab.setObjectName(_fromUtf8("serverLab"))
         self.onBtn = QtGui.QPushButton(Serverui)
         self.onBtn.setGeometry(QtCore.QRect(450, 770, 101, 51))
@@ -71,10 +69,11 @@ class Ui_Serverui(object):
 "\n"
 "QPushButton:hover {\n"
 "    background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.9, fx:0.5, fy:0.5, stop:0 rgba(0, 41, 71, 255), stop:1 rgba(255, 255, 255, 255));\n"
+"    color: rgb(231, 240, 248);\n"
 "}"))
         self.onBtn.setObjectName(_fromUtf8("onBtn"))
         self.layoutWidget_2 = QtGui.QWidget(Serverui)
-        self.layoutWidget_2.setGeometry(QtCore.QRect(210, 230, 711, 171))
+        self.layoutWidget_2.setGeometry(QtCore.QRect(130, 290, 711, 171))
         self.layoutWidget_2.setObjectName(_fromUtf8("layoutWidget_2"))
         self.horizontalLayout_4 = QtGui.QHBoxLayout(self.layoutWidget_2)
         self.horizontalLayout_4.setObjectName(_fromUtf8("horizontalLayout_4"))
@@ -91,7 +90,7 @@ class Ui_Serverui(object):
         self.C308Lab.setObjectName(_fromUtf8("C308Lab"))
         self.horizontalLayout_4.addWidget(self.C308Lab)
         self.layoutWidget_3 = QtGui.QWidget(Serverui)
-        self.layoutWidget_3.setGeometry(QtCore.QRect(210, 400, 711, 171))
+        self.layoutWidget_3.setGeometry(QtCore.QRect(130, 460, 711, 171))
         self.layoutWidget_3.setObjectName(_fromUtf8("layoutWidget_3"))
         self.horizontalLayout_5 = QtGui.QHBoxLayout(self.layoutWidget_3)
         self.horizontalLayout_5.setObjectName(_fromUtf8("horizontalLayout_5"))
@@ -109,20 +108,7 @@ class Ui_Serverui(object):
         self.horizontalLayout_5.addWidget(self.C310Lab)
         self.serverPic = QtGui.QLabel(Serverui)
         self.serverPic.setGeometry(QtCore.QRect(0, -90, 971, 1191))
-        
-#------------lx
-        
-        self.serverPic.setScaledContents(True)
-        serverPic = QtGui.QMovie("./images/server.gif") 
-        #设置cacheMode为CacheAll时表示gif无限循环，注意此时loopCount()返回-1
-        serverPic.setCacheMode(QtGui.QMovie.CacheAll) 
-        #播放速度
-        serverPic.setSpeed(100) 
-        #self.movie_screen是在qt designer里定义的一个QLabel对象的对象名，将gif显示在label上
-        self.serverPic.setMovie(serverPic)   
-        #开始播放，对应的是movie.start()
-        serverPic.start()
-
+        self.serverPic.setStyleSheet(_fromUtf8("border-image: url(:/aaa/images/server.gif);"))
         self.serverPic.setText(_fromUtf8(""))
         self.serverPic.setObjectName(_fromUtf8("serverPic"))
         self.setBtn = QtGui.QPushButton(Serverui)
@@ -179,17 +165,17 @@ class Ui_Serverui(object):
 
     def retranslateUi(self, Serverui):
         Serverui.setWindowTitle(_translate("Serverui", "Dialog", None))
-        self.C306Lab.setText(_translate("Serverui", "这是306C", None))
-        self.D306Lab.setText(_translate("Serverui", "这是306D", None))
-        self.C307Lab.setText(_translate("Serverui", "这是307C", None))
-        self.serverLab.setText(_translate("Serverui", "<html><head/><body><p><span style=\" color:#b9dff4;\">当前时间巴拉巴拉</span></p></body></html>", None))
+        self.C306Lab.setText(_translate("Serverui", "306C房间", None))
+        self.D306Lab.setText(_translate("Serverui", "306D房间", None))
+        self.C307Lab.setText(_translate("Serverui", "307C房间", None))
+        self.serverLab.setText(_translate("Serverui", "<html><head/><body><p><br/></p></body></html>", None))
         self.onBtn.setText(_translate("Serverui", "开", None))
-        self.D308Lab.setText(_translate("Serverui", "这是308D", None))
-        self.D307Lab.setText(_translate("Serverui", "这是307D", None))
-        self.C308Lab.setText(_translate("Serverui", "这是308C", None))
-        self.C309Lab.setText(_translate("Serverui", "这是309C", None))
-        self.D309Lab.setText(_translate("Serverui", "这是309D", None))
-        self.C310Lab.setText(_translate("Serverui", "这是310C", None))
+        self.D308Lab.setText(_translate("Serverui", "308D房间", None))
+        self.D307Lab.setText(_translate("Serverui", "307D房间", None))
+        self.C308Lab.setText(_translate("Serverui", "308C房间", None))
+        self.C309Lab.setText(_translate("Serverui", "309C房间", None))
+        self.D309Lab.setText(_translate("Serverui", "309D房间", None))
+        self.C310Lab.setText(_translate("Serverui", "310C房间", None))
         self.setBtn.setText(_translate("Serverui", "设置", None))
         self.checkoutBtn.setText(_translate("Serverui", "退房", None))
         self.formBtn.setText(_translate("Serverui", "报表", None))
