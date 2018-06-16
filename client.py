@@ -13,7 +13,11 @@ from ReadConfig import *
 
 
 # Socket Init
+<<<<<<< HEAD
 HOST, PORT = "127.0.0.1", int(233)
+=======
+HOST, PORT = "127.0.0.1", int(8002)
+>>>>>>> 055d13e823684e36457b551474f34ffd75d81ec6
 
 HIGHWIND = 3
 MIDWIND = 2
@@ -110,7 +114,11 @@ class Client(QtGui.QMainWindow):
                 self.clientUI.lowBtn.toggled[bool].connect(self.lowBtnSlot)
 
             self.air.show_status()
-            sendBuf = self.air.send_first_open()
+            if self.air.is_reset:
+                sendBuf = self.air.send_first_open()
+                self.air.is_reset = False
+            else:
+                sendBuf = self.air.send_open()
             print sendBuf
             self.sock.send(sendBuf)
             time.sleep(0.2)

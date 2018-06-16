@@ -5,7 +5,7 @@ class Algo(object):
 
     def __init__(self):
         self.roomPriority = {'307C':2, '306C':2,'306D':2,'307D':2}
-
+        self.first_wait = {}
         self.serverList = []
         self.waitList = []
         self.roomStartTime = {}
@@ -21,10 +21,10 @@ class Algo(object):
             self.change_server()
         
         if roomid in self.serverList:
-            print roomid, 'serving'
+            #print roomid, 'serving'
             return
         elif roomid in self.waitList:
-            print roomid, 'waiting'
+            #print roomid, 'waiting'
             return
 
         # self.serverList append
@@ -48,6 +48,7 @@ class Algo(object):
             # check if need switch
             if self.roomPriority[roomid] < minPriority:
                 self.waitList.append(roomid)
+                self.first_wait[roomid] = 0
                 return
 
             # get oldest room
@@ -65,6 +66,7 @@ class Algo(object):
             self.serverList.remove(minRoom[0])
             if minRoom[0] not in self.waitList:
                 self.waitList.append(minRoom[0])
+                self.first_wait[minRoom[0]] = 0
             self.serverList.append(roomid)
             self.roomStartTime[roomid] = time.time()
 
@@ -95,6 +97,10 @@ class Algo(object):
             self.waitList.remove(maxRoom)
 
     def change_server(self):
+        for room in self.roomStartTime:
+            if time.time() - self.roomStartTime[room] > 40:
+                self.remove_server(room)
+
         print self.serverList, self.waitList, self.roomStartTime
         if len(self.serverList) < self.queueLength:
             return
@@ -151,6 +157,7 @@ class Algo(object):
 
             self.waitList.remove(inRoom)
             self.waitList.append(outRoom)
+            self.first_wait[outRoom] = 0
 
 
 #    def remove_server(self, roomid):

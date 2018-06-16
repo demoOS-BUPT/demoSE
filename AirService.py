@@ -10,7 +10,7 @@ class AirService(object):
     #初始化
     global database
 
-    def __init__(self, room=503, currentTemp=15, finalTemp=25, wind=2):
+    def __init__(self, room='307C', currentTemp=15, finalTemp=25, wind=2):
         self.room = room
         self.mode = MODE
         self.currentTemp = DEFAULT_TEMP-3
@@ -49,12 +49,14 @@ class AirService(object):
         status = {}
         status['room'] = operate[1]
         status['currentTemp'] = float(operate[2])
-        status['finalTemp'] = operate[3]
         if operate[3] == '#':
             status['finalTemp'] = DEFAULT_TEMP
-        #status['wind'] = operate[4]
+        else:
+            status['finalTemp'] = float(operate[3])
         if operate[4] == '#':
             status['wind'] = DEFAULT_WIND
+        else:
+            status['wind'] = int(operate[4])
         self.change_status(status)
         self.sleep = False
         self.open = True
@@ -66,7 +68,7 @@ class AirService(object):
         status['room'] = operate[1]
         status['currentTemp'] = float(operate[2])
         status['finalTemp'] = float(operate[3])
-        status['wind'] = operate[4]
+        status['wind'] = int(operate[4])
         self.sleep = False
         self.open = True
         self.change_status(status)
@@ -75,13 +77,22 @@ class AirService(object):
 
     def recv_change(self, operate):
         timeLen=round((time.time()-self.lastTime)/3,2)
-        database.insert_operate(self, "serve", timeLen)
         status = {}
         status['room'] = operate[1]
         status['currentTemp'] = float(operate[2])
-        status['finalTemp'] = float(operate[3])
-        status['wind'] = operate[4]
+
+        if operate[3] == '#':
+            status['finalTemp'] = DEFAULT_TEMP
+        else:
+            status['finalTemp'] = float(operate[3])
+        #status['wind'] = operate[4]
+        if operate[4] == '#':
+            status['wind'] = DEFAULT_WIND
+        else:
+            status['wind'] = operate[4]
+
         self.change_status(status)
+        database.insert_operate(self, "serve", timeLen)
         return 
 
     def recv_close(self, operate):
@@ -125,7 +136,7 @@ class AirService(object):
         status = {'room':self.room,
                     'flag':flag}
         sendBuf = sendBuf.format(**status)
-        #database.insert_operate(self,"close",0)
+        database.insert_operate(self,"close",0)
         return sendBuf
 
     def send_sleep(self):
@@ -187,7 +198,7 @@ class AirService(object):
 
     #test：展示状态
     def show_status(self):
-        print 'room:', self.room, 'currentTemp:', self.currentTemp, 'finalTemp:', self.finalTemp,'mode:',self.mode, 'wind:', self.wind
+        print 'room:', self.room, 'currentTemp:', self.currentTemp, 'finalTemp:', self.finalTemp,'mode:',self.mode, 'wind:', self.wind, 'elec',self.totalElec,'per:',self.perMoney,'totalMoney:',self.totalMoney
 
     #模拟运行
     def work(self):
@@ -202,7 +213,6 @@ class AirService(object):
 
         if not self.sleep:
             print 'running'
-            self.show_status()
             #正常运行
             self.totalElec += float(WIND[int(self.wind)])
             self.totalMoney += self.perMoney
@@ -210,6 +220,7 @@ class AirService(object):
                 self.currentTemp += WIND[int(self.wind)] * float(ELEC_TEMP)
             else:
                 self.currentTemp -= WIND[int(self.wind)] * float(ELEC_TEMP)
+            #self.show_status()
         else:
             #睡眠了，不该运行
             #self.currentTemp -= COLD * (nowTime - self.lastTime)
@@ -224,11 +235,11 @@ class AirService(object):
     def status_syn(self):
         #根据风速得到每秒钱数，这里后面替换为ConfigParser
         if self.wind == 1 or self.wind == '1':
-            self.perMoney = WIND[0] * ELEC_MONEY
-        elif self.wind == 2 or self.wind == '2':
             self.perMoney = WIND[1] * ELEC_MONEY
-        elif self.wind == 3 or self.wind == '3':
+        elif self.wind == 2 or self.wind == '2':
             self.perMoney = WIND[2] * ELEC_MONEY
+        elif self.wind == 3 or self.wind == '3':
+            self.perMoney = WIND[3] * ELEC_MONEY
 
     #是否该休眠
     def is_sleep(self):
