@@ -49,12 +49,14 @@ class AirService(object):
         status = {}
         status['room'] = operate[1]
         status['currentTemp'] = float(operate[2])
-        status['finalTemp'] = operate[3]
         if operate[3] == '#':
             status['finalTemp'] = DEFAULT_TEMP
-        #status['wind'] = operate[4]
+        else:
+            status['finalTemp'] = float(operate[3])
         if operate[4] == '#':
             status['wind'] = DEFAULT_WIND
+        else:
+            status['wind'] = int(operate[4])
         self.change_status(status)
         self.sleep = False
         self.open = True
@@ -66,7 +68,7 @@ class AirService(object):
         status['room'] = operate[1]
         status['currentTemp'] = float(operate[2])
         status['finalTemp'] = float(operate[3])
-        status['wind'] = operate[4]
+        status['wind'] = int(operate[4])
         self.sleep = False
         self.open = True
         self.change_status(status)
@@ -79,8 +81,17 @@ class AirService(object):
         status = {}
         status['room'] = operate[1]
         status['currentTemp'] = float(operate[2])
-        status['finalTemp'] = float(operate[3])
-        status['wind'] = operate[4]
+
+        if operate[3] == '#':
+            status['finalTemp'] = DEFAULT_TEMP
+        else:
+            status['finalTemp'] = float(operate[3])
+        #status['wind'] = operate[4]
+        if operate[4] == '#':
+            status['wind'] = DEFAULT_WIND
+        else:
+            status['wind'] = operate[4]
+
         self.change_status(status)
         return 
 
@@ -224,11 +235,11 @@ class AirService(object):
     def status_syn(self):
         #根据风速得到每秒钱数，这里后面替换为ConfigParser
         if self.wind == 1 or self.wind == '1':
-            self.perMoney = WIND[0] * ELEC_MONEY
-        elif self.wind == 2 or self.wind == '2':
             self.perMoney = WIND[1] * ELEC_MONEY
-        elif self.wind == 3 or self.wind == '3':
+        elif self.wind == 2 or self.wind == '2':
             self.perMoney = WIND[2] * ELEC_MONEY
+        elif self.wind == 3 or self.wind == '3':
+            self.perMoney = WIND[3] * ELEC_MONEY
 
     #是否该休眠
     def is_sleep(self):
