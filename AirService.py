@@ -12,10 +12,24 @@ class AirService(object):
 
     def __init__(self, room=503, currentTemp=15, finalTemp=25, wind=2):
         self.room = room
-        self.mode = 0
-        self.currentTemp = currentTemp
-        self.finalTemp = finalTemp
-        self.wind = wind
+        self.mode = MODE
+        self.currentTemp = DEFAULT_TEMP-3
+        self.finalTemp = DEFAULT_TEMP
+        self.wind = DEFAULT_WIND
+        self.totalMoney = 0.0
+        self.perMoney = 1.2
+        self.startTime = int(time.time())
+        self.lastTime = int(time.time())
+        self.sleep = False
+        self.open = True
+        self.totalElec = 0
+        self.status_syn()
+
+    def reset(self):
+        self.mode = MODE
+        self.currentTemp = DEFAULT_TEMP-3
+        self.finalTemp = DEFAULT_TEMP
+        self.wind = DEFAULT_WIND
         self.totalMoney = 0.0
         self.perMoney = 1.2
         self.startTime = int(time.time())
@@ -38,9 +52,9 @@ class AirService(object):
         status['finalTemp'] = operate[3]
         if operate[3] == '#':
             status['finalTemp'] = DEFAULT_TEMP
-        status['wind'] = operate[4]
+        #status['wind'] = operate[4]
         if operate[4] == '#':
-            status['finalTemp'] = DEFAULT_WIND
+            status['wind'] = DEFAULT_WIND
         self.change_status(status)
         self.sleep = False
         self.open = True
@@ -60,7 +74,7 @@ class AirService(object):
         return 
 
     def recv_change(self, operate):
-        timeLen=(int(time.time())-self.lastTime)/3
+        timeLen=round((time.time()-self.lastTime)/3,2)
         database.insert_operate(self,"serve",timeLen)
         status = {}
         status['room'] = operate[1]
@@ -119,7 +133,7 @@ class AirService(object):
         sendBuf = 'sleep_{room}_$'
         status = {'room':self.room}
         sendBuf = sendBuf.format(**status)
-        timeLen=(int(time.time())-self.lastTime)/3
+        timeLen=round((time.time()-self.lastTime)/3,2)
         database.insert_operate(self,"serve",timeLen)
         return sendBuf
 

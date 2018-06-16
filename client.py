@@ -82,7 +82,7 @@ class Client(QtGui.QMainWindow):
 
                 self.air = AirClient()
                 status={'room':self.room,
-                        'currentTemp':20.3,
+                        'currentTemp':CURRENT_TEMP,
                         'finalTemp':float(self.clientUI.temperaBox.value()),
                         'wind':win,
                         }
@@ -126,10 +126,7 @@ class Client(QtGui.QMainWindow):
             self.clientUI.roomLabel.setText(s)
 
             self.clientUI.oBtn.setText(u"关机")
-
-
         else:#关空调
-
             off_tips_string = u"耶 终于关空调了"
             self.clientUI.tipLabel.setText(off_tips_string)
 
