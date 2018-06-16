@@ -18,7 +18,11 @@ from report import *
 
 # 1 Set Host and Port
 
+<<<<<<< HEAD
+HOST, PORT = "127.0.0.1", int(8002)
+=======
 HOST, PORT = "0.0.0.0", int(8002)
+>>>>>>> 994a441977f8b6f0eb865ec5be67795e5dd6d12d
 
 global serverui
 #global airserver
