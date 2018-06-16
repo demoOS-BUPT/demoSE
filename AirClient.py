@@ -21,6 +21,7 @@ class AirClient(object):
         self.sleep = False
         self.open = True
         self.tempWidth = 2
+        self.is_reset = True
         #self.is_sleep()
 
     def reset(self):
@@ -35,10 +36,7 @@ class AirClient(object):
         self.sleep = False
         self.open = False
         self.totalElec = 0
-        self.status_syn()######################## meixiema
-
-    def status_syn(self):
-        pass
+        self.is_reset = True
 
     def send_start(self):
         #{:0>2d} 左边补0
@@ -53,6 +51,7 @@ class AirClient(object):
                                     'finalTemp':'#',
                                     'wind':'#'}
         sendBuf = sendBuf.format(**status)
+        self.open = True
         return sendBuf
 
     def send_open(self):
@@ -61,11 +60,15 @@ class AirClient(object):
                                     'currentTemp':self.currentTemp,
                                     'finalTemp':self.finalTemp,
                                     'wind':self.wind}
+        self.open = True
         sendBuf = sendBuf.format(**status)
         return sendBuf
 
     def send_change(self):
-        sendBuf = 'c_{room}_{currentTemp}_{finalTemp}_{wind}_$'
+        if self.sleep == True:
+            sendBuf = 'c_{room}_{currentTemp}_{finalTemp}_{wind}_$'
+        else:
+            sendBuf = 'r_{room}_{currentTemp}_{finalTemp}_{wind}_$'
         status = {'room':self.room,
                                     'currentTemp':self.currentTemp,
                                     'finalTemp':self.finalTemp,
@@ -160,6 +163,10 @@ class AirClient(object):
 
         #模拟运行
         if nowTime <= int( self.lastTime + 3 ):
+            return False
+
+        if self.is_reset:
+            print '[退房啦]', self.room
             return False
 
         if not self.open:

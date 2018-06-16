@@ -10,7 +10,7 @@ class AirService(object):
     #初始化
     global database
 
-    def __init__(self, room=503, currentTemp=15, finalTemp=25, wind=2):
+    def __init__(self, room='307C', currentTemp=15, finalTemp=25, wind=2):
         self.room = room
         self.mode = MODE
         self.currentTemp = DEFAULT_TEMP-3
