@@ -75,14 +75,15 @@ class AirService(object):
 
     def recv_change(self, operate):
         timeLen=round((time.time()-self.lastTime)/3,2)
-        database.insert_operate(self,"serve",timeLen)
+
         status = {}
         status['room'] = operate[1]
         status['currentTemp'] = float(operate[2])
         status['finalTemp'] = float(operate[3])
         status['wind'] = operate[4]
         self.change_status(status)
-        #database.insert_operate(self,"serve")
+
+        database.insert_operate(self, "serve", timeLen)
         return 
 
     def recv_close(self, operate):

@@ -337,19 +337,17 @@ class Database(object):
     def detailed_bill(self,objRoom):
         objRoom="room"+objRoom
         user=database.getUser(objRoom)
-        select = [
-            'Select * from {tableName} where user="{user}";'.format(tableName=objRoom,user=user),
+        select = 'Select * from {tableName} where user="{user}";'.format(tableName=objRoom,user=user)
             #详单
-            ]
+
         list=[]
-        for sqlQuery in select:
-            cursor = self.conn.cursor()
-            cursor.execute(sqlQuery)
-            for row in cursor:
-                list.append(row)
-                #print(row[0]),
-            cursor.close()
-            self.conn.commit()
+        cursor = self.conn.cursor()
+        cursor.execute(select)
+        for row in cursor:
+            list.append(row)
+            #print(row[0]),
+        cursor.close()
+        self.conn.commit()
         print list
         return list
 
