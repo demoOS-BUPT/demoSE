@@ -125,7 +125,7 @@ class AirService(object):
         status = {'room':self.room,
                     'flag':flag}
         sendBuf = sendBuf.format(**status)
-        #database.insert_operate(self,"close",0)
+        database.insert_operate(self,"close",0)
         return sendBuf
 
     def send_sleep(self):
