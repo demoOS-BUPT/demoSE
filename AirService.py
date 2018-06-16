@@ -235,11 +235,11 @@ class AirService(object):
     def status_syn(self):
         #根据风速得到每秒钱数，这里后面替换为ConfigParser
         if self.wind == 1 or self.wind == '1':
-            self.perMoney = WIND[0] * ELEC_MONEY
-        elif self.wind == 2 or self.wind == '2':
             self.perMoney = WIND[1] * ELEC_MONEY
-        elif self.wind == 3 or self.wind == '3':
+        elif self.wind == 2 or self.wind == '2':
             self.perMoney = WIND[2] * ELEC_MONEY
+        elif self.wind == 3 or self.wind == '3':
+            self.perMoney = WIND[3] * ELEC_MONEY
 
     #是否该休眠
     def is_sleep(self):
