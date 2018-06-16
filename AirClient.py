@@ -64,7 +64,7 @@ class AirClient(object):
         return sendBuf
 
     def send_change(self):
-        if self.sleep == True:
+        if self.sleep == False:
             sendBuf = 'c_{room}_{currentTemp}_{finalTemp}_{wind}_$'
         else:
             sendBuf = 'r_{room}_{currentTemp}_{finalTemp}_{wind}_$'
@@ -161,7 +161,7 @@ class AirClient(object):
         nowTime = int(time.time())
 
         #模拟运行
-        if nowTime <= int( self.lastTime + 3 ):
+        if nowTime <= int( self.lastTime + SYSTEM_TIME ):
             return False
 
         if self.is_reset:

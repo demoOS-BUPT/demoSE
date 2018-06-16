@@ -77,7 +77,6 @@ class AirService(object):
 
     def recv_change(self, operate):
         timeLen=round((time.time()-self.lastTime)/3,2)
-        database.insert_operate(self, "serve", timeLen)
         status = {}
         status['room'] = operate[1]
         status['currentTemp'] = float(operate[2])
@@ -93,6 +92,7 @@ class AirService(object):
             status['wind'] = operate[4]
 
         self.change_status(status)
+        database.insert_operate(self, "serve", timeLen)
         return 
 
     def recv_close(self, operate):
@@ -198,7 +198,7 @@ class AirService(object):
 
     #test：展示状态
     def show_status(self):
-        print 'room:', self.room, 'currentTemp:', self.currentTemp, 'finalTemp:', self.finalTemp,'mode:',self.mode, 'wind:', self.wind
+        print 'room:', self.room, 'currentTemp:', self.currentTemp, 'finalTemp:', self.finalTemp,'mode:',self.mode, 'wind:', self.wind, 'elec',self.totalElec,'per:',self.perMoney,'totalMoney:',self.totalMoney
 
     #模拟运行
     def work(self):
@@ -213,7 +213,6 @@ class AirService(object):
 
         if not self.sleep:
             print 'running'
-            self.show_status()
             #正常运行
             self.totalElec += float(WIND[int(self.wind)])
             self.totalMoney += self.perMoney
@@ -221,6 +220,7 @@ class AirService(object):
                 self.currentTemp += WIND[int(self.wind)] * float(ELEC_TEMP)
             else:
                 self.currentTemp -= WIND[int(self.wind)] * float(ELEC_TEMP)
+            #self.show_status()
         else:
             #睡眠了，不该运行
             #self.currentTemp -= COLD * (nowTime - self.lastTime)

@@ -277,6 +277,8 @@ class Database(object):
         elif op=="close":
             cursor.execute(insert[2])
         elif op=="serve":
+            objAir.show_status()
+            print '[elec,money]',singleElec, singleMoney
             cursor.execute(insert[3])
         cursor.close()
         self.conn.commit()

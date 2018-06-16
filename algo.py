@@ -21,10 +21,10 @@ class Algo(object):
             self.change_server()
         
         if roomid in self.serverList:
-            print roomid, 'serving'
+            #print roomid, 'serving'
             return
         elif roomid in self.waitList:
-            print roomid, 'waiting'
+            #print roomid, 'waiting'
             return
 
         # self.serverList append
