@@ -30,11 +30,11 @@ class Client(QtGui.QMainWindow):
 
         self.room = user
 
-        if DEFAULT_WIND == "1":
+        if DEFAULT_WIND == 1:
             self.clientUI.lowBtn.setChecked(True)
-        elif DEFAULT_WIND == "2":
+        elif DEFAULT_WIND == 2:
             self.clientUI.midBtn.setChecked(True)
-        elif DEFAULT_WIND == "3":
+        elif DEFAULT_WIND == 3:
             self.clientUI.highBtn.setChecked(True)
 
 
