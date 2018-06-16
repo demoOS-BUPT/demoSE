@@ -3,10 +3,8 @@ import socket
 import time
 import re, ConfigParser
 
-global localTempChange, localTempRange, localInitTemp
-localTempChange=0.8
-localTempRange=3.0
-localInitTemp=26
+from ReadConfig import *
+global localTempChange,localTempRange,localInitTemp
 
 
 class AirClient(object):
@@ -37,7 +35,10 @@ class AirClient(object):
         self.sleep = False
         self.open = False
         self.totalElec = 0
-        self.status_syn()
+        self.status_syn()######################## meixiema
+
+    def status_syn(self):
+        pass
 
     def send_start(self):
         #{:0>2d} 左边补0
@@ -49,8 +50,8 @@ class AirClient(object):
         sendBuf = 'r_{room}_{currentTemp}_{finalTemp}_{wind}_$'
         status = {'room':self.room,
                                     'currentTemp':self.currentTemp,
-                                    'finalTemp':self.finalTemp,
-                                    'wind':self.wind}
+                                    'finalTemp':'#',
+                                    'wind':'#'}
         sendBuf = sendBuf.format(**status)
         return sendBuf
 

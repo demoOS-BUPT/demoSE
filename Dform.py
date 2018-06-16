@@ -63,11 +63,17 @@ class DformUI(QtGui.QDialog):
         self.Dform.tableWidget.setRowCount(len(list))
         row = 0
         column = 0
+        wind = [0,u'低风',u'中风',u'高风']
         for items in list:
-            for item in items:
-                self.Dform.tableWidget.setItem(row, column, QtGui.QTableWidgetItem(str(item)))
-                column +=1
-            row +=1
+            if items != None:
+                for item in items:
+                    if column != 7:
+                        self.Dform.tableWidget.setItem(row, column, QtGui.QTableWidgetItem(str(item)))
+                    else:
+                        self.Dform.tableWidget.setItem(row, column, QtGui.QTableWidgetItem(wind[item]))
+                    column +=1
+                row +=1
+                column = 0
 
 if __name__ == "__main__":
     import sys

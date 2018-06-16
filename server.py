@@ -48,16 +48,15 @@ class Server(QtGui.QMainWindow):
         serverStr = ''
         serverStr += u'\n工作模式：\n'+ MODE
         serverStr += u'\n工作状态：'
-        '''
+
         if(onOff == 0):
             serverStr += u'\n开机'
-        elif:
+        else:
             serverStr += u'\n关机'
-        '''
-        serverStr += u'\n当前时间：\n' + str(time.time())
+
         self.serverUI.serverLab.setText(serverStr)
 
-    ######################服务端的几个功能
+    ######################服务端的更改空调配置，打印报表，前台退房等功能
 
     def setRate(self):
         self.setrate = setrateUI()
@@ -71,7 +70,6 @@ class Server(QtGui.QMainWindow):
     def printForm(self):
         self.formui = formUI()
         self.formui.show()
-        #self.formui.exec_()
 
     def checkOut(self):
         self.checkoutui = checkoutUI()
@@ -155,6 +153,7 @@ class Server(QtGui.QMainWindow):
 
             server.shutdown()
             onOff = 1
+        self.serverState()
 
 class HandleCheckin(SocketServer.StreamRequestHandler):
     # 3 Call this function when recv a connection from client
@@ -199,7 +198,10 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
             print operate
 
             if operate[0] == 'r' and operate[-1] == '$':
-                self.objAir.recv_first_open(operate)
+                if operate[3]=='#'and operate[4]=='#':
+                    self.objAir.recv_first_open(operate)
+                else:
+                    self.objAir.recv_open(operate)
                 algo.req_server(self.objAir.room, self.objAir.wind)
                 opStr = ''
                 print operate
@@ -223,8 +225,10 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
         global checkoutList
         print '[work start]'
 
+
         while(1):
             time.sleep(0.1)
+
             if self.objAir.room in checkoutList:
                 checkoutList.remove(self.objAir.room)
                 sendBuf = self.objAir.send_close('1')
@@ -235,6 +239,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
 
             if not self.objAir.open:
+                serverui.showRoomState(self.objAir.room, 'closed')
                 algo.remove_server(self.objAir.room)
                 continue
 

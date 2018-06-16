@@ -98,9 +98,16 @@ class formUI(QtGui.QDialog):
 
         list = None
         list = database.report(timeArray,room,type)
+
+        column = 0
+        wind = [0, u'低风', u'中风', u'高风']
         if list != None:
             for i in list:
-                self.formForm.tabWidget.setItem(0, i, QtGui.QTableWidgetItem(str(list[i])))
+                if column == 2:
+                    self.formForm.tabWidget.setItem(0, column, QtGui.QTableWidgetItem(wind[i]))
+                else:
+                    self.formForm.tabWidget.setItem(0, column, QtGui.QTableWidgetItem(str(i)))
+                column += 1
 
 if __name__ == "__main__":
     import sys

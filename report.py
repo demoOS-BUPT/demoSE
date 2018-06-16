@@ -249,19 +249,23 @@ class Database(object):
         '''
         user=database.getUser(objRoom)
         id=database.getId(objRoom)
-        singleElec=objAir.totalElec-database.getLastTotalElec(user,objRoom)
-        singleMoney=objAir.totalMoney-database.getLastTotalMoney(user,objRoom)
+        singleElec=round(objAir.totalElec-database.getLastTotalElec(user,objRoom),2)
+        if singleElec<0:
+            singleElec=0
+        singleMoney=round(objAir.totalMoney-database.getLastTotalMoney(user,objRoom),2)
+        if singleMoney<0:
+            singleMoney=0
         insert=[
             "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `singleElec`,`totalElec`,`perMoney`,`singleMoney`, `totalMoney`) VALUES ('{id}', 'firstopen', '{user}', '{date} ',0 , '{currentTemp}', '{finalTemp}', '{wind}', 0, 0,'{perMoney}',0,0);".format(
-            tableName=objRoom,id=id, user=user+1,date= time.strftime("%Y-%m-%d", time.localtime(objAir.lastTime))  ,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,perMoney=objAir.perMoney) ,
+            tableName=objRoom,id=id, user=user+1,date= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(objAir.lastTime))  ,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,perMoney=objAir.perMoney) ,
             "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `singleElec`,`totalElec`,`perMoney`,`singleMoney`, `totalMoney`) VALUES ('{id}', 'open', '{user}', '{date} ',0, '{currentTemp}', '{finalTemp}', '{wind}', 0, '{totalElec}', '{perMoney}', 0, '{totalMoney}');".format(
-            tableName=objRoom,id=id, user=user,date= time.strftime("%Y-%m-%d", time.localtime(objAir.lastTime))  ,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
+            tableName=objRoom,id=id, user=user,date= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(objAir.lastTime))  ,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
             totalElec=objAir.totalElec,perMoney=objAir.perMoney,totalMoney=objAir.totalMoney) ,
              "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `singleElec`,`totalElec`,`perMoney`,`singleMoney`, `totalMoney`) VALUES ('{id}', 'close', '{user}', '{date} ',0, '{currentTemp}', '{finalTemp}', '{wind}', 0, '{totalElec}', '{perMoney}',0, '{totalMoney}');".format(
-            tableName=objRoom,id=id, user=user,date= time.strftime("%Y-%m-%d", time.localtime(objAir.lastTime))  ,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
+            tableName=objRoom,id=id, user=user,date= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(objAir.lastTime))  ,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
             totalElec=objAir.totalElec,perMoney=objAir.perMoney,totalMoney=objAir.totalMoney) ,
             "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `singleElec`,`totalElec`,`perMoney`,`singleMoney`, `totalMoney`) VALUES ('{id}', 'serve', '{user}', '{date} ','{timeLen}', '{currentTemp}', '{finalTemp}', '{wind}', '{singleElec}', '{totalElec}', '{perMoney}', '{singleMoney}', '{totalMoney}');".format(
-            tableName=objRoom,id=id, user=user,date= time.strftime("%Y-%m-%d", time.localtime(objAir.lastTime)) ,timeLen=timeLen,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
+            tableName=objRoom,id=id, user=user,date= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(objAir.lastTime)) ,timeLen=timeLen,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
             singleElec=singleElec,totalElec=objAir.totalElec,perMoney=objAir.perMoney,singleMoney=singleMoney,totalMoney=objAir.totalMoney ) ,
         ]
 
@@ -333,19 +337,17 @@ class Database(object):
     def detailed_bill(self,objRoom):
         objRoom="room"+objRoom
         user=database.getUser(objRoom)
-        select = [
-            'Select * from {tableName} where user="{user}";'.format(tableName=objRoom,user=user),
+        select = 'Select * from {tableName} where user="{user}";'.format(tableName=objRoom,user=user)
             #详单
-            ]
+
         list=[]
-        for sqlQuery in select:
-            cursor = self.conn.cursor()
-            cursor.execute(sqlQuery)
-            for row in cursor:
-                list.append(row)
-                #print(row[0]),
-            cursor.close()
-            self.conn.commit()
+        cursor = self.conn.cursor()
+        cursor.execute(select)
+        for row in cursor:
+            list.append(row)
+            #print(row[0]),
+        cursor.close()
+        self.conn.commit()
         print list
         return list
 

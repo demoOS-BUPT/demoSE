@@ -30,6 +30,7 @@ class Client(QtGui.QMainWindow):
         self.clientUI= Ui_MainWindow()
         self.clientUI.setupUi(self)
 
+
         self.room = user
 
         if DEFAULT_WIND == "1":
@@ -64,6 +65,11 @@ class Client(QtGui.QMainWindow):
         s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~"
         t = time.strftime("%Y-%m-%d %H:%M:%S",time.strptime(t,"%Y/%m/%d/%H/%M/%S"))
         s += (u"\n当前时间为：" + str(t))
+        self.clientUI.roomLabel.setText(s)
+
+    def setLabel(self,s):
+        s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~\n"
+        s += u"回温ing"
         self.clientUI.roomLabel.setText(s)
 
     def onOroff(self):
@@ -143,7 +149,7 @@ class Client(QtGui.QMainWindow):
             self.clientUI.tabWidget.setCurrentIndex(2)
 
     def printDetail(self):
-        self.clientUI.tabWidget.setCurrentIndex(1)
+        print "client退房啦，我要关闭欸"
 
     def showState(self):
         stateStr = ""
@@ -223,6 +229,11 @@ class Client(QtGui.QMainWindow):
             wind_str = u'低风'
         return wind_str
 
+    def bye(self):
+        print "guan!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        self.close()
+        exit(True)
+
 
 
 class myThread(threading.Thread):  # 继承父类threading.Thread
@@ -253,17 +264,18 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
                 op += "$"
                 operate = op.split("_")
 
-
                 if operate[0] == 'a' and len(operate) == 11 and operate[-1] == '$':
                     self.client.air.recv_a(operate)
                     self.client.setTime(operate[4])
-
                 if operate[0] == 'close' and len(operate) == 4 and operate[-1] == '$':
-                    self.client.air.recv_close(operate)
                     self.client.printDetail()
+                    self.client.bye()
+                    self.client.air.recv_close(operate)
 
                 if operate[0] == 'sleep' and len(operate) == 3 and operate[-1] == '$':
                     self.client.air.recv_sleep(operate)
+                    self.client.setLabel(u"slepping~回温中")
+
 
                     #待机
                 if operate[0] == 'wait' and len(operate) == 5 and operate[-1] == '$':
