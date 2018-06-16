@@ -8,7 +8,7 @@ from AirService import *
 
 class Database(object):
     def __init__(self):
-        self.conn = sqlite3.connect('air.db')
+        self.conn = sqlite3.connect('db/air'+str(time.time())+'.db')
 
     def init(self):
         create_table = [

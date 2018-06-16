@@ -243,6 +243,12 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 self.objAir.sleep = False
                 time.sleep(0.2)
 
+            if self.objAir.room in algo.first_wait:
+                if algo.first_wait[self.objAir.room] == 0:
+                    sendBuf = self.objAir.send_wait('2', '1')
+                    self.request.sendall(sendBuf)
+                    algo.first_wait[self.objAir.room] = 1
+                    time.sleep(0.1)
 
             if not self.objAir.open:
                 serverui.showRoomState(self.objAir.room, 'closed')

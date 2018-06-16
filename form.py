@@ -101,7 +101,8 @@ class formUI(QtGui.QDialog):
 
         column = 0
         wind = [0, u'低风', u'中风', u'高风']
-        if list != None:
+
+        if list != None and list != [0, None, None, 0, 0, 0]:
             for i in list:
                 if column == 2:
                     self.formForm.tabWidget.setItem(0, column, QtGui.QTableWidgetItem(wind[i]))
