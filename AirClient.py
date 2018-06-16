@@ -3,11 +3,10 @@ import socket
 import time
 import re, ConfigParser
 
-global localTempChange,localTempRange,localInitTemp
+global localTempChange, localTempRange, localInitTemp
 localTempChange=0.8
 localTempRange=3.0
 localInitTemp=26
-
 
 
 class AirClient(object):
@@ -134,7 +133,7 @@ class AirClient(object):
             pass
             #self.lastTime = kwargs['time']
         if 'tempChange' in kwargs:
-            self.tempChange = int(kwargs['tempChange'])
+            self.tempChange = float(kwargs['tempChange'])
         if 'perMoney' in kwargs:
             self.perMoney = float(kwargs['perMoney'])
         if 'totalElec' in kwargs:

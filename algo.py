@@ -5,20 +5,19 @@ class Algo(object):
 
     def __init__(self):
         self.roomPriority = {'307C':2, '306C':2,'306D':2,'307D':2}
-        self.roomList = []
 
         self.serverList = []
         self.waitList = []
         self.roomStartTime = {}
         self.time = int(time.time())
-        self.queueLength = 2
-        self.queueTime = 2
+        self.queueLength = 5
+        self.queueTime = 6
 
     def req_server(self, roomid, priority):
         self.roomPriority[roomid] = priority
         #print '[queueueueueue]', roomid, '[request]'
-        if int(time.time())-self.time >= self.queueTime:
-            self.time = int(time.time())
+        if time.time()-self.time >= self.queueTime:
+            self.time = time.time()
             self.change_server()
         
         if roomid in self.serverList:

@@ -13,7 +13,7 @@ from ReadConfig import *
 
 
 # Socket Init
-HOST, PORT = "127.0.0.1", int(233)
+HOST, PORT = "192.168.137.110", int(8002)
 
 HIGHWIND = 3
 MIDWIND = 2
@@ -32,12 +32,13 @@ class Client(QtGui.QMainWindow):
 
         self.room = user
 
-        if DEFAULT_WIND == 1:
-            self.clientUI.lowBtn.isChecked(True)
-        elif DEFAULT_WIND == 2:
-            self.clientUI.midBtn.isChecked(True)
-        elif DEFAULT_WIND == 3:
-            self.clientUI.highBtn.isChecked(True)
+        if DEFAULT_WIND == "1":
+            self.clientUI.lowBtn.setChecked(True)
+        elif DEFAULT_WIND == "2":
+            self.clientUI.midBtn.setChecked(True)
+        elif DEFAULT_WIND == "3":
+            self.clientUI.highBtn.setChecked(True)
+
 
         # 设置温度控件的最大最小值
         self.clientUI.tempSlider.setMinimum(TEMP_FROM)
@@ -243,40 +244,39 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
             if res != '':
                 print '[recv]', res
             opStr += res
-            #print opStr
-            operate = opStr.split("_")
+
+            opList = opStr.split("$")
+            for opq in opList:
+                op = opq
+                if op == '':
+                    continue
+                op += "$"
+                operate = op.split("_")
 
 
-            if operate[0] == 'a' and len(operate) == 11 and operate[-1] == '$':
-                self.client.air.recv_a(operate)
-                self.client.setTime(operate[4])
+                if operate[0] == 'a' and len(operate) == 11 and operate[-1] == '$':
+                    self.client.air.recv_a(operate)
+                    self.client.setTime(operate[4])
 
-            if operate[0] == 'close' and len(operate) == 4 and operate[-1] == '$':
-                self.client.air.recv_close(operate)
-                self.client.printDetail()
+                if operate[0] == 'close' and len(operate) == 4 and operate[-1] == '$':
+                    self.client.air.recv_close(operate)
+                    self.client.printDetail()
 
-            if operate[0] == 'sleep' and len(operate) == 3 and operate[-1] == '$':
-                self.client.air.recv_sleep(operate)
+                if operate[0] == 'sleep' and len(operate) == 3 and operate[-1] == '$':
+                    self.client.air.recv_sleep(operate)
 
-                #待机
-            if operate[0] == 'wait' and len(operate) == 5 and operate[-1] == '$':
-                self.client.air.recv_wait(operate)
-
-
-            opStr = ''
+                    #待机
+                if operate[0] == 'wait' and len(operate) == 5 and operate[-1] == '$':
+                    self.client.air.recv_wait(operate)
 
             sendBuf = self.client.air.work()
             if sendBuf != '' and sendBuf != False and sendBuf != None:
                 self.sock.send(sendBuf)
                 print '[send]', sendBuf
-            
-            if time.time() - self.client.air.startTime > 5 and time.time() - self.client.air.startTime < 6 and False:
-                sendBuf = self.client.air.send_change()
-                self.sock.send(sendBuf)
-                time.sleep(1)
 
             self.client.showState()
             time.sleep(0.1)
+            opStr = ''
         print '我要关闭咯'
         self.sock.close()
 
