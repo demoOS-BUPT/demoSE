@@ -71,7 +71,7 @@ class Server(QtGui.QMainWindow):
         self.formui = formUI()
         self.formui.show()
 
-    def checkOut(self,algo.waitList,algo.serverList):
+    def checkOut(self):
         self.checkoutui = checkoutUI()
         self.checkoutui.show()
         if(self.checkoutui.exec_()):

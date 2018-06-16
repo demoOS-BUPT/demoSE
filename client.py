@@ -68,7 +68,8 @@ class Client(QtGui.QMainWindow):
         self.clientUI.roomLabel.setText(s)
 
     def setLabel(self,s):
-        s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~\n"+str(s)
+        s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~\n"
+        s += u"回温ing"
         self.clientUI.roomLabel.setText(s)
 
     def onOroff(self):
