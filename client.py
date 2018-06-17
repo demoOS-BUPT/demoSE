@@ -14,7 +14,7 @@ from ReadConfig import *
 
 # Socket Init
 
-HOST, PORT = "127.0.0.1", int(233)
+HOST, PORT = "127.0.0.1", int(8000)
 
 
 HIGHWIND = 3
@@ -97,7 +97,7 @@ class Client(QtGui.QMainWindow):
                 self.sock.send(sendBuf)
                 print sendBuf
 
-                time.sleep(0.2)
+                time.sleep(0.4)
                 opStr = self.sock.recv(1024)
                 operate = opStr.split("_")
                 if operate[0] == 'start' and len(operate) == 6 and operate[-1] == '$':
@@ -141,6 +141,7 @@ class Client(QtGui.QMainWindow):
             self.clientUI.oBtn.setText(u"开机")
 
             sendBuf = self.air.send_close()
+            print sendBuf
             self.sock.send(sendBuf)
 
             sock_flag = 0

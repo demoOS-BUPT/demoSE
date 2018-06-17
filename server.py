@@ -18,7 +18,11 @@ from report import *
 
 # 1 Set Host and Port
 
+<<<<<<< HEAD
 HOST, PORT = "127.0.0.1", int(233)
+=======
+HOST, PORT = "0.0.0.0", int(8000)
+>>>>>>> 849785b96f4ffa1e925ae8840ea80417632bb180
 
 global serverui
 #global airserver
@@ -29,7 +33,6 @@ global algo
 onOff=1
 algo = Algo()
 airList = []
-
 
 class Server(QtGui.QMainWindow):
     def __init__(self,server,parent=None):
@@ -194,30 +197,36 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
             res = self.request.recv(1024).strip()
 
             opStr += res
-            operate = opStr.split("_")
-            print operate
 
-            if operate[0] == 'r' and operate[-1] == '$':
-                if operate[3]=='#'and operate[4]=='#':
-                    self.objAir.recv_first_open(operate)
-                else:
-                    self.objAir.recv_open(operate)
-                algo.req_server(self.objAir.room, self.objAir.wind,self.objAir)
-                opStr = ''
-                print operate
-            if operate[0] == 'c' and operate[-1] == '$':
-                self.objAir.recv_change(operate)
-                opStr = ''
-                print '[change]',operate
+            opList = opStr.split("$")
+            for opq in opList:
+                op = opq
+                if op == '':
+                    continue
+                op += "$"
+                operate = op.split("_")
 
-            if operate[0] == 'close' and operate[-1] == '$':
-                algo.remove_server(self.objAir.room,self.objAir)
-                self.objAir.recv_close(operate)
-                serverui.showRoomState(self.objAir.room,'closed')
-                opStr = ''
-                #待机
+                if operate[0] == 'r' and operate[-1] == '$':
+                    if operate[3]=='#'and operate[4]=='#':
+                        self.objAir.recv_first_open(operate)
+                    else:
+                        self.objAir.recv_open(operate)
+                    algo.req_server(self.objAir.room, self.objAir.wind, self.objAir)
+                    opStr = ''
+                    print operate
+                if operate[0] == 'c' and operate[-1] == '$':
+                    self.objAir.recv_change(operate)
+                    opStr = ''
+                    print '[change]',operate
 
-            time.sleep(0.1)
+                if operate[0] == 'close' and operate[-1] == '$':
+                    algo.remove_server(self.objAir.room, self.objAir)
+                    self.objAir.recv_close(operate)
+                    serverui.showRoomState(self.objAir.room,'closed')
+                    opStr = ''
+                    #待机
+
+                time.sleep(0.1)
 
 
     def work(self):
