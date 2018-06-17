@@ -354,10 +354,10 @@ class Database(object):
             'Select  count(operate) from {tableName} where strftime("{pattern}",date)="{queryDate}" and  operate=="dispatch" ;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
             #被调次数---------没有考虑调度算法！！！！！！！
 
-            'Select count(*) from {tableName} where strftime("{pattern}",date)="{queryDate}" ;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
+            'Select count(*) from {tableName} where strftime("{pattern}",date)="{queryDate}" and operate!="dispatch" ;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
             #详单数
 
-            'Select sum(totalMoney) from {tableName} where strftime("{pattern}",date)="{queryDate}" and (operate=="close" or operate=="checkout")  group by user;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern)
+            'Select sum(totalMoney) from {tableName} where strftime("{pattern}",date)="{queryDate}" and  operate=="checkout"  group by user;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern)
             #总费用
             ]
         print(objRoom)
@@ -396,7 +396,7 @@ class Database(object):
         objRoom="room"+objRoom
         user=database.getUser(objRoom)
         print "user",user
-        select = 'Select max(totalMoney)money from {tableName} where user="{user}" and (operate=="close" or operate=="checkout");'.format(tableName=objRoom,user=user)
+        select = 'Select max(totalMoney)money from {tableName} where user="{user}" and  operate=="checkout";'.format(tableName=objRoom,user=user)
             #总钱数
         cursor = self.conn.cursor()
         cursor.execute(select)

@@ -144,7 +144,8 @@ class AirService(object):
         status = {'room':self.room}
         sendBuf = sendBuf.format(**status)
         timeLen=round((time.time()-self.lastTime)/3,2)
-        database.insert_operate(self,"sleep",timeLen)
+        database.insert_operate(self,"serve",timeLen)
+        database.insert_operate(self,"sleep",0)
         return sendBuf
 
     def send_wait(self, waitNum, waitType):
