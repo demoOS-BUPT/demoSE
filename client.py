@@ -14,8 +14,8 @@ from ReadConfig import *
 
 # Socket Init
 
-HOST, PORT = "192.168.137.1", int(8002)
-
+HOST, PORT = "10.8.213.21", int(8002)
+#HOST, PORT = "127.0.0.1", int(8000)
 
 HIGHWIND = 3
 MIDWIND = 2
@@ -41,10 +41,10 @@ class Client(QtGui.QMainWindow):
 
 
         # 设置温度控件的最大最小值
-        self.clientUI.tempSlider.setMinimum(TEMP_FROM)
-        self.clientUI.tempSlider.setMaximum(TEMP_TO)
-        self.clientUI.temperaBox.setMinimum(TEMP_FROM)
-        self.clientUI.temperaBox.setMaximum(TEMP_TO)
+        self.clientUI.tempSlider.setMinimum(19)
+        self.clientUI.tempSlider.setMaximum(21)
+        self.clientUI.temperaBox.setMinimum(19)
+        self.clientUI.temperaBox.setMaximum(21)
 
         # 设置温度条控件的初始值
         self.clientUI.tempSlider.setValue(int(DEFAULT_TEMP))
@@ -97,7 +97,7 @@ class Client(QtGui.QMainWindow):
                 self.sock.send(sendBuf)
                 print sendBuf
 
-                time.sleep(0.4)
+                time.sleep(8)
                 opStr = self.sock.recv(1024)
                 operate = opStr.split("_")
                 if operate[0] == 'start' and len(operate) == 6 and operate[-1] == '$':
@@ -153,12 +153,14 @@ class Client(QtGui.QMainWindow):
             self.clientUI.tabWidget.setCurrentIndex(2)
 
     def printDetail(self):
-        print "client退房啦，我要关闭欸"
+        print u"client退房啦，我要关闭欸"
 
     def showState(self):
         stateStr = ""
         stateStr += u"\n当前温度："+(str(self.air.currentTemp))
         stateStr += u"\n目标温度：" +(str(self.air.finalTemp))
+        on_tips_string = u"您设置了空调温度：" + str(self.air.finalTemp)
+        self.clientUI.tipLabel.setText(on_tips_string)
         stateStr += u"\n风速：" + self.getWindStr()
         stateStr += u"\n工作模式：" +self.air.mode
         stateStr += u"\n消费金额：" +str(self.air.totalMoney)
@@ -186,10 +188,12 @@ class Client(QtGui.QMainWindow):
     def changeBoxTemp(self,value):
         self.clientUI.temperaBox.setValue(value)
         if sock_flag :
+            print str(value)
             self.setTemp()
 
     def changeSliderTemp(self, value):
         self.clientUI.tempSlider.setValue(int(value))
+        print value
 
     def highBtnSlot(self):
         if (self.clientUI.highBtn.isChecked()):
@@ -271,6 +275,11 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
                 if operate[0] == 'a' and len(operate) == 11 and operate[-1] == '$':
                     self.client.air.recv_a(operate)
                     self.client.setTime(operate[4])
+
+                    if self.client.air.have_reply == False:
+                        self.sock.send(self.client.air.send_change())
+                        self.client.air.have_reply == True
+                        time.sleep(0.2)
                 if operate[0] == 'close' and len(operate) == 4 and operate[-1] == '$':
                     self.client.printDetail()
                     #self.client.bye()
@@ -284,6 +293,7 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
                     #待机
                 if operate[0] == 'wait' and len(operate) == 5 and operate[-1] == '$':
                     self.client.air.recv_wait(operate)
+                    self.client.air.have_reply = False
 
             sendBuf = self.client.air.work()
             if sendBuf != '' and sendBuf != False and sendBuf != None:

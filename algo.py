@@ -13,8 +13,8 @@ class Algo(object):
         self.waitList = []
         self.roomStartTime = {}
         self.time = int(time.time())
-        self.queueLength = 5
-        self.queueTime = 6
+        self.queueLength = 3
+        self.queueTime = 10
 
     def req_server(self, roomid, priority,objAir):
         self.roomPriority[roomid] = priority

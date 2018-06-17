@@ -235,7 +235,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
         while(1):
             time.sleep(0.1)
             if self.objAir.room in checkoutList:
-                print self.objAir.room+"sleeping"
+                #print self.objAir.room+"sleeping"
                 checkoutList.remove(self.objAir.room)
                 sendBuf = self.objAir.send_close('1')
                 print '[close]',sendBuf

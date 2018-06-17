@@ -155,6 +155,7 @@ class AirService(object):
                     'num':waitNum,
                     'type':waitType,}
         sendBuf = sendBuf.format(**status)
+        return sendBuf
 
     def stamp_to_time(self, num):
         timeArray = time.localtime(num)

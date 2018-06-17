@@ -11,7 +11,7 @@ class AirClient(object):
     def __init__(self, room=503, currentTemp=15, finalTemp=25, wind=2):
         self.room = room
         self.mode = 'hot'
-        self.currentTemp = currentTemp
+        self.currentTemp = 15
         self.finalTemp = finalTemp
         self.wind = wind
         self.totalMoney = 0.0
@@ -21,11 +21,13 @@ class AirClient(object):
         self.open = True
         self.tempWidth = 2
         self.is_reset = True
+        self.sleep_time = time.time()
+        self.have_reply = True
         #self.is_sleep()
 
     def reset(self):
         self.mode = MODE
-        self.currentTemp = DEFAULT_TEMP - 3
+        self.currentTemp = DEFAULT_TEMP - 5
         self.finalTemp = DEFAULT_TEMP
         self.wind = DEFAULT_WIND
         self.totalMoney = 0.0
@@ -98,7 +100,7 @@ class AirClient(object):
         status['currentTemp'] = operate[2]
         status['totalMoney'] = operate[3]
         status['time'] = self.time_to_stamp(operate[4])
-        status['finalTemp'] = operate[5]
+        #status['finalTemp'] = operate[5]
         status['wind'] = operate[6]
         status['tempChange'] = operate[7]
         status['preMoney'] = operate[8]
@@ -171,16 +173,22 @@ class AirClient(object):
         if not self.open:
             print '[closing]', self.room
             return False
-
+        tttt = 6
         if self.sleep:
-            print '[sleeping]'
             if self.mode == 'hot':
-                self.currentTemp -= localTempChange
+                if time.time() - self.sleep_time >=tttt:
+                    print '[sleeping]'
+                    self.currentTemp -= 1
+                    self.sleep_time = time.time()
                 if self.currentTemp <= self.finalTemp - self.tempWidth:
                     self.sleep = False
                     return self.send_open()
             else:
-                self.currentTemp += localTempChange
+                if time.time() - self.sleep_time >= tttt:
+                    print '[sleeping]'
+                    self.currentTemp += 1
+                    self.sleep_time = time.time()
+
                 if self.currentTemp >= self.finalTemp + self.tempWidth:
                     self.sleep = False
                     return self.send_open()
