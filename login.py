@@ -24,9 +24,10 @@ class loginUI(QtGui.QDialog):
             QtGui.QMessageBox.information(self,u"信息提示",u"房间号不能为空")
         else:
             if(passwd == ''):
-                self.accept()
+
                 self.client = Client(user)
                 self.client.show()
+                self.accept()
             else:
                 QtGui.QMessageBox.information(self, u"信息提示", u"密码不要填哦")
 

@@ -18,8 +18,7 @@ from report import *
 
 # 1 Set Host and Port
 
-
-HOST, PORT = "127.0.0.1", int(8002)
+HOST, PORT = "127.0.0.1", int(233)
 
 
 global serverui
@@ -31,7 +30,7 @@ global algo
 onOff=1
 algo = Algo()
 airList = []
-checkoutList = []
+
 
 class Server(QtGui.QMainWindow):
     def __init__(self,server,parent=None):
@@ -80,7 +79,6 @@ class Server(QtGui.QMainWindow):
         if(self.checkoutui.exec_()):
             #从队列里找到self.checkoutui.room对应的airserver 再sendclose
             global checkoutList
-            checkoutList = self.checkoutui.roomList
             print checkoutList
             print '[sync] checkoutList'
 
@@ -231,8 +229,8 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
         while(1):
             time.sleep(0.1)
-
             if self.objAir.room in checkoutList:
+                print self.objAir.room+"sleeping"
                 checkoutList.remove(self.objAir.room)
                 sendBuf = self.objAir.send_close('1')
                 print '[close]',sendBuf

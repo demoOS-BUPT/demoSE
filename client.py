@@ -13,7 +13,9 @@ from ReadConfig import *
 
 
 # Socket Init
-HOST, PORT = "127.0.0.1", int(8002)
+
+HOST, PORT = "127.0.0.1", int(233)
+
 
 HIGHWIND = 3
 MIDWIND = 2
@@ -23,8 +25,6 @@ sock_flag = 0
 first_open = 1
 
 class Client(QtGui.QMainWindow):
-
-
     def __init__(self,user,parent=None):
         super(Client, self).__init__(parent)
         self.clientUI= Ui_MainWindow()
@@ -32,11 +32,11 @@ class Client(QtGui.QMainWindow):
 
         self.room = user
 
-        if DEFAULT_WIND == "1":
+        if DEFAULT_WIND == 1:
             self.clientUI.lowBtn.setChecked(True)
-        elif DEFAULT_WIND == "2":
+        elif DEFAULT_WIND == 2:
             self.clientUI.midBtn.setChecked(True)
-        elif DEFAULT_WIND == "3":
+        elif DEFAULT_WIND == 3:
             self.clientUI.highBtn.setChecked(True)
 
 
