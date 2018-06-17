@@ -6,7 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui,Qt
+from PyQt4 import QtCore, QtGui
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -27,7 +27,6 @@ class Ui_Form(object):
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(415, 568)
         Form.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
-        Form.setWindowFlags(Qt.Qt.FramelessWindowHint)
         self.commitBtn = QtGui.QPushButton(Form)
         self.commitBtn.setGeometry(QtCore.QRect(40, 510, 91, 28))
         self.commitBtn.setStyleSheet(_fromUtf8("QPushButton {\n"
@@ -87,10 +86,19 @@ class Ui_Form(object):
         self.priceLab.setStyleSheet(_fromUtf8(""))
         self.priceLab.setText(_fromUtf8(""))
         self.priceLab.setObjectName(_fromUtf8("priceLab"))
+        self.roomListLab = QtGui.QLabel(Form)
+        self.roomListLab.setGeometry(QtCore.QRect(20, 380, 371, 61))
+        self.roomListLab.setText(_fromUtf8(""))
+        self.roomListLab.setObjectName(_fromUtf8("roomListLab"))
+        self.label.raise_()
+        self.roomBox.raise_()
+        self.label_2.raise_()
+        self.priceLab.raise_()
         self.commitBtn.raise_()
         self.label_3.raise_()
         self.cancelBtn.raise_()
         self.gotoDform.raise_()
+        self.roomListLab.raise_()
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)

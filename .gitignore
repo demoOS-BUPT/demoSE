@@ -102,3 +102,4 @@ ENV/
 
 # db
 ./air.db
+*.db
