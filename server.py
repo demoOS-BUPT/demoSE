@@ -254,11 +254,11 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
             if not self.objAir.open:
                 serverui.showRoomState(self.objAir.room, 'closed')
-                algo.remove_server(self.objAir.room)
+                algo.remove_server(self.objAir.room,self.objAir)
                 continue
 
             if self.objAir.sleep:
-                algo.remove_server(self.objAir.room)
+                algo.remove_server(self.objAir.room,self.objAir)
                 serverui.showRoomState(self.objAir.room,'sleeping')
                 continue
 
@@ -268,7 +268,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
             if self.objAir.room in algo.serverList:
                 self.objAir.work()
                 if self.objAir.open and not self.objAir.sleep:
-                    algo.req_server(self.objAir.room, self.objAir.wind)
+                    algo.req_server(self.objAir.room, self.objAir.wind,self.objAir)
 
                 # 房间号，目标温度，当前温度，风速，累计的费用，累计的时长。
                 status = {'room': self.objAir.room,
@@ -288,7 +288,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 sendBuf = self.objAir.is_sleep()
                 if sendBuf != False and sendBuf != None:
                     self.request.sendall(sendBuf)
-                    algo.remove_server(self.objAir.room)
+                    algo.remove_server(self.objAir.room,self.objAir)
                     print '[send]', sendBuf
                     continue
 

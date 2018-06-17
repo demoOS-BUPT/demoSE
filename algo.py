@@ -1,7 +1,10 @@
 # -*- coding:utf-8 -*-
 import math, time
+from report import *
 
 class Algo(object):
+    global database
+
 
     def __init__(self):
         self.roomPriority = {'307C':2, '306C':2,'306D':2,'307D':2}
@@ -13,13 +16,13 @@ class Algo(object):
         self.queueLength = 5
         self.queueTime = 6
 
-    def req_server(self, roomid, priority):
+    def req_server(self, roomid, priority,objAir):
         self.roomPriority[roomid] = priority
         #print '[queueueueueue]', roomid, '[request]'
         if time.time()-self.time >= self.queueTime:
             self.time = time.time()
-            self.change_server()
-        
+            self.change_server(objAir)
+
         if roomid in self.serverList:
             #print roomid, 'serving'
             return
@@ -29,6 +32,7 @@ class Algo(object):
 
         # self.serverList append
         if len(self.serverList) < self.queueLength:
+            database.insert_operate(objAir,"dispatch",0)
             self.serverList.append(roomid)
             self.roomStartTime[roomid] = time.time()
             return
@@ -67,10 +71,11 @@ class Algo(object):
             if minRoom[0] not in self.waitList:
                 self.waitList.append(minRoom[0])
                 self.first_wait[minRoom[0]] = 0
+            database.insert_operate(objAir,"dispatch",0)
             self.serverList.append(roomid)
             self.roomStartTime[roomid] = time.time()
 
-    def remove_server(self, roomid):
+    def remove_server(self, roomid,objAir):
         if roomid in self.serverList:
             self.serverList.remove(roomid)
         if roomid in self.waitList:
@@ -93,13 +98,14 @@ class Algo(object):
                 return
 
             maxRoom = maxRoom[0]
+            database.insert_operate(objAir,"dispatch",0)
             self.serverList.append(maxRoom)
             self.waitList.remove(maxRoom)
 
-    def change_server(self):
+    def change_server(self,objAir):
         for room in self.roomStartTime:
             if time.time() - self.roomStartTime[room] > 40:
-                self.remove_server(room)
+                self.remove_server(room,objAir)
 
         print self.serverList, self.waitList, self.roomStartTime
         if len(self.serverList) < self.queueLength:
@@ -152,6 +158,7 @@ class Algo(object):
                 return
 
             self.serverList.remove(outRoom)
+            database.insert_operate(objAir,"dispatch",0)
             self.serverList.append(inRoom)
             self.roomStartTime[inRoom] = time.time()
 
