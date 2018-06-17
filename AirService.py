@@ -77,6 +77,7 @@ class AirService(object):
 
     def recv_change(self, operate):
         timeLen=round((time.time()-self.lastTime)/3,2)
+        database.insert_operate(self, "serve", timeLen)
         status = {}
         status['room'] = operate[1]
         status['currentTemp'] = float(operate[2])
@@ -90,9 +91,8 @@ class AirService(object):
             status['wind'] = DEFAULT_WIND
         else:
             status['wind'] = operate[4]
-
         self.change_status(status)
-        database.insert_operate(self, "serve", timeLen)
+        database.insert_operate(self,"change",0)
         return 
 
     def recv_close(self, operate):
@@ -136,7 +136,7 @@ class AirService(object):
         status = {'room':self.room,
                     'flag':flag}
         sendBuf = sendBuf.format(**status)
-        database.insert_operate(self,"close",0)
+        database.insert_operate(self,"checkout",0)
         return sendBuf
 
     def send_sleep(self):
@@ -144,7 +144,7 @@ class AirService(object):
         status = {'room':self.room}
         sendBuf = sendBuf.format(**status)
         timeLen=round((time.time()-self.lastTime)/3,2)
-        database.insert_operate(self,"serve",timeLen)
+        database.insert_operate(self,"sleep",timeLen)
         return sendBuf
 
     def send_wait(self, waitNum, waitType):

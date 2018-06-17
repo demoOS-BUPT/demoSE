@@ -147,6 +147,23 @@ class Database(object):
           `perMoney` double DEFAULT NULL,
           `singleMoney`double DEFAULT NULL,
           `totalMoney` double DEFAULT NULL
+        );''',
+        'DROP TABLE IF EXISTS `room310C`;',
+            '''
+        CREATE TABLE IF NOT EXISTS `room310C` (
+          `id` INTEGER PRIMARY KEY NOT NULL,
+          `operate` varchar(20) NOT NULL,
+          `user` int(5) DEFAULT NULL,
+          `date` timestamp NOT NULL,
+          `timeLen` double NOT NULL ,
+          `currentTemp` double DEFAULT NULL,
+          `finalTemp` double DEFAULT NULL,
+          `wind` int(5) DEFAULT NULL,
+          `singleElec`double DEFAULT NULL,
+          `totalElec`double DEFAULT NULL,
+          `perMoney` double DEFAULT NULL,
+          `singleMoney`double DEFAULT NULL,
+          `totalMoney` double DEFAULT NULL
         );''',]
         for sqlQuery in create_table:
             cursor = self.conn.cursor()
@@ -267,6 +284,18 @@ class Database(object):
             "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `singleElec`,`totalElec`,`perMoney`,`singleMoney`, `totalMoney`) VALUES ('{id}', 'serve', '{user}', '{date} ','{timeLen}', '{currentTemp}', '{finalTemp}', '{wind}', '{singleElec}', '{totalElec}', '{perMoney}', '{singleMoney}', '{totalMoney}');".format(
             tableName=objRoom,id=id, user=user,date= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(objAir.lastTime)) ,timeLen=timeLen,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
             singleElec=singleElec,totalElec=objAir.totalElec,perMoney=objAir.perMoney,singleMoney=singleMoney,totalMoney=objAir.totalMoney ) ,
+            "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `singleElec`,`totalElec`,`perMoney`,`singleMoney`, `totalMoney`) VALUES ('{id}', 'sleep', '{user}', '{date} ','{timeLen}', '{currentTemp}', '{finalTemp}', '{wind}', '{singleElec}', '{totalElec}', '{perMoney}', '{singleMoney}', '{totalMoney}');".format(
+            tableName=objRoom,id=id, user=user,date= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(objAir.lastTime)) ,timeLen=timeLen,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
+            singleElec=singleElec,totalElec=objAir.totalElec,perMoney=objAir.perMoney,singleMoney=singleMoney,totalMoney=objAir.totalMoney ) ,
+             "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `singleElec`,`totalElec`,`perMoney`,`singleMoney`, `totalMoney`) VALUES ('{id}', 'checkout', '{user}', '{date} ',0, '{currentTemp}', '{finalTemp}', '{wind}', 0, '{totalElec}', '{perMoney}',0, '{totalMoney}');".format(
+            tableName=objRoom,id=id, user=user,date= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(objAir.lastTime))  ,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
+            totalElec=objAir.totalElec,perMoney=objAir.perMoney,totalMoney=objAir.totalMoney) ,
+            "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `singleElec`,`totalElec`,`perMoney`,`singleMoney`, `totalMoney`) VALUES ('{id}', 'change', '{user}', '{date} ',0, '{currentTemp}', '{finalTemp}', '{wind}', 0, '{totalElec}', '{perMoney}',0, '{totalMoney}');".format(
+            tableName=objRoom,id=id, user=user,date= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(objAir.lastTime))  ,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
+            totalElec=objAir.totalElec,perMoney=objAir.perMoney,totalMoney=objAir.totalMoney) ,
+            "INSERT INTO `{tableName}` (`id`, `operate`, `user`, `date`,`timeLen`, `currentTemp`, `finalTemp`, `wind`, `singleElec`,`totalElec`,`perMoney`,`singleMoney`, `totalMoney`) VALUES ('{id}', 'dispatch', '{user}', '{date} ',0, '{currentTemp}', '{finalTemp}', '{wind}', 0, '{totalElec}', '{perMoney}',0, '{totalMoney}');".format(
+            tableName=objRoom,id=id, user=user,date= time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(objAir.lastTime))  ,currentTemp=objAir.currentTemp, finalTemp=objAir.finalTemp, wind=objAir.wind,
+            totalElec=objAir.totalElec,perMoney=objAir.perMoney,totalMoney=objAir.totalMoney) ,
         ]
 
         cursor = self.conn.cursor()
@@ -280,6 +309,16 @@ class Database(object):
             objAir.show_status()
             print '[elec,money]',singleElec, singleMoney
             cursor.execute(insert[3])
+        elif op=="sleep":
+            objAir.show_status()
+            print '[elec,money]',singleElec, singleMoney
+            cursor.execute(insert[4])
+        elif op=="checkout":
+            cursor.execute(insert[5])
+        elif op=="change":
+            cursor.execute(insert[6])
+        elif op=="dispatch":
+            cursor.execute(insert[7])
         cursor.close()
         self.conn.commit()
 
@@ -309,16 +348,16 @@ class Database(object):
             group by wind)
             ;'''.format(tableName=objRoom,queryDate=objDate,pattern=pattern),#最常用风速（时间最长的风速）
 
-            'Select  count(*) from {tableName} where strftime("{pattern}",date)="{queryDate}" and operate=="serve" ;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
+            'Select  count(*) from {tableName} where strftime("{pattern}",date)="{queryDate}" and operate=="sleep" ;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
             #达到目标温度次数---------没有考虑调度算法！！！！！！！
 
-            'Select  count(operate) from {tableName} where strftime("{pattern}",date)="{queryDate}" and operate=="serve" ;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
+            'Select  count(operate) from {tableName} where strftime("{pattern}",date)="{queryDate}" and  operate=="dispatch" ;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
             #被调次数---------没有考虑调度算法！！！！！！！
 
-            'Select count(User) from ( select count(*)User from {tableName} where strftime("{pattern}",date)="{queryDate}" group by user);'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
+            'Select count(*) from {tableName} where strftime("{pattern}",date)="{queryDate}" ;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern),
             #详单数
 
-            'Select sum(totalMoney) from {tableName} where strftime("{pattern}",date)="{queryDate}" and operate=="close"  group by user;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern)
+            'Select sum(totalMoney) from {tableName} where strftime("{pattern}",date)="{queryDate}" and (operate=="close" or operate=="checkout")  group by user;'.format(tableName=objRoom,queryDate=objDate,pattern=pattern)
             #总费用
             ]
         print(objRoom)
@@ -357,7 +396,7 @@ class Database(object):
         objRoom="room"+objRoom
         user=database.getUser(objRoom)
         print "user",user
-        select = 'Select max(totalMoney)money from {tableName} where user="{user}" and operate=="close";'.format(tableName=objRoom,user=user)
+        select = 'Select max(totalMoney)money from {tableName} where user="{user}" and (operate=="close" or operate=="checkout");'.format(tableName=objRoom,user=user)
             #总钱数
         cursor = self.conn.cursor()
         cursor.execute(select)
