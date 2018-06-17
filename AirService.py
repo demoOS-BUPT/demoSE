@@ -122,9 +122,9 @@ class AirService(object):
                     'currentTemp':self.currentTemp,
                     'totalMoney':self.totalMoney,
                     'time':self.stamp_to_time(time.time()),
-                    'finalTemp': self.finalTemp,
+                    'finalTemp': int(self.finalTemp),
                     'wind':self.wind,
-                    'tempChange':TEMP_CHANGE,
+                    'tempChange':WIND[int(self.wind)] * float(ELEC_TEMP),
                     'preMoney':self.perMoney,
                     'totalElec':self.totalElec}
         sendBuf = sendBuf.format(**status)
@@ -171,7 +171,7 @@ class AirService(object):
         if 'currentTemp' in kwargs:
             self.currentTemp = float(kwargs['currentTemp'])
         if 'finalTemp' in kwargs:
-            self.finalTemp = float(kwargs['finalTemp'])
+            self.finalTemp = int(kwargs['finalTemp'])
         if 'wind' in kwargs:
             self.wind = int(kwargs['wind'])
         if 'totalMoney' in kwargs:

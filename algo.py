@@ -103,9 +103,9 @@ class Algo(object):
             self.waitList.remove(maxRoom)
 
     def change_server(self,objAir):
-        for room in self.roomStartTime:
-            if time.time() - self.roomStartTime[room] > 40:
-                self.remove_server(room,objAir)
+        #for room in self.roomStartTime:
+        #    if time.time() - self.roomStartTime[room] > 40:
+        #        self.remove_server(room,objAir)
 
         print self.serverList, self.waitList, self.roomStartTime
         if len(self.serverList) < self.queueLength:

@@ -18,7 +18,7 @@ from report import *
 
 # 1 Set Host and Port
 
-HOST, PORT = "0.0.0.0", int(8002)
+HOST, PORT = "0.0.0.0", int(8000)
 
 global serverui
 #global airserver
@@ -29,7 +29,6 @@ global algo
 onOff=1
 algo = Algo()
 airList = []
-
 
 class Server(QtGui.QMainWindow):
     def __init__(self,server,parent=None):
@@ -208,7 +207,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                         self.objAir.recv_first_open(operate)
                     else:
                         self.objAir.recv_open(operate)
-                    algo.req_server(self.objAir.room, self.objAir.wind)
+                    algo.req_server(self.objAir.room, self.objAir.wind, self.objAir)
                     opStr = ''
                     print operate
                 if operate[0] == 'c' and operate[-1] == '$':
@@ -217,7 +216,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                     print '[change]',operate
 
                 if operate[0] == 'close' and operate[-1] == '$':
-                    algo.remove_server(self.objAir.room)
+                    algo.remove_server(self.objAir.room, self.objAir)
                     self.objAir.recv_close(operate)
                     serverui.showRoomState(self.objAir.room,'closed')
                     opStr = ''

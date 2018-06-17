@@ -14,7 +14,7 @@ from ReadConfig import *
 
 # Socket Init
 
-HOST, PORT = "10.8.185.99", int(8002)
+HOST, PORT = "127.0.0.1", int(8000)
 
 
 HIGHWIND = 3
@@ -141,6 +141,7 @@ class Client(QtGui.QMainWindow):
             self.clientUI.oBtn.setText(u"开机")
 
             sendBuf = self.air.send_close()
+            print sendBuf
             self.sock.send(sendBuf)
 
             sock_flag = 0
