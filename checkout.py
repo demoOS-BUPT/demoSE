@@ -20,7 +20,7 @@ class checkoutUI(QtGui.QDialog):
         self.checkoutForm.cancelBtn.clicked.connect(self.bye)
         self.checkoutForm.gotoDform.clicked.connect(self.dform)
         self.checkoutForm.gotoDform.hide()
-        self.roomList = []
+        self.roomList = set()
 
     def commitAction(self):
         if (self.checkoutForm.roomBox.currentIndex() == 0):
@@ -43,15 +43,22 @@ class checkoutUI(QtGui.QDialog):
             self.room = '310C'
 
         global checkoutList
-        self.roomList.append(self.room)
-        checkoutList.append(self.room)
-        print 'append '+checkoutList[0]
+
+        if self.room in self.roomList:
+            QtGui.QMessageBox.information(self, u"操作失败", str(self.room) + u"已退过房啦")
+        else:
+            self.roomList.add(self.room)
+            checkoutList.append(self.room)
+            print 'append '+checkoutList[0]
+            QtGui.QMessageBox.information(self, u"操作成功", str(self.room) + u"退房成功")
+
+
         r_str = ''
         for r in self.roomList:
             r_str += r+' '
         self.checkoutForm.roomListLab.setText(r_str+u"成功退房")
 
-        QtGui.QMessageBox.information(self, u"信息提示", str(self.room) + u"已退房")
+
         money = database.getTotalMoney(self.room)
         if money == None:
             money = 0
