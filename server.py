@@ -18,11 +18,7 @@ from report import *
 
 # 1 Set Host and Port
 
-<<<<<<< HEAD
-HOST, PORT = "127.0.0.1", int(233)
-=======
 HOST, PORT = "0.0.0.0", int(8000)
->>>>>>> 849785b96f4ffa1e925ae8840ea80417632bb180
 
 global serverui
 #global airserver
@@ -208,6 +204,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
                 if operate[0] == 'r' and operate[-1] == '$':
                     if operate[3]=='#'and operate[4]=='#':
+                        print '[first open]'
                         self.objAir.recv_first_open(operate)
                     else:
                         self.objAir.recv_open(operate)

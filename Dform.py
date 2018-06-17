@@ -27,7 +27,7 @@ class DformUI(QtGui.QDialog):
         column = 0
         wind = [0,u'低风',u'中风',u'高风']
 
-        air_closed_flag = 0
+        first_flag = 0
 
         self.Dform.listWidget.clear()
         last_wind = wind[0]
@@ -49,27 +49,37 @@ class DformUI(QtGui.QDialog):
 
             if items[1] == "firstopen":
                 showBuf = u'{date} 空调初次启动服务,室温{roomtemp}℃，目标温度{targettemp} ℃,风速{wind}。'
+                showBuf = showBuf.format(**status)
+                self.Dform.listWidget.addItem(showBuf)
             elif items[1] == "open":
                 showBuf = u'{date} 空调再次开机，室温{roomtemp}℃，目标温度{targettemp} ℃,风速{wind}，总耗电量{totalelec}度,共耗费￥{totalmoney}。'
+                showBuf = showBuf.format(**status)
+                self.Dform.listWidget.addItem(showBuf)
             elif items[1] == "close":
                 showBuf = u'{date} 空调服务关闭，房间温度{roomtemp}℃,总耗电量{totalelec}度,共耗费￥{totalmoney}。'
+                showBuf = showBuf.format(**status)
+                self.Dform.listWidget.addItem(showBuf)
             elif items[1] == "change":
                 if last_wind != status['wind']:
                     showBuf = u'{date} 室温{roomtemp}℃，目标温度{targettemp} ℃,风速由'+last_wind+ u'改为{wind},总耗电量{totalelec}度,共耗费￥{totalmoney}。'
+                    showBuf = showBuf.format(**status)
+                    self.Dform.listWidget.addItem(showBuf)
                 elif last_temp != status['targettemp']:
                     showBuf = u'{date} 室温{roomtemp}℃，目标温度由'+str(last_temp)+u'改为{targettemp} ℃,风速{wind}，总耗电量{totalelec}度,共耗费￥{totalmoney}。'
+                    showBuf = showBuf.format(**status)
+                    self.Dform.listWidget.addItem(showBuf)
             elif items[1] == "sleep":
                     showBuf = u'{date} 室温{roomtemp}℃到达目标温度，开始休眠，停止计费，总耗电量{totalelec}度,共耗费￥{totalmoney}。'
+                    showBuf = showBuf.format(**status)
+                    self.Dform.listWidget.addItem(showBuf)
             elif items[1] == "checkout":
                     showBuf = u'{date} 退房了。'
+                    showBuf = showBuf.format(**status)
+                    self.Dform.listWidget.addItem(showBuf)
             else:
                 print items[1]
-
-            showBuf = showBuf.format(**status)
-            self.Dform.listWidget.addItem(showBuf)
             last_wind = status['wind']
             last_temp = status['targettemp']
-
 
 if __name__ == "__main__":
     import sys
