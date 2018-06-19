@@ -173,7 +173,7 @@ class AirClient(object):
         if not self.open:
             print '[closing]', self.room
             return False
-        tttt = 6
+        tttt = 60
         if self.sleep:
             if self.mode == 'hot':
                 if time.time() - self.sleep_time >=tttt:
