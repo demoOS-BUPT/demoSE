@@ -44,6 +44,7 @@ class Server(QtGui.QMainWindow):
         self.serverUI.setBtn.clicked.connect(self.setRate)
         self.serverUI.formBtn.clicked.connect(self.printForm)
 
+    #主机状态信息展示
     def serverState(self):
         serverStr = ''
         serverStr += u'\n工作模式：\n'+ MODE
@@ -56,8 +57,7 @@ class Server(QtGui.QMainWindow):
 
         self.serverUI.serverLab.setText(serverStr)
 
-    ######################服务端的更改空调配置，打印报表，前台退房等功能
-
+    ######################服务端的更改空调配置
     def setRate(self):
         self.setrate = setrateUI()
         self.setrate.show()
@@ -66,11 +66,12 @@ class Server(QtGui.QMainWindow):
             print self.setrate.lowrate
             print self.setrate.midrate
             print self.setrate.highrate
-
+    ###打印报表
     def printForm(self):
         self.formui = formUI()
         self.formui.show()
 
+    #前台退房
     def checkOut(self):
         self.checkoutui = checkoutUI()
         self.checkoutui.show()
@@ -80,13 +81,9 @@ class Server(QtGui.QMainWindow):
             print checkoutList
             print '[sync] checkoutList'
 
-
-    ######################
-
-    ######################展示房间状态
+    ######################展示各个房间运行信息
 
     def showState(self,status):
-
         # 房间号，目标温度，当前温度，风速，累计的费用，累计的时长。
         if (status['wind'] == 3):
             status['wind'] = u'高风'
@@ -102,12 +99,12 @@ class Server(QtGui.QMainWindow):
 
         self.everyRoomLab(room,showBuf)
 
+    ###展示各个房间的状态
     def showRoomState(self,room,state):
-
-        #房间号，目标温度，当前温度，风速，累计的费用，累计的时长。
         showBuf = room + ' is ' + state
         self.everyRoomLab(room, showBuf)
 
+    ##界面接口
     def everyRoomLab(self, room, showBuf):
         if room == '306C':
             self.serverUI.C306Lab.setText(showBuf)
@@ -129,7 +126,6 @@ class Server(QtGui.QMainWindow):
             self.serverUI.C310Lab.setText(showBuf)
 
     ######################
-
     def onOff(self):
         global onOff
         if(onOff == 1):##开机啦
@@ -202,7 +198,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 op += "$"
                 operate = op.split("_")
 
-                if operate[0] == 'r' and operate[-1] == '$':
+                if operate[0] == 'r' and operate[-1] == '$':###睡眠中改变参数
                     if operate[3]=='#'and operate[4]=='#':
                         print '[first open]'
                         self.objAir.recv_first_open(operate)
@@ -211,12 +207,12 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                     algo.req_server(self.objAir.room, self.objAir.wind, self.objAir)
                     opStr = ''
                     print operate
-                if operate[0] == 'c' and operate[-1] == '$':
+                if operate[0] == 'c' and operate[-1] == '$':###运行中改变参数
                     self.objAir.recv_change(operate)
                     opStr = ''
                     print '[change]',operate
 
-                if operate[0] == 'close' and operate[-1] == '$':
+                if operate[0] == 'close' and operate[-1] == '$':####关机
                     algo.remove_server(self.objAir.room, self.objAir)
                     self.objAir.recv_close(operate)
                     serverui.showRoomState(self.objAir.room,'closed')
@@ -234,8 +230,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
 
         while(1):
             time.sleep(0.1)
-            if self.objAir.room in checkoutList:
-                #print self.objAir.room+"sleeping"
+            if self.objAir.room in checkoutList:##处理退房房间
                 checkoutList.remove(self.objAir.room)
                 sendBuf = self.objAir.send_close('1')
                 print '[close]',sendBuf
@@ -245,7 +240,7 @@ class HandleCheckin(SocketServer.StreamRequestHandler):
                 self.objAir.sleep = False
                 time.sleep(0.2)
 
-            if self.objAir.room in algo.first_wait:
+            if self.objAir.room in algo.first_wait:##处理等待队列的房间
                 if algo.first_wait[self.objAir.room] == 0:
                     sendBuf = self.objAir.send_wait('2', '1')
                     self.request.sendall(sendBuf)
@@ -306,7 +301,6 @@ if __name__ == "__main__":
     #airserver = AirService()
     serverui = Server(server)
     serverui.show()
-
 
     if app.exec_():
         server.shutdown()

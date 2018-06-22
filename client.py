@@ -14,7 +14,7 @@ from ReadConfig import *
 
 # Socket Init
 
-HOST, PORT = "192.168.137.1", int(8002)
+HOST, PORT = "192.168.43.189", int(8002)
 #HOST, PORT = "127.0.0.1", int(8000)
 
 HIGHWIND = 3
@@ -32,6 +32,7 @@ class Client(QtGui.QMainWindow):
 
         self.room = user
 
+        #设置初始房间配置
         if DEFAULT_WIND == 1:
             self.clientUI.lowBtn.setChecked(True)
         elif DEFAULT_WIND == 2:
@@ -41,18 +42,16 @@ class Client(QtGui.QMainWindow):
 
 
         # 设置温度控件的最大最小值
-        self.clientUI.tempSlider.setMinimum(19)
-        self.clientUI.tempSlider.setMaximum(21)
-        self.clientUI.temperaBox.setMinimum(19)
-        self.clientUI.temperaBox.setMaximum(21)
+        self.clientUI.tempSlider.setMinimum(TEMP_FROM)
+        self.clientUI.tempSlider.setMaximum(TEMP_TO)
+        self.clientUI.temperaBox.setMinimum(TEMP_FROM)
+        self.clientUI.temperaBox.setMaximum(TEMP_TO)
 
         # 设置温度条控件的初始值
         self.clientUI.tempSlider.setValue(int(DEFAULT_TEMP))
         self.clientUI.temperaBox.setValue(float(DEFAULT_TEMP))
 
         # 连接信号和槽
-        self.clientUI.tempSlider.valueChanged[int].connect(self.changeBoxTemp)
-        self.clientUI.temperaBox.valueChanged[float].connect(self.changeSliderTemp)
         self.clientUI.oBtn.clicked.connect(self.onOroff)
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -60,23 +59,12 @@ class Client(QtGui.QMainWindow):
         self.sock.setblocking(0)
         self.t = myThread(self.sock, self)
 
-    def setTime(self,t):
-        s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~"
-        t = time.strftime("%Y-%m-%d %H:%M:%S",time.strptime(t,"%Y/%m/%d/%H/%M/%S"))
-        s += (u"\n当前时间为：" + str(t))
-        self.clientUI.roomLabel.setText(s)
-
-    def setLabel(self,s):
-        s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~\n"
-        s += u"回温ing"
-        self.clientUI.roomLabel.setText(s)
-
     def onOroff(self):
         global sock_flag
         global first_open
         if(sock_flag == 0):
 
-            if first_open:
+            if first_open:#第一次开机
                 finalTemp = float(self.clientUI.temperaBox.value())
                 on_tips_string = u"您设置了空调温度：" + str(finalTemp)
                 self.clientUI.tipLabel.setText(on_tips_string)
@@ -90,7 +78,7 @@ class Client(QtGui.QMainWindow):
                         'finalTemp':float(self.clientUI.temperaBox.value()),
                         'wind':win,
                         }
-                self.air.change_status(status)
+                self.air.change_status(status)###初次开机，设置分控机配置
 
                 ##开机
                 sendBuf = self.air.send_start()
@@ -106,10 +94,13 @@ class Client(QtGui.QMainWindow):
                 else:
                     print '[error]recv first start error!'
                     exit()
-
+                
+                #温度、风速的变动将发送消息
                 self.clientUI.highBtn.toggled[bool].connect(self.highBtnSlot)
                 self.clientUI.midBtn.toggled[bool].connect(self.midBtnSlot)
                 self.clientUI.lowBtn.toggled[bool].connect(self.lowBtnSlot)
+                self.clientUI.tempSlider.valueChanged[int].connect(self.changeBoxTemp)
+                self.clientUI.temperaBox.valueChanged[float].connect(self.changeSliderTemp)
 
             self.air.show_status()
             if self.air.is_reset:
@@ -126,34 +117,39 @@ class Client(QtGui.QMainWindow):
                 self.t.start()
                 first_open = 0
 
+            ##开机界面的显示
             self.clientUI.tabWidget.setCurrentIndex(0)
-
             s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~"
             t = time.strftime("%Y-%m-%d %H:%M:%S",time.gmtime(time.time()))
             s += (u"\n当前时间为：" + str(t))
             self.clientUI.roomLabel.setText(s)
-
             self.clientUI.oBtn.setText(u"关机")
+            
         else:#关空调
-            off_tips_string = u"耶 终于关空调了"
-            self.clientUI.tipLabel.setText(off_tips_string)
+            #显示关机
 
+            self.clientUI.tipLabel.setText(u"耶 终于关空调了")
             self.clientUI.oBtn.setText(u"开机")
+            self.clientUI.roomLabel.setText('')
+            self.clientUI.tabWidget.setCurrentIndex(2)
 
             sendBuf = self.air.send_close()
             print sendBuf
             self.sock.send(sendBuf)
 
             sock_flag = 0
+        
 
-            s=''
-            self.clientUI.roomLabel.setText(s)
-            #self.sock.close()
+    def setTime(self,t):
+        s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~"
+        t = time.strftime("%Y-%m-%d %H:%M:%S",time.strptime(t,"%Y/%m/%d/%H/%M/%S"))
+        s += (u"\n当前时间为：" + str(t))
+        self.clientUI.roomLabel.setText(s)
 
-            self.clientUI.tabWidget.setCurrentIndex(2)
-
-    def printDetail(self):
-        print u"client退房啦，我要关闭欸"
+    def setLabel(self,s):
+        s = str(self.air.room) + u"房间的顾客您好呀! \nwe offering simple and comfort here~\n"
+        s += u"回温ing"
+        self.clientUI.roomLabel.setText(s)
 
     def showState(self):
         stateStr = ""
@@ -168,10 +164,12 @@ class Client(QtGui.QMainWindow):
 
     #修改目标温度参数
     def setTemp(self):
+        #更改界面
         temperature = float(self.clientUI.temperaBox.value())
         on_tips_string = u"您设置了空调温度：" + str(temperature)
         self.clientUI.tipLabel.setText(on_tips_string)
 
+        #调节温度的信令
         status = { 'finalTemp': temperature,
                   }
         self.air.change_status(status)
@@ -237,10 +235,6 @@ class Client(QtGui.QMainWindow):
             wind_str = u'低风'
         return wind_str
 
-    def bye(self):
-        print "guan!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        self.close()
-        exit(True)
 
 
 
@@ -272,7 +266,7 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
                 op += "$"
                 operate = op.split("_")
 
-                if operate[0] == 'a' and len(operate) == 11 and operate[-1] == '$':
+                if operate[0] == 'a' and len(operate) == 11 and operate[-1] == '$':##服务端发来分控机状态信息
                     self.client.air.recv_a(operate)
                     self.client.setTime(operate[4])
 
@@ -280,12 +274,10 @@ class myThread(threading.Thread):  # 继承父类threading.Thread
                         self.sock.send(self.client.air.send_change())
                         self.client.air.have_reply == True
                         time.sleep(0.2)
-                if operate[0] == 'close' and len(operate) == 4 and operate[-1] == '$':
-                    self.client.printDetail()
-                    #self.client.bye()
+                if operate[0] == 'close' and len(operate) == 4 and operate[-1] == '$':#退房信息
                     self.client.air.recv_close(operate)
 
-                if operate[0] == 'sleep' and len(operate) == 3 and operate[-1] == '$':
+                if operate[0] == 'sleep' and len(operate) == 3 and operate[-1] == '$':#睡眠信息
                     self.client.air.recv_sleep(operate)
                     self.client.setLabel(u"slepping~回温中")
 

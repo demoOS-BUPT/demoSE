@@ -47,6 +47,8 @@ class DformUI(QtGui.QDialog):
             status['singlemoney'] = items[11]
             status['totalmoney'] = items[12]
 
+
+            #表单适应不同信息
             if items[1] == "firstopen":
                 showBuf = u'{date} 空调初次启动服务,室温{roomtemp}℃，目标温度{targettemp} ℃,风速{wind}。'
                 showBuf = showBuf.format(**status)

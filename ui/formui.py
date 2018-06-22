@@ -103,6 +103,33 @@ class Ui_Form(object):
         self.monthBtn.setObjectName(_fromUtf8("yearBtn"))
         self.gobackBtn = QtGui.QPushButton(Form)
         self.gobackBtn.setEnabled(True)
+
+        self.tabWidget.setColumnCount(8)
+        self.tabWidget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+
+        self.tabWidget.setHorizontalHeaderLabels(
+            [u'开关次数', u'常用目标温度', u'常用风速', u'达到目标温度次数', u'被服务次数', u'详单数', u'总费用'])
+
+        # 设置自动填充
+        # item=self.tabWidget.horizontalHeader()
+        # item.setStretchLastSection(1)
+
+        # 设置指定列宽
+        self.tabWidget.setColumnWidth(0, 90)
+        self.tabWidget.setColumnWidth(1, 115)
+        self.tabWidget.setColumnWidth(2, 80)
+        self.tabWidget.setColumnWidth(3, 144)
+        self.tabWidget.setColumnWidth(4, 100)
+        self.tabWidget.setColumnWidth(5, 70)
+        self.tabWidget.setColumnWidth(6, 80)
+        self.tabWidget.setColumnWidth(7, 0)
+
+        # 设置表头字体加粗：
+        font = self.tabWidget.horizontalHeader().font()
+
+        font.setBold(True)
+        self.tabWidget.horizontalHeader().setFont(font)
+            
         self.gobackBtn.setGeometry(QtCore.QRect(30, 810, 51, 41))
         self.gobackBtn.setStyleSheet(_fromUtf8("QPushButton { \n"
 "font: 8pt \"Adobe Arabic\";\n"

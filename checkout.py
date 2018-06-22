@@ -23,24 +23,8 @@ class checkoutUI(QtGui.QDialog):
         self.roomList = set()
 
     def commitAction(self):
-        if (self.checkoutForm.roomBox.currentIndex() == 0):
-            self.room = '306C'
-        elif (self.checkoutForm.roomBox.currentIndex() == 1):
-            self.room = '306D'
-        elif (self.checkoutForm.roomBox.currentIndex() == 2):
-            self.room = '307C'
-        elif (self.checkoutForm.roomBox.currentIndex() == 3):
-            self.room = '307D'
-        elif (self.checkoutForm.roomBox.currentIndex() == 4):
-            self.room = '308C'
-        elif (self.checkoutForm.roomBox.currentIndex() == 5):
-            self.room = '308D'
-        elif (self.checkoutForm.roomBox.currentIndex() == 6):
-            self.room = '309C'
-        elif (self.checkoutForm.roomBox.currentIndex() == 7):
-            self.room = '309D'
-        elif (self.checkoutForm.roomBox.currentIndex() == 8):
-            self.room = '310C'
+        roomNum = {'306C', '306D', '307C', '307D', '308C', '308D', '309C', '309D', '310C'}
+        self.room = roomNum[self.checkoutForm.roomBox.currentIndex()]
 
         global checkoutList
 
@@ -52,18 +36,17 @@ class checkoutUI(QtGui.QDialog):
             print 'append '+checkoutList[0]
             QtGui.QMessageBox.information(self, u"操作成功", str(self.room) + u"退房成功")
 
-
         r_str = ''
         for r in self.roomList:
             r_str += r+' '
         self.checkoutForm.roomListLab.setText(r_str+u"成功退房")
 
-
+        
+        #获取消费金额
         money = database.getTotalMoney(self.room)
         if money == None:
             money = 0
         self.checkoutForm.priceLab.setText(str(money)+u"元")
-
 
 
         self.checkoutForm.gotoDform.setText(self.room+u"详单")
